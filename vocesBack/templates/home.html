@@ -1,0 +1,41 @@
+{%  extends 'templateHeadCommon.html' %}
+
+{%  block headTitle %}
+<title>DataScope Home</title>
+{%  endblock %}
+
+{% block body %}
+	<div class="home">
+		<div class="content">
+			<div class="leftFrame">
+				<a href="{% url home %}"><img src="{{ STATIC_URL }}img/logo_color.gif" width="200" height="254" /></a>
+				<div class="explain">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis nulla sed nunc porta susci- pit. Morbi libero purus, semper eu mattis volutpat, molestie eu nisl. Curabitur consectetur, mauris eget ultrices lacinia, diam risus ultrices augue, male- suada mollis urna mi et quam. Vivamus ut felis dolor.</div>
+
+
+				<div class="menu">
+					<ul>
+						<li><a href="{% url work %}">WORK</a></li>
+						<li><a href="{% url information %}">INFORMATION</a></li>
+						<li><a href="{% url contact %}">CONTACT</a></li>
+						<li><a href="{% url work %}"></a></li>
+					</ul>
+
+
+
+				</div><!--Acaba menu-->
+
+
+
+			</div><!--Acaba leftFrame-->
+
+			<div class="rightFrame"><img src="{{ STATIC_URL }}img/interact_mock.png" width="671" height="547" />
+
+			</div><!--Acaba rightFrame-->
+
+
+		</div><!--Acaba content-->
+
+	</div><!--Acaba home-->
+
+
+{% endblock %}

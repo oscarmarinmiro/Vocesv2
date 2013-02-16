@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	{% block headTitle %}
+
+	{% endblock %}
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<!-- Le styles -->
+
+	<link href="{{ STATIC_URL }}css/styles.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+
+	<link href='http://fonts.googleapis.com/css?family=Maven+Pro:400,500,700,900' rel='stylesheet' type='text/css'>
+
+	<!-- Le scripts -->
+
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.js"></script>
+
+	<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.22.custom.min.js"></script>
+
+	<script type="text/javascript" src="{{ STATIC_URL }}js/d3.v2.chordfix.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/moment.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/d3.layout.cloud.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}js/tdviz.js"></script>
+
+
+</head>
+
+<body>
+{% block body %}
+{% endblock %}
+</body>
+
+</html>
