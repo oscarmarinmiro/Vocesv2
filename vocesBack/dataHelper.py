@@ -10,21 +10,42 @@ def dataSearchGeo(latMin,lngMin,latMax,lngMax):
     tweets = tweetGeo.objects.filter(lat__lte=latMax,lat__gte=latMin,lng__gte=lngMin,lng__lte=lngMax).order_by('-stamp')[:500]
 
     tweetStruct = []
+    tagFacets = {}
+    userFacets = {}
 
     for tweet in tweets:
         tweetStruct.append({'tweetId':tweet.tweetId,'lat':tweet.lat,'lng':tweet.lng,'stamp':tweet.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':tweet.hashTag,'votes':tweet.votes,'relevance':tweet.relevanceFirst})
 
-    return tweetStruct
+        if tweet.hashTag not in tagFacets:
+            tagFacets[tweet.hashTag] = 0
+        tagFacets[tweet.hashTag]+=1
+
+        if tweet.tweetInfo.userId.screenName not in userFacets:
+            userFacets[tweet.tweetInfo.userId.screenName] = 0
+        userFacets[tweet.tweetInfo.userId.screenName] += 1
+
+
+    return {'points':tweetStruct,'tagFacets':tagFacets,'userFacets':userFacets}
 
 def dataSearchGeoHash(latMin,lngMin,latMax,lngMax,hash):
     tweets = tweetGeo.objects.filter(lat__lte=latMax,lat__gte=latMin,lng__gte=lngMin,lng__lte=lngMax,hashTag = hash.lower()).order_by('-stamp')[:500]
 
     tweetStruct = []
+    tagFacets = {}
+    userFacets = {}
 
     for tweet in tweets:
         tweetStruct.append({'tweetId':tweet.tweetId,'lat':tweet.lat,'lng':tweet.lng,'stamp':tweet.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':tweet.hashTag,'votes':tweet.votes,'relevance':tweet.relevanceFirst})
 
-    return tweetStruct
+        if tweet.hashTag not in tagFacets:
+            tagFacets[tweet.hashTag] = 0
+            tagFacets[tweet.hashTag]+=1
+
+        if tweet.tweetInfo.userId.screenName not in userFacets:
+            userFacets[tweet.tweetInfo.userId.screenName] = 0
+            userFacets[tweet.tweetInfo.userId.screenName] += 1
+
+    return {'points':tweetStruct,'tagFacets':tagFacets,'userFacets':userFacets}
 
 def dataSearchPointDetail(tweetId):
 
