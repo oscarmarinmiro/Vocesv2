@@ -10,7 +10,42 @@ import json
 import sys
 import traceback
 
+from django.http import HttpResponse
+from dataHelper import dataSearchGeo,dataSearchGeoHash,dataSearchPointDetail
+
 # Create your views here.
+
+# AJAX Views
+
+def searchGeo(request,latMin,lngMin,latMax,lngMax):
+    latMin = float(latMin)
+    lngMin = float(lngMin)
+    latMax = float(latMax)
+    lngMax = float(lngMax)
+
+    tweets = dataSearchGeo(latMin,lngMin,latMax,lngMax)
+
+    # html = "Hola mundo %f %f %f %f" % (latMin,lngMin,latMax,lngMax)
+    return HttpResponse(json.dumps(tweets), content_type="application/json")
+    # return HttpResponse(html)
+
+def searchGeoHash(request,latMin,lngMin,latMax,lngMax,hashtag):
+    latMin = float(latMin)
+    lngMin = float(lngMin)
+    latMax = float(latMax)
+    lngMax = float(lngMax)
+
+    tweets = dataSearchGeoHash(latMin,lngMin,latMax,lngMax,hashtag)
+
+    return HttpResponse(json.dumps(tweets), content_type="application/json")
+
+
+def searchPointDetail(request,tweetId):
+    tweetId = int(tweetId)
+
+    tweet = dataSearchPointDetail(tweetId)
+
+    return HttpResponse(json.dumps(tweet), content_type="application/json")
 
 # def home(request):
 #

@@ -15,7 +15,10 @@ urlpatterns = patterns('',
                        # url(r'^work/tags/(?P<tagSlug>[\w-]+)/$', views.filterTag, name='filterTag'),
                        # url(r'^work/categories/(?P<catSlug>[\w-]+)/$', views.filterCategory, name='filterCategory'),
                        # url(r'^work/detail/(?P<postSlug>[\w-]+)/$', views.workDetail, name='workDetail'),
-
+                       # Las llamadas ajax con vuelta en json
+                       url(r'^getPointsGeo/(?P<latMin>[\d.]+)/(?P<lngMin>[\d.]+)/(?P<latMax>[\d.]+)/(?P<lngMax>[\d.]+)/$',views.searchGeo, name = 'getPointsGeo'),
+                       url(r'^getPointsGeoHash/(?P<latMin>[\d.]+)/(?P<lngMin>[\d.]+)/(?P<latMax>[\d.]+)/(?P<lngMax>[\d.]+)/(?P<hashtag>[\w]+)/$',views.searchGeoHash, name = 'getPointsGeoHash'),
+                       url(r'^getPointDetail/(?P<tweetId>[\d.]+)/$',views.searchPointDetail, name = 'getPointDetail'),
                        # Uncomment the next line to enable the admin:
                        url(r'^admin/', include(admin.site.urls)),
                        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),

@@ -123,7 +123,7 @@ while(True):
                 tweetG.tweetInfo = tweetI
                 pprint.pprint(status.hashtags)
                 if dStatus['hashtags'] is not None:
-                    tweetG.hashTag = dStatus['hashtags'][0]
+                    tweetG.hashTag = dStatus['hashtags'][0].lower()
                 else:
                     tweetG.hashTag = ""
                 tweetG.stamp = time.strftime('%Y-%m-%d %H:%M:%S',time.strptime(dStatus['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))

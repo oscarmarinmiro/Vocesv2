@@ -1,78 +1,35 @@
 __author__ = 'oscarmarinmiro'
 
-# from django.db import models
-# from models import Category,Tag,Post
-#
-# import pprint
-#
-#
-# # Get Dictionary with all category slugs and counts
-#
-# def getAllCategoriesCount():
-#
-# 	# Take all categories...
-#
-# 	categories = Category.objects.all()
-#
-# 	categoryHash = {}
-#
-# 	# And for each one, query matching posts, and build a dict
-#
-# 	for category in categories:
-# 		name = category.name
-# 		totalCount = Post.objects.filter(category=category).count()
-# 		categoryHash[name] = {'slug':category.slugName,'count':totalCount}
-#
-# 	return categoryHash
-#
-# # Get Dictionary with all tag slugs and counts
-#
-# def getAllTagsCount():
-#
-# 	# Take all tags..
-#
-# 	tags = Tag.objects.all()
-#
-# 	tagHash = {}
-#
-# 	# And for each one, query matching posts, and build a dict
-#
-# 	for tag in tags:
-# 		name = tag.name
-# 		totalCount = Post.objects.filter(tags=tag).count()
-# 		tagHash[name] = {'slug':tag.slugName,'count':totalCount}
-#
-# 	return tagHash
-#
-# # Get *all* posts
-#
-# def getAllPosts():
-#
-# 	posts = Post.objects.all()
-#
-# 	return posts
-#
-# # Get all posts filtered by a tag slug
-#
-# def getAllPostsFilteredByTag(tagSlug):
-#
-# 	posts = Post.objects.filter(tags__slugName=tagSlug)
-#
-# 	return posts
-#
-# # Get all posts filtered by a category slug
-#
-# def getAllPostsFilteredByCategory(catSlug):
-#
-# 	posts = Post.objects.filter(category__slugName=catSlug)
-#
-# 	return posts
-#
-# # Get a post given its slug
-#
-# def getPostBySlug(postSlug):
-#
-# 	post = Post.objects.filter(slugName = postSlug)
-#
-# 	return post[0]
-#
+from django.db import models
+from models import tweetGeo,tweetInfo,userInfo
+
+MAX_RECORDS = 500
+
+
+def dataSearchGeo(latMin,lngMin,latMax,lngMax):
+    tweets = tweetGeo.objects.filter(lat__lte=latMax,lat__gte=latMin,lng__gte=lngMin,lng__lte=lngMax).order_by('-stamp')[:500]
+
+    tweetStruct = []
+
+    for tweet in tweets:
+        tweetStruct.append({'tweetId':tweet.tweetId,'lat':tweet.lat,'lng':tweet.lng,'stamp':tweet.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':tweet.hashTag,'votes':tweet.votes,'relevance':tweet.relevanceFirst})
+
+    return tweetStruct
+
+def dataSearchGeoHash(latMin,lngMin,latMax,lngMax,hash):
+    tweets = tweetGeo.objects.filter(lat__lte=latMax,lat__gte=latMin,lng__gte=lngMin,lng__lte=lngMax,hashTag = hash.lower()).order_by('-stamp')[:500]
+
+    tweetStruct = []
+
+    for tweet in tweets:
+        tweetStruct.append({'tweetId':tweet.tweetId,'lat':tweet.lat,'lng':tweet.lng,'stamp':tweet.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':tweet.hashTag,'votes':tweet.votes,'relevance':tweet.relevanceFirst})
+
+    return tweetStruct
+
+def dataSearchPointDetail(tweetId):
+
+    tweet = tweetInfo.objects.get(tweetId = int(tweetId))
+
+    myTweet = {'tweetId':tweet.tweetId,'lat':tweet.tweetgeo.lat,'lng':tweet.tweetgeo.lng,'stamp':tweet.tweetgeo.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':tweet.tweetgeo.hashTag,'votes':tweet.tweetgeo.votes,'relevance':tweet.tweetgeo.relevanceFirst,'text':tweet.text,'media':tweet.mediaUrl,'userName':tweet.userId.name,'userKarma':tweet.userId.karma,'userNick':tweet.userId.screenName,'userId':tweet.userId.userId,'userImg':tweet.userId.profileImgUrl}
+
+    return myTweet
