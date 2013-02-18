@@ -133,7 +133,9 @@ class Status(object):
                contributors=None,
                retweeted=None,
                retweeted_status=None,
-               retweet_count=None):
+               retweet_count=None,
+               data=None
+            ):
     '''An object to hold a Twitter status message.
 
     This class is normally instantiated by the twitter.Api class and
@@ -193,6 +195,8 @@ class Status(object):
     self.contributors = contributors
     self.retweeted_status = retweeted_status
     self.retweet_count = retweet_count
+    self.data = data
+
 
   def GetCreatedAt(self):
     '''Get the time this status message was posted.
@@ -637,7 +641,7 @@ class Status(object):
                   coordinates=data.get('coordinates', None),
                   contributors=data.get('contributors', None),
                   retweeted_status=retweeted_status,
-                  retweet_count=data.get('retweet_count', None))
+                  retweet_count=data.get('retweet_count', None),data = data)
 
 
 class User(object):

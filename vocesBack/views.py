@@ -47,6 +47,9 @@ def searchPointDetail(request,tweetId):
 
     return HttpResponse(json.dumps(tweet), content_type="application/json")
 
+def home(request):
+    return render_to_response("index.html", locals(),context_instance=RequestContext(request))
+
 # def home(request):
 #
 #     name="Home"

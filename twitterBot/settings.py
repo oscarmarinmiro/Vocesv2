@@ -12,21 +12,21 @@ LANGUAGE_CODE = 'es-ES'
 
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+    #     'NAME': 'voces',                      # Or path to database file if using sqlite3.
+    #     'USER': 'root',                      # Not used with sqlite3.
+    #     'PASSWORD': 'root',                  # Not used with sqlite3.
+    #     'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
+    #     'PORT': '8889',                      # Set to empty string for default. Not used with sqlite3.
+    # }
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'voces',                      # Or path to database file if using sqlite3.
-        'USER': 'root',                      # Not used with sqlite3.
-        'PASSWORD': 'root',                  # Not used with sqlite3.
-        'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '8889',                      # Set to empty string for default. Not used with sqlite3.
+        'USER': 'voces',                      # Not used with sqlite3.
+        'PASSWORD': 'voces',                  # Not used with sqlite3.
+        'HOST': '178.63.87.73',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '3306',                      # Set to empty string for default. Not used with sqlite3.
     }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-    #     'NAME': 'datascope',                      # Or path to database file if using sqlite3.
-    #     'USER': 'datascope',                      # Not used with sqlite3.
-    #     'PASSWORD': 'datascope',                  # Not used with sqlite3.
-    #     'HOST': '178.63.87.73',                      # Set to empty string for localhost. Not used with sqlite3.
-    #     'PORT': '3306',                      # Set to empty string for default. Not used with sqlite3.
-    # }
 }
 

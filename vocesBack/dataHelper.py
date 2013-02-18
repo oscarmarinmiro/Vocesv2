@@ -14,7 +14,7 @@ def dataSearchGeo(latMin,lngMin,latMax,lngMax):
     userFacets = {}
 
     for tweet in tweets:
-        tweetStruct.append({'tweetId':tweet.tweetId,'lat':tweet.lat,'lng':tweet.lng,'stamp':tweet.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':tweet.hashTag,'votes':tweet.votes,'relevance':tweet.relevanceFirst})
+        tweetStruct.append({'tweetId':str(tweet.tweetId),'lat':tweet.lat,'lng':tweet.lng,'stamp':tweet.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':tweet.hashTag,'votes':tweet.votes,'relevance':tweet.relevanceFirst})
 
         if tweet.hashTag not in tagFacets:
             tagFacets[tweet.hashTag] = 0
@@ -35,7 +35,7 @@ def dataSearchGeoHash(latMin,lngMin,latMax,lngMax,hash):
     userFacets = {}
 
     for tweet in tweets:
-        tweetStruct.append({'tweetId':tweet.tweetId,'lat':tweet.lat,'lng':tweet.lng,'stamp':tweet.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':tweet.hashTag,'votes':tweet.votes,'relevance':tweet.relevanceFirst})
+        tweetStruct.append({'tweetId':str(tweet.tweetId),'lat':tweet.lat,'lng':tweet.lng,'stamp':tweet.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':tweet.hashTag,'votes':tweet.votes,'relevance':tweet.relevanceFirst})
 
         if tweet.hashTag not in tagFacets:
             tagFacets[tweet.hashTag] = 0
@@ -51,6 +51,6 @@ def dataSearchPointDetail(tweetId):
 
     tweet = tweetInfo.objects.get(tweetId = int(tweetId))
 
-    myTweet = {'tweetId':tweet.tweetId,'lat':tweet.tweetgeo.lat,'lng':tweet.tweetgeo.lng,'stamp':tweet.tweetgeo.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':tweet.tweetgeo.hashTag,'votes':tweet.tweetgeo.votes,'relevance':tweet.tweetgeo.relevanceFirst,'text':tweet.text,'media':tweet.mediaUrl,'userName':tweet.userId.name,'userKarma':tweet.userId.karma,'userNick':tweet.userId.screenName,'userId':tweet.userId.userId,'userImg':tweet.userId.profileImgUrl}
+    myTweet = {'tweetId':str(tweet.tweetId),'lat':tweet.tweetgeo.lat,'lng':tweet.tweetgeo.lng,'stamp':tweet.tweetgeo.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':tweet.tweetgeo.hashTag,'votes':tweet.tweetgeo.votes,'relevance':tweet.tweetgeo.relevanceFirst,'text':tweet.text,'media':tweet.mediaUrl,'userName':tweet.userId.name,'userKarma':tweet.userId.karma,'userNick':tweet.userId.screenName,'userId':tweet.userId.userId,'userImg':tweet.userId.profileImgUrl}
 
     return myTweet
