@@ -13,7 +13,7 @@ class Config(models.Model):
     site = models.OneToOneField(Site)
     #BEGIN Call detection constants.
     calls_twitter_account = 'vote_outliers'
-    call_symbol = '!'
+    call_symbol = '¡'
     call_detection_regexp = "^@%s %s .*$" % (calls_twitter_account, call_symbol)
     #END Call detection constants.
     oauthToken = models.CharField('Robot OauthToken',max_length=100,unique=True)
