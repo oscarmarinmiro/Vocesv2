@@ -37,6 +37,10 @@ OAUTH_SECRET=ConfigObject.oauthSecret
 CONSUMER_KEY=ConfigObject.consumerKey
 CONSUMER_SECRET=ConfigObject.consumerSecret
 
+#BEGIN Call detection.
+CALL_DETECTION_REGEXP = re.compile(ConfigObject.call_detection_regexp, re.IGNORECASE)
+#END Call detection.
+
 
 def getSinceFromConfig():
     try:
@@ -54,7 +58,8 @@ def putSinceInConfig(since):
 
     return
 
-api = twitter.Api(consumer_key=CONSUMER_KEY,consumer_secret=CONSUMER_SECRET, access_token_key=OAUTH_TOKEN, access_token_secret=OAUTH_SECRET)
+api = twitter.Api(consumer_key=CONSUMER_KEY,consumer_secret=CONSUMER_SECRET,
+                  access_token_key=OAUTH_TOKEN, access_token_secret=OAUTH_SECRET)
 
 
 while(True):
@@ -101,6 +106,15 @@ while(True):
             if tweetInfo.objects.filter(tweetId=dStatus['id']).count() == 0:
                 tweetI = tweetInfo(tweetId=dStatus['id'])
                 tweetI.text = dStatus['text']
+
+                #BEGIN Call detection.
+                if CALL_DETECTION_REGEXP.search(tweetI.text):
+                    #It's a call!
+                    tweetI.inReplyToId = -1
+                else:
+                    # We need to retrieve to which call it's replying to
+                    tweetI.inReplyToId = dStatus['in_reply_to_status_id']
+                #END Call detection.
                 tweetI.userId = user
 
                 # TBD

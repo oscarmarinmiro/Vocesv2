@@ -3,8 +3,6 @@
 from django.db import models
 from django.contrib.sites.models import Site
 
-
-
 class Config(models.Model):
     """
     Config object to store global info
@@ -13,6 +11,11 @@ class Config(models.Model):
     # Otherwise [a 'settings' instance NOT accesible through admin], this https://github.com/sciyoshi/django-dbsettings
     # could be used...
     site = models.OneToOneField(Site)
+    #BEGIN Call detection constants.
+    calls_twitter_account = 'vote_outliers'
+    call_symbol = '!'
+    call_detection_regexp = "^@%s %s .*$" % (calls_twitter_account, call_symbol)
+    #END Call detection constants.
     oauthToken = models.CharField('Robot OauthToken',max_length=100,unique=True)
     oauthSecret = models.CharField('Robot OauthSecret',max_length=100,unique=True)
     consumerKey = models.CharField('Consumer key',max_length=100,unique=True)
@@ -53,6 +56,7 @@ class tweetInfo(models.Model):
     userId = models.ForeignKey(userInfo)
     text = models.CharField(max_length=160)
     mediaUrl = models.URLField(null=True)
+    inReplyToId = models.BigIntegerField(db_index=True)
 
     class Meta:
         verbose_name_plural = "TweetInfos"
