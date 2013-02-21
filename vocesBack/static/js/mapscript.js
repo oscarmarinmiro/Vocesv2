@@ -452,7 +452,7 @@ $(document).ready(function()
 
     var  L_PREFER_CANVAS =true;
 
-	var map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18});
+	var map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,enableHighAccuracy:true});
 
 
 	map.on('locationfound', onLocationFound);
