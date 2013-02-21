@@ -2,7 +2,7 @@ __author__ = 'oscarmarinmiro'
 
 
 from django.contrib import admin
-from vocesBack.models import Config,tweetGeo,tweetInfo,userInfo
+from vocesBack.models import Config, Tweet, User, CheckIn
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
 
@@ -17,8 +17,8 @@ from django.contrib.sites.models import Site
 
 
 admin.site.register(Config)
-admin.site.register(tweetGeo)
-admin.site.register(tweetInfo)
-admin.site.register(userInfo)
+admin.site.register(User)
+admin.site.register(Tweet)
+admin.site.register(CheckIn)
 admin.site.unregister(Group)
 admin.site.unregister(Site)

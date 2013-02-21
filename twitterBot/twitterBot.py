@@ -13,11 +13,12 @@ import random
 import pprint
 from django.utils import timezone
 
+
 sys.path.append('../')
 
 os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
 
-from vocesBack.models import Config, userInfo, tweetGeo, tweetInfo
+from vocesBack.models import Config, User, Tweet
 
 # Estas son las credenciales de la app
 # La cuenta es vote_outliers en twitter, pass:vote2012pp
@@ -84,16 +85,16 @@ while(True):
 
         if status.coordinates is not None:
 
-            # Go w/ userInfo
+            # Go w/ User
 
-            if userInfo.objects.filter(userId = dStatus['user']['id']).count() != 0 :
+            if User.objects.filter(userId = dStatus['user']['id']).count() != 0 :
                 print "User %s already exists... updating" % dStatus['user']['screen_name']
-                user = userInfo.objects.filter(userId = dStatus['user']['id'])[0]
+                user = User.objects.filter(userId = dStatus['user']['id'])[0]
                 # TBD how to update karma
                 user.name = dStatus['user']['name']
                 user.profileImgUrl = dStatus['user']['profile_image_url']
             else:
-                user = userInfo(userId = dStatus['user']['id'])
+                user = User(userId = dStatus['user']['id'])
                 user.profileImgUrl = dStatus['user']['profile_image_url']
                 user.name = dStatus['user']['name']
                 user.karma = 0
@@ -101,48 +102,42 @@ while(True):
 
             user.save()
 
-            # Go w/ tweetInfo
+            # Go w/ Tweet
 
-            if tweetInfo.objects.filter(tweetId=dStatus['id']).count() == 0:
-                tweetI = tweetInfo(tweetId=dStatus['id'])
-                tweetI.text = dStatus['text']
+            if Tweet.objects.filter(tweetId=dStatus['id']).count() == 0:
+                tweet = Tweet(tweetId=dStatus['id'])
+                tweet.text = dStatus['text']
 
                 #BEGIN Call detection.
-                if CALL_DETECTION_REGEXP.search(tweetI.text):
+                if CALL_DETECTION_REGEXP.search(tweet.text):
                     #It's a call!
-                    tweetI.inReplyToId = -1
+                    tweet.inReplyToId = -1
                 else:
                     # We need to retrieve to which call it's replying to
-                    tweetI.inReplyToId = dStatus['in_reply_to_status_id']
+                    tweet.inReplyToId = dStatus['in_reply_to_status_id']
                 #END Call detection.
-                tweetI.userId = user
+                tweet.userId = user
 
                 # TBD
                 if 'entities' in status.data and 'media' in status.data['entities'] and status.data['entities']['media'][0]['type']=='photo':
-                    tweetI.mediaUrl = status.data['entities']['media'][0]['media_url']+":thumb"
+                    tweet.mediaUrl = status.data['entities']['media'][0]['media_url']+":thumb"
                 else:
-                    tweetI.mediaUrl = ""
+                    tweet.mediaUrl = ""
 
-                tweetI.save()
-
-                # Go w/ tweetGeo
-
-                tweetG = tweetGeo(tweetId=dStatus['id'])
-                tweetG.lat = dStatus['coordinates']['coordinates'][1]
-                tweetG.lng = dStatus['coordinates']['coordinates'][0]
-                tweetG.relevanceFirst = 0
-                tweetG.relevanceSecond = 0
-                tweetG.rt = 0
-                tweetG.votes = 0
-                tweetG.tweetInfo = tweetI
+                tweet.lat = dStatus['coordinates']['coordinates'][1]
+                tweet.lng = dStatus['coordinates']['coordinates'][0]
+                tweet.relevanceFirst = 0
+                tweet.relevanceSecond = 0
+                tweet.rt = 0
+                tweet.votes = 0
                 pprint.pprint(status.hashtags)
                 if dStatus['hashtags'] is not None:
-                    tweetG.hashTag = dStatus['hashtags'][0].lower()
+                    tweet.hashTag = dStatus['hashtags'][0].lower()
                 else:
-                    tweetG.hashTag = ""
-                tweetG.stamp = time.strftime('%Y-%m-%d %H:%M:%S',time.strptime(dStatus['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))
+                    tweet.hashTag = ""
+                tweet.stamp = time.strftime('%Y-%m-%d %H:%M:%S',time.strptime(dStatus['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))
 
-                tweetG.save()
+                tweet.save()
             else:
                 print "Tweet %d already exists" % dStatus['id']
         else:
