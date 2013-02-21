@@ -3,7 +3,7 @@ from os.path import join, dirname, normpath
 DATABASES = {
     # DEV
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'voices',                      # Or path to database file if using sqlite3.
         'USER': 'voices',                      # Not used with sqlite3.
         'PASSWORD': 'voices2013pp',                  # Not used with sqlite3.
