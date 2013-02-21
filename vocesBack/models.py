@@ -85,3 +85,19 @@ class tweetGeo(models.Model):
 
     def __unicode__(self):
         return str(self.tweetId)
+
+
+class checkIn(models.Model):
+    """
+    Checkins register
+    """
+    fingerprint = models.CharField(max_length=32,unique=True,db_index=True,primary_key=True)
+    stamp = models.DateTimeField()
+    tweetId = models.BigIntegerField()
+
+    class Meta:
+        verbose_name_plural = "CheckIns"
+
+    def __unicode__(self):
+        return str(self.fingerprint)
+                                          
