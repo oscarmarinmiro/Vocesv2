@@ -67,6 +67,12 @@ def dataInsertCheckIn(tweetId,fingerprint):
         print "%s--%s--%s" % (fingerprint,dt_stamp.strftime("%Y%m%d%H%M%S"),tweetId)
         checkin = checkIn(fingerprint=fingerprint, stamp=dt_stamp, tweetId=tweetId)
         checkin.save()
+        print "pido con el id: %s" % tweetId
+        call = tweetGeo.objects.get(tweetId=tweetId)
+        call.relevanceFirst += 1
+        print "AAAAA"
+        print call.relevanceFirst
+        call.save()
         print "OK"
         return {"code":"OK"}
     except Exception as e:

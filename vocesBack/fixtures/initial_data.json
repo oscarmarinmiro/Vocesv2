@@ -145,7 +145,8 @@
         "fields": {
             "text": "@vote_outliers #test nainonaiiiii http://t.co/PtKzm222",
             "userId": 289284899,
-            "mediaUrl": "http://pbs.twimg.com/media/BDPErO3CAAAa_aG.jpg:thumb"
+            "mediaUrl": "http://pbs.twimg.com/media/BDPErO3CAAAa_aG.jpg:thumb",
+            "inReplyToId": 666
         }
     },
     {
@@ -154,7 +155,8 @@
         "fields": {
             "text": "@vote_outliers #test nainonai http://t.co/0MDmut59",
             "userId": 289284899,
-            "mediaUrl": "http://pbs.twimg.com/media/BDPFHEwCAAALkxz.jpg:thumb"
+            "mediaUrl": "http://pbs.twimg.com/media/BDPFHEwCAAALkxz.jpg:thumb",
+            "inReplyToId": 666
         }
     },
     {
@@ -163,7 +165,8 @@
         "fields": {
             "text": "@vote_outliers #test3 hola hola",
             "userId": 289284899,
-            "mediaUrl": ""
+            "mediaUrl": "",
+            "inReplyToId": 666
         }
     },
     {
@@ -178,8 +181,7 @@
             "relevanceFirst": 0,
             "hashTag": "test",
             "lat": 41.357711799999997,
-            "lng": 2.09850096,
-            "inReplyTo": 666
+            "lng": 2.09850096
         }
     },
     {
@@ -194,8 +196,7 @@
             "relevanceFirst": 0,
             "hashTag": "test",
             "lat": 41.357730019999998,
-            "lng": 2.09850928,
-            "inReplyTo": 666
+            "lng": 2.09850928
         }
     },
     {
@@ -210,8 +211,7 @@
             "relevanceFirst": 0,
             "hashTag": "test3",
             "lat": 41.357729329999998,
-            "lng": 2.09851652,
-            "inReplyTo": 666
+            "lng": 2.09851652
         }
     },
     {

@@ -206,7 +206,7 @@ $(document).ready(function()
                           ].join("###");
                           var fingerprint = md5( data )
                           console.log(fingerprint);
-                          $.ajax( 'check/'+this.getAttribute("tweetId")+'/'+fingerprint );
+                          $.ajax( {url:'check/'+this.getAttribute("tweetId")+'/'+fingerprint,'success':function(d,statusText,xkk){if(d['code']=='OK'){$("#check").css('display', 'none')};}} );
                     });
     }
 
@@ -216,8 +216,6 @@ $(document).ready(function()
         var tweetId = e.target._popup._source.__data__;
 
         e.target.closePopup();
-
-        console.log(tweetId);
 
 
 
