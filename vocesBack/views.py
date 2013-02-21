@@ -11,7 +11,7 @@ import sys
 import traceback
 
 from django.http import HttpResponse
-from dataHelper import dataSearchGeo,dataSearchGeoHash,dataSearchPointDetail
+from dataHelper import dataSearchGeo,dataSearchGeoHash,dataSearchPointDetail,dataInsertCheckIn,dataAlreadyChecked
 
 # Create your views here.
 
@@ -46,6 +46,20 @@ def searchPointDetail(request,tweetId):
     tweet = dataSearchPointDetail(tweetId)
 
     return HttpResponse(json.dumps(tweet), content_type="application/json")
+
+#alex
+def insertCheckIn(request,tweetId,fingerprint):
+    tweetId = int(tweetId)
+
+    ok = dataInsertCheckIn(tweetId,fingerprint)
+
+    return HttpResponse(json.dumps(ok), content_type="application/json")
+
+def alreadyChecked(request,fingerprint):
+    response = dataAlreadyChecked(fingerprint)
+    print "RESPONSE %s" % response
+
+    return HttpResponse(json.dumps(response), content_type="application/json")
 
 def home(request):
     return render_to_response("index.html", locals(),context_instance=RequestContext(request))

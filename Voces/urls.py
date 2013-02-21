@@ -20,7 +20,10 @@ urlpatterns = patterns('',
                        url(r'^getPointsGeo/(?P<latMin>[\d.-]+)/(?P<lngMin>[\d.-]+)/(?P<latMax>[\d.-]+)/(?P<lngMax>[\d.-]+)/$',views.searchGeo, name = 'getPointsGeo'),
                        url(r'^getPointsGeoHash/(?P<latMin>[\d.-]+)/(?P<lngMin>[\d.-]+)/(?P<latMax>[\d.-]+)/(?P<lngMax>[\d.-]+)/(?P<hashtag>[\w]+)/$',views.searchGeoHash, name = 'getPointsGeoHash'),
                        url(r'^getPointDetail/(?P<tweetId>[\d.]+)/$',views.searchPointDetail, name = 'getPointDetail'),
+                       url(r'^check/(?P<tweetId>[\d.]+)/(?P<fingerprint>[\w]+)/$',views.insertCheckIn, name = 'insertCheckIn'),
+                       url(r'^alreadyChecked/(?P<fingerprint>[\w]+)/$',views.alreadyChecked, name = 'alreadyChecked'),
                        # Uncomment the next line to enable the admin:
                        url(r'^admin/', include(admin.site.urls)),
-                       (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
+                       url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
+                       url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT, 'show_indexes': True}),
                        )

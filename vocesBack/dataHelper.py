@@ -1,7 +1,10 @@
 __author__ = 'oscarmarinmiro'
 
 from django.db import models
-from models import tweetGeo,tweetInfo,userInfo
+from django.utils import timezone
+from models import tweetGeo,tweetInfo,userInfo,checkIn
+
+from datetime import datetime
 
 MAX_RECORDS = 500
 
@@ -54,3 +57,26 @@ def dataSearchPointDetail(tweetId):
     myTweet = {'tweetId':str(tweet.tweetId),'lat':tweet.tweetgeo.lat,'lng':tweet.tweetgeo.lng,'stamp':tweet.tweetgeo.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':tweet.tweetgeo.hashTag,'votes':tweet.tweetgeo.votes,'relevance':tweet.tweetgeo.relevanceFirst,'text':tweet.text,'media':tweet.mediaUrl,'userName':tweet.userId.name,'userKarma':tweet.userId.karma,'userNick':tweet.userId.screenName,'userId':tweet.userId.userId,'userImg':tweet.userId.profileImgUrl}
 
     return myTweet
+
+#alex
+def dataInsertCheckIn(tweetId,fingerprint):
+    tweetId = str(tweetId)
+    dt_stamp = timezone.now()
+    #stamp = dt_stamp.strftime('%Y-%m-%d %H:%M:%S')
+    try:
+        print "%s--%s--%s" % (fingerprint,dt_stamp.strftime("%Y%m%d%H%M%S"),tweetId)
+        checkin = checkIn(fingerprint=fingerprint, stamp=dt_stamp, tweetId=tweetId)
+        checkin.save()
+        print "OK"
+        return {"code":"OK"}
+    except Exception as e:
+        print e
+        return {"code":"KO"}
+
+
+def dataAlreadyChecked(fingerprint):
+    checkins = checkIn.objects.filter(fingerprint=fingerprint)
+    if len(checkins) > 0:
+        return {"code":"OK"}
+    else:
+        return {"code":"KO"}

@@ -17,8 +17,8 @@ USE_L10N = True
 USE_TZ = True
 MEDIA_ROOT = join(LOCAL_PATH, "/",'vocesBack','media')
 MEDIA_URL = '/media/'
-STATIC_ROOT = ''
-STATIC_URL = '/static/'
+STATIC_ROOT = join(LOCAL_PATH,'vocesBack','static')
+STATIC_URL = '/vocesBack/static/'
 STATICFILES_DIRS = ()
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',

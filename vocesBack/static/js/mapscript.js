@@ -145,6 +145,71 @@ $(document).ready(function()
         $('#close').on("click",function(){contractInfobox();});
 
     }
+
+//alex
+    function check(tweetId,htmlText)
+    {
+        var data = [
+            tweetId,
+            navigator.userAgent,
+            [ screen.height, screen.width, screen.colorDepth ].join("x"),
+              ( new Date() ).getTimezoneOffset(),
+              !!window.sessionStorage,
+              !!window.localStorage,
+              $.map( navigator.plugins, function(p) {
+                   return [
+                         p.name,
+                         p.description,
+                         $.map( p, function(mt) {
+                           return [ mt.type, mt.suffixes ].join("~");
+                         }).join(",")
+                     ].join("::");
+                 }).join(";")
+            ].join("###");
+        var fingerprint = md5( data )
+        console.log("fingerprintCH");
+        console.log(fingerprint);
+        //$.ajax( 'alreadyChecked/'+tweetId+'/'+fingerprint );
+        var checkedUrl = 'alreadyChecked/'+fingerprint;
+        $.getJSON(checkedUrl,function(d){console.log("already");console.log(d['code']);fillInfo(tweetId,htmlText,d['code'])});
+        return true;
+    }
+
+    function fillInfo(tweetId,htmlText,ok)
+    {
+
+        if(ok == 'KO'){
+            htmlText+='<input type="button" id="check" tweetId="'+tweetId+'" />';
+        }
+        putInfo(htmlText);
+
+        $("#check").on("click",function(e)
+                    {
+                        console.log("ID");
+                        console.log(this.getAttribute("tweetId"));
+                        var data = [
+                            this.getAttribute("tweetId"),
+                            navigator.userAgent,
+                            [ screen.height, screen.width, screen.colorDepth ].join("x"),
+                            ( new Date() ).getTimezoneOffset(),
+                            !!window.sessionStorage,
+                            !!window.localStorage,
+                            $.map( navigator.plugins, function(p) {
+                              return [
+                                p.name,
+                                p.description,
+                                $.map( p, function(mt) {
+                                  return [ mt.type, mt.suffixes ].join("~");
+                                }).join(",")
+                              ].join("::");
+                            }).join(";")
+                          ].join("###");
+                          var fingerprint = md5( data )
+                          console.log(fingerprint);
+                          $.ajax( 'check/'+this.getAttribute("tweetId")+'/'+fingerprint );
+                    });
+    }
+
     function circleClick(e)
     {
 
@@ -179,10 +244,44 @@ $(document).ready(function()
 
             myHtml+='<img width="100" height="100" src="'+data.media+'"><br>';
 
-            putInfo(myHtml);
+            //alex :D
+            check(data.tweetId,myHtml);
+//+='<input type="button" id="check" tweetId="'+data.tweetId+'" />';
+            
 
-            });
+            //putInfo(myHtml);
+
+            //$(".check").on("click",function(){get(data.tweetId)});
+            $("#check").on("click",function(e)
+                    {
+                        console.log("ID");
+                        console.log(this.getAttribute("tweetId"));
+                        var data = [
+                            this.getAttribute("tweetId"),
+                            navigator.userAgent,
+                            [ screen.height, screen.width, screen.colorDepth ].join("x"),
+                            ( new Date() ).getTimezoneOffset(),
+                            !!window.sessionStorage,
+                            !!window.localStorage,
+                            $.map( navigator.plugins, function(p) {
+                              return [
+                                p.name,
+                                p.description,
+                                $.map( p, function(mt) {
+                                  return [ mt.type, mt.suffixes ].join("~");
+                                }).join(",")
+                              ].join("::");
+                            }).join(";")
+                          ].join("###");
+                          var fingerprint = md5( data )
+                          console.log(fingerprint);
+                          $.ajax( 'check/'+this.getAttribute("tweetId")+'/'+fingerprint );
+                    });
+                    
+        });
+
     }
+
         function loadMarkersFirst()
           {
         console.log("Cargando marcadores...");
