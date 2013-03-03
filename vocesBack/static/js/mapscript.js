@@ -206,7 +206,9 @@ $(document).ready(function()
                           ].join("###");
                           var fingerprint = md5( data )
                           console.log(fingerprint);
-                          $.ajax( {url:'check/'+this.getAttribute("tweetId")+'/'+fingerprint,'success':function(d,statusText,xkk){if(d['code']=='OK'){$("#check").css('display', 'none')};}} );
+                          $.ajax( {url:'check/'+this.getAttribute("tweetId")+'/'+fingerprint,
+                                   success:function(d,statusText,xkk){if(d['code']=='OK'){$("#check").css('display', 'none')};$("#checkinsCount").html('CheckIns count: '+d['count']);}} 
+                          );
                     });
     }
 
@@ -242,6 +244,7 @@ $(document).ready(function()
 
             myHtml+='<img width="100" height="100" src="'+data.media+'"><br>';
 
+            myHtml+='<div id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</div>';
             //alex :D
             check(data.tweetId,myHtml);
 //+='<input type="button" id="check" tweetId="'+data.tweetId+'" />';

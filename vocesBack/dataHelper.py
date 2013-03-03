@@ -54,7 +54,7 @@ def dataSearchPointDetail(tweetId):
 
     tweet = Tweet.objects.get(tweetId = int(tweetId))
 
-    myTweet = {'tweetId':str(tweet.tweetId),'lat':tweet.tweetgeo.lat,'lng':tweet.tweetgeo.lng,'stamp':tweet.tweetgeo.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':tweet.tweetgeo.hashTag,'votes':tweet.tweetgeo.votes,'relevance':tweet.tweetgeo.relevanceFirst,'text':tweet.text,'media':tweet.mediaUrl,'userName':tweet.userId.name,'userKarma':tweet.userId.karma,'userNick':tweet.userId.screenName,'userId':tweet.userId.userId,'userImg':tweet.userId.profileImgUrl}
+    myTweet = {'tweetId':str(tweet.tweetId),'lat':tweet.tweetgeo.lat,'lng':tweet.tweetgeo.lng,'stamp':tweet.tweetgeo.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':tweet.tweetgeo.hashTag,'votes':tweet.tweetgeo.votes,'relevance':tweet.tweetgeo.relevanceFirst,'text':tweet.text,'media':tweet.mediaUrl,'userName':tweet.userId.name,'userKarma':tweet.userId.karma,'userNick':tweet.userId.screenName,'userId':tweet.userId.userId,'userImg':tweet.userId.profileImgUrl,'relevanceFirst':tweet.tweetgeo.relevanceFirst}
 
     return myTweet
 
@@ -70,11 +70,9 @@ def dataInsertCheckIn(tweetId,fingerprint):
         print "pido con el id: %s" % tweetId
         call = tweetGeo.objects.get(tweetId=tweetId)
         call.relevanceFirst += 1
-        print "AAAAA"
-        print call.relevanceFirst
         call.save()
         print "OK"
-        return {"code":"OK"}
+        return {"code":"OK","count":call.relevanceFirst}
     except Exception as e:
         print e
         return {"code":"KO"}
