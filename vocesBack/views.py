@@ -11,7 +11,8 @@ import sys
 import traceback
 
 from django.http import HttpResponse
-from dataHelper import dataSearchGeo,dataSearchGeoHash,dataSearchPointDetail,dataInsertCheckIn,dataAlreadyChecked
+from dataHelper import dataSearchGeo,dataSearchGeoHash,dataSearchPointDetail,dataInsertCheckIn,dataAlreadyChecked,\
+                       dataGetCalls, dataGetCallCheckins, dataGetCallsInRadius
 
 # Create your views here.
 
@@ -64,68 +65,21 @@ def alreadyChecked(request,fingerprint):
 def home(request):
     return render_to_response("index.html", locals(),context_instance=RequestContext(request))
 
-# def home(request):
-#
-#     name="Home"
-#
-#     return render_to_response("home.html", locals(),context_instance=RequestContext(request))
-#
-# def contact(request):
-#
-#     name="contact"
-#
-#     return render_to_response("home.html", locals(),context_instance=RequestContext(request))
-#
-# def information(request):
-#
-#     name="information"
-#
-#     return render_to_response("home.html", locals(),context_instance=RequestContext(request))
-#
-# def work(request):
-#
-#     name="Work..."
-#
-#     categoryDict = getAllCategoriesCount()
-#     tagDict = getAllTagsCount()
-#
-#     pprint.pprint(categoryDict)
-#     pprint.pprint(tagDict)
-#
-#     posts = getAllPosts()
-#
-#     return render_to_response("work.html", locals(),context_instance=RequestContext(request))
-#
-# def filterTag(request,tagSlug):
-#
-#     name="filterTag" + tagSlug
-#
-#     categoryDict = getAllCategoriesCount()
-#     tagDict = getAllTagsCount()
-#
-#     posts = getAllPostsFilteredByTag(tagSlug)
-#
-#     return render_to_response("work.html", locals(),context_instance=RequestContext(request))
-#
-#
-# def filterCategory(request,catSlug):
-#
-#     name="filterCat" + catSlug
-#
-#     categoryDict = getAllCategoriesCount()
-#     tagDict = getAllTagsCount()
-#
-#     posts = getAllPostsFilteredByCategory(catSlug)
-#
-#     return render_to_response("work.html", locals(),context_instance=RequestContext(request))
-#
-#
-# def workDetail(request,postSlug):
-#
-#     categoryDict = getAllCategoriesCount()
-#     tagDict = getAllTagsCount()
-#
-#     post = getPostBySlug(postSlug)
-#
-#     return render_to_response("workDetail.html", locals(),context_instance=RequestContext(request))
-# # Create your views here.
+#BEGIN Calls management.
+def getCalls(request):
+    response = dataGetCalls()
+    return HttpResponse(json.dumps(response), content_type='application/json')
+
+def getCallInRadius(request, lat, lng, radius):
+    lat = float(lat)
+    lng = float(lng)
+    radius = float(radius)
+    response = dataGetCallsInRadius(lat, lng, radius)
+    return HttpResponse(json.dumps(response), content_type='application/json')
+
+def getCallCheckins(request, callId):
+    callId = int(callId)
+    response = dataGetCallCheckins(callId)
+    return HttpResponse(json.dumps(response), content_type='application/json')
+#END Calls management.
+

@@ -1,29 +1,30 @@
 # -*- coding: utf8 -*-
 
-from django.db import models
+from django.db.models import Model, CharField, BigIntegerField, IntegerField, DateTimeField, URLField, FloatField,\
+                             OneToOneField, ForeignKey
 from django.contrib.sites.models import Site
 
-class Config(models.Model):
+class Config(Model):
     """
     Config object to store global info
     """
     # This is a 'trick' to allow only one instance for site of the settings, accesible through django admin
     # Otherwise [a 'settings' instance NOT accesible through admin], this https://github.com/sciyoshi/django-dbsettings
     # could be used...
-    site = models.OneToOneField(Site)
+    site = OneToOneField(Site)
     #BEGIN Call detection constants.
     calls_twitter_account = 'vote_outliers'
     call_symbol = '¡'
     call_detection_regexp = "^@%s %s .*$" % (calls_twitter_account, call_symbol)
     #END Call detection constants.
-    oauthToken = models.CharField('Robot OauthToken',max_length=100,unique=True)
-    oauthSecret = models.CharField('Robot OauthSecret',max_length=100,unique=True)
-    consumerKey = models.CharField('Consumer key',max_length=100,unique=True)
-    consumerSecret = models.CharField('Consumer secret',max_length=100,unique=True)
-    sleepTime = models.IntegerField('Robot sleep time (seconds',unique=True)
-    maxPoints = models.IntegerField('Max number of points in a user geo Window')
-    lastId = models.BigIntegerField('Last tweet Id for internal robot management (do not touch!)')
-    lastBotTime = models.DateTimeField('Last robot wake up for internal robot management (do not touch!)')
+    oauthToken = CharField('Robot OauthToken',max_length=100,unique=True)
+    oauthSecret = CharField('Robot OauthSecret',max_length=100,unique=True)
+    consumerKey = CharField('Consumer key',max_length=100,unique=True)
+    consumerSecret = CharField('Consumer secret',max_length=100,unique=True)
+    sleepTime = IntegerField('Robot sleep time (seconds',unique=True)
+    maxPoints = IntegerField('Max number of points in a user geo Window')
+    lastId = BigIntegerField('Last tweet Id for internal robot management (do not touch!)')
+    lastBotTime = DateTimeField('Last robot wake up for internal robot management (do not touch!)')
 
     class Meta:
         verbose_name_plural = "Config"
@@ -32,15 +33,15 @@ class Config(models.Model):
         return self.site.name
 
 
-class userInfo(models.Model):
+class User(Model):
     """
     Twitter user specific-info
     """
-    userId = models.BigIntegerField(primary_key=True,unique=True,db_index=True)
-    profileImgUrl = models.URLField()
-    name = models.CharField(max_length=100)
-    screenName = models.CharField(max_length=100)
-    karma = models.IntegerField()
+    userId = BigIntegerField(primary_key=True,unique=True,db_index=True)
+    profileImgUrl = URLField()
+    name = CharField(max_length=100)
+    screenName = CharField(max_length=100)
+    karma = IntegerField()
 
     class Meta:
         verbose_name_plural = "Users"
@@ -48,52 +49,38 @@ class userInfo(models.Model):
     def __unicode__(self):
         return self.screenName
 
-class tweetInfo(models.Model):
+class Tweet(Model):
     """
-    Tweet specific info
+    Tweet specific-info
     """
-    tweetId = models.BigIntegerField(unique=True,db_index=True,primary_key=True)
-    userId = models.ForeignKey(userInfo)
-    text = models.CharField(max_length=160)
-    mediaUrl = models.URLField(null=True)
-    inReplyToId = models.BigIntegerField(db_index=True)
+    tweetId = BigIntegerField(unique=True,db_index=True,primary_key=True)
+    userId = ForeignKey(User)
+    text = CharField(max_length=160)
+    mediaUrl = URLField(null=True)
+    inReplyToId = BigIntegerField(db_index=True)
+    lat = FloatField()
+    lng = FloatField()
+    stamp = DateTimeField()
+    hashTag = CharField(max_length=100,db_index=True)
+    votes = IntegerField()
+    rt = IntegerField()
+    relevanceFirst = IntegerField()
+    relevanceSecond = IntegerField()
 
     class Meta:
-        verbose_name_plural = "TweetInfos"
+        verbose_name_plural = "Tweets"
 
     def __unicode__(self):
         return str(self.tweetId)
 
 
-class tweetGeo(models.Model):
-    """
-    Tweet specific info, constrained to geo display and operations
-    """
-    tweetId = models.BigIntegerField(unique=True,db_index=True,primary_key=True)
-    lat = models.FloatField()
-    lng = models.FloatField()
-    stamp = models.DateTimeField()
-    hashTag = models.CharField(max_length=100,db_index=True)
-    votes = models.IntegerField()
-    rt = models.IntegerField()
-    relevanceFirst = models.IntegerField()
-    relevanceSecond = models.IntegerField()
-    tweetInfo = models.OneToOneField(tweetInfo)
-
-    class Meta:
-        verbose_name_plural = "Tweet Geos"
-
-    def __unicode__(self):
-        return str(self.tweetId)
-
-
-class checkIn(models.Model):
+class CheckIn(Model):
     """
     Checkins register
     """
-    fingerprint = models.CharField(max_length=32,unique=True,db_index=True,primary_key=True)
-    stamp = models.DateTimeField()
-    tweetId = models.BigIntegerField()
+    fingerprint = CharField(max_length=32,unique=True,db_index=True,primary_key=True)
+    stamp = DateTimeField()
+    tweetId = BigIntegerField()
 
     class Meta:
         verbose_name_plural = "CheckIns"
