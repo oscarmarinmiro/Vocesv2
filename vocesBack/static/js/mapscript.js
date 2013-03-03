@@ -454,7 +454,6 @@ $(document).ready(function()
 
 	var map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,enableHighAccuracy:true});
 
-
 	map.on('locationfound', onLocationFound);
 
 	map.on('locationerror', onLocationError);
