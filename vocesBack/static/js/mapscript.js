@@ -76,6 +76,32 @@ $(document).ready(function()
 
         return false;
     }
+    //BEGIN Make call
+    function menuConvoca() {
+        var callSymbol = '%C2%A1';
+        if( /Android/i.test(navigator.userAgent) ) {
+            location = "https://twitter.com/intent/tweet?text="+replyAccount+"%20"+callSymbol+"%20";
+        }
+        else
+        {
+            if( /iPad/i.test(navigator.userAgent) ) {
+                location = "twitter://post?message="+replyAccount+"%20"+callSymbol+"%20";
+            }
+            else
+            {
+                if( /iPhone/i.test(navigator.userAgent) ) {
+                    location = "twitter://post?message="+replyAccount+"%20"+callSymbol+"%20";
+                }
+                else
+                {
+                    location = "https://twitter.com/intent/tweet?text="+replyAccount+"%20"+callSymbol+"%20";
+                }
+            }
+        }
+        console.log("¡");
+        return false;
+    }
+    //END Make call
     function menuAt()
     {
         if( /Android/i.test(navigator.userAgent) ) {
@@ -124,13 +150,14 @@ $(document).ready(function()
     {
         var myHtml="";
 
-        myHtml = '<a id="home" href="#">Home</a> | <a id="tag" href="#">#</a> | <a id="at" href="#">@</a>';
+        myHtml = '<a id="home" href="#">Home</a> | <a id="tag" href="#">#</a> | <a id="call" href="#">¡</a>';
 
         $('#infomenu').html(myHtml);
 
         $('#home').on("click",menuHome);
         $('#tag').on("click",menuHash);
-        $('#at').on("click",menuAt);
+        $('#call').on("click", menuConvoca);
+        //$('#at').on("click",menuAt);
 
     }
 

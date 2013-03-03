@@ -3,8 +3,8 @@
         "pk": 8,
         "model": "contenttypes.contenttype",
         "fields": {
-            "model": "config",
-            "name": "config",
+            "model": "Config",
+            "name": "Config",
             "app_label": "vocesBack"
         }
     },
@@ -63,20 +63,11 @@
         }
     },
     {
-        "pk": 11,
-        "model": "contenttypes.contenttype",
-        "fields": {
-            "model": "tweetgeo",
-            "name": "tweet geo",
-            "app_label": "vocesBack"
-        }
-    },
-    {
         "pk": 10,
         "model": "contenttypes.contenttype",
         "fields": {
-            "model": "tweetinfo",
-            "name": "tweet info",
+            "model": "Tweet",
+            "name": "Tweet",
             "app_label": "vocesBack"
         }
     },
@@ -93,8 +84,8 @@
         "pk": 9,
         "model": "contenttypes.contenttype",
         "fields": {
-            "model": "userinfo",
-            "name": "user info",
+            "model": "User",
+            "name": "User",
             "app_label": "vocesBack"
         }
     },
@@ -131,7 +122,7 @@
     },
     {
         "pk": 289284899,
-        "model": "vocesBack.userinfo",
+        "model": "vocesBack.User",
         "fields": {
             "profileImgUrl": "http://a0.twimg.com/profile_images/2647957708/2367032b9b30b0ded453879497a1b1f4_normal.jpeg",
             "karma": 0,
@@ -141,41 +132,14 @@
     },
     {
         "pk": 302801846957899778,
-        "model": "vocesBack.tweetinfo",
+        "model": "vocesBack.Tweet",
         "fields": {
             "text": "@vote_outliers #test nainonaiiiii http://t.co/PtKzm222",
             "userId": 289284899,
             "mediaUrl": "http://pbs.twimg.com/media/BDPErO3CAAAa_aG.jpg:thumb",
-            "inReplyToId": 666
-        }
-    },
-    {
-        "pk": 302802325280522240,
-        "model": "vocesBack.tweetinfo",
-        "fields": {
-            "text": "@vote_outliers #test nainonai http://t.co/0MDmut59",
-            "userId": 289284899,
-            "mediaUrl": "http://pbs.twimg.com/media/BDPFHEwCAAALkxz.jpg:thumb",
-            "inReplyToId": 666
-        }
-    },
-    {
-        "pk": 302847154978951168,
-        "model": "vocesBack.tweetinfo",
-        "fields": {
-            "text": "@vote_outliers #test3 hola hola",
-            "userId": 289284899,
-            "mediaUrl": "",
-            "inReplyToId": 666
-        }
-    },
-    {
-        "pk": 302801846957899778,
-        "model": "vocesBack.tweetgeo",
-        "fields": {
+            "inReplyToId": 666,
             "rt": 0,
             "votes": 0,
-            "tweetInfo": 302801846957899778,
             "relevanceSecond": 0,
             "stamp": "2013-02-16T15:29:20Z",
             "relevanceFirst": 0,
@@ -186,11 +150,14 @@
     },
     {
         "pk": 302802325280522240,
-        "model": "vocesBack.tweetgeo",
+        "model": "vocesBack.Tweet",
         "fields": {
+            "text": "@vote_outliers #test nainonai http://t.co/0MDmut59",
+            "userId": 289284899,
+            "mediaUrl": "http://pbs.twimg.com/media/BDPFHEwCAAALkxz.jpg:thumb",
+            "inReplyToId": 666,
             "rt": 0,
             "votes": 0,
-            "tweetInfo": 302802325280522240,
             "relevanceSecond": 0,
             "stamp": "2013-02-16T15:31:15Z",
             "relevanceFirst": 0,
@@ -201,11 +168,14 @@
     },
     {
         "pk": 302847154978951168,
-        "model": "vocesBack.tweetgeo",
+        "model": "vocesBack.Tweet",
         "fields": {
+            "text": "@vote_outliers #test3 hola hola",
+            "userId": 289284899,
+            "mediaUrl": "",
+            "inReplyToId": 666,
             "rt": 0,
             "votes": 0,
-            "tweetInfo": 302847154978951168,
             "relevanceSecond": 0,
             "stamp": "2013-02-16T18:29:23Z",
             "relevanceFirst": 0,
