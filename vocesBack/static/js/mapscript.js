@@ -327,7 +327,7 @@ $(document).ready(function()
     function fillInfobox()
     {
         var myHtml="";
-        myHtml = '<a id="home" href="#">Home</a> | <a id="tag" href="#">#</a> | <a id="call" href="#">¡</a> | <a id="resetCalls" href="#">Mostrar convocatorias</a>';
+        myHtml = '<a id="home" href="#">Home</a> | <a id="tag" href="#">#</a> | <a id="call" href="#">¡</a> | <a id="resetCalls" href="#">Reset</a>';
         $('#infomenu').html(myHtml);
         $('#home').on("click",menuHome);
         $('#tag').on("click",menuHash);
@@ -343,15 +343,17 @@ $(document).ready(function()
         var myUrl="getPointDetail/"+tweetId;
         $.getJSON(myUrl, function(data){
             console.log(data);
-            var myHtml = "";
-            myHtml+=data.stamp+"<br>";
-            myHtml+="@"+data.userNick+"<br>";
-            myHtml+='<img src="'+data.userImg+'"><br>';
-            myHtml+=data.userName+"<br>";
+            var myHtml = '<div class="tweet">';
+            myHtml+='<div class="meta">';
+            myHtml+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("MMM DDDo YYYY HH:mm:ss")+"</span><br>";
+            myHtml+='<span class="author">@'+data.userNick+"("+data.userName+")</span><br>";
+            myHtml+='<img class="picture" src="'+data.userImg+'"><br>';
+            myHtml+='</div>';
             myHtml+=data.text+"<br>";
             myHtml+=data.hashTag+"<br>";
             myHtml+='<img width="100" height="100" src="'+data.media+'"><br>';
             myHtml+='<div id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</div>';
+            myHtml+='</div>';
             //alex :D
             check(data.tweetId,myHtml);
             $("#check").on("click",function(e){
