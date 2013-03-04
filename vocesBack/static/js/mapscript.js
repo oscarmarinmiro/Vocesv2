@@ -273,14 +273,16 @@ $(document).ready(function()
         var callId = e.target._popup._source.__data__;
         e.target.closePopup();
         var myUrl = "getCallCheckins/"+callId+"/";
-        console('URL: ' + myUrl);
+        console.log('URL: ' + myUrl);
         $.getJSON(myUrl, function(data){
+            console.log(data);
             var callTweets = data.tweets;
+            console.log(callTweets);
             for(var i=0;i<callTweets.length;i++)
             {
                 var tweet = callTweets[i];
                 var circle = L.circle([tweet.lat,tweet.lng],CIRCLE_SIZE,{
-                    color:"black",
+                    color:"red",
                     weight:1,
                     stroke:true,
                     fillColor: c_category10[hashtagMap[tweet.hashTag]],

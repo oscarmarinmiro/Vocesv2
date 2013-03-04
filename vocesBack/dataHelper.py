@@ -86,26 +86,30 @@ def dataAlreadyChecked(fingerprint):
 
 #BEGIN Calls management.
 def __buildTweetsResult(calls):
+    result = list()
     for call in calls:
-        yield ({'id':str(call.tweetId),'lat':call.lat,'lng':call.lng,
-                'stamp':call.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':call.hashTag,'votes':call.votes,
-                'relevance':call.relevanceFirst})
+        result.append({'id':str(call.tweetId),'lat':call.lat,'lng':call.lng,
+                       'stamp':call.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':call.hashTag,'votes':call.votes,
+                       'relevance':call.relevanceFirst})
+    return result
 
 def dataGetCalls():
     calls = Tweet.objects.filter(inReplyToId=-1).order_by('-stamp')[:500]
     return {'calls': __buildTweetsResult(calls)}
 
 def __pdistance(x1, y1, x2, y2):
-    return sqrt(pow(x2 - x1, 2) + (y2 - y1, 2))
+    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2))
 
 def __withind(queryset, lat, lng, radius):
+    result = list()
     for item in queryset:
-        if __pdistance(item.lat, item.lng, lat, lng) <= radius:
-            yield item
+        distance = __pdistance(item.lat, item.lng, lat, lng)
+        if distance <= radius:
+            result.append(item)
+    return result
 
 def dataGetCallsInRadius(lat, lng, radius):
-    calls = Tweet.objects.filter(inReplyToId=-1).order_by('-stamp')
-    calls = __withind(calls, lat, lng, radius)[:500]
+    calls = __withind(Tweet.objects.filter(inReplyToId=-1).order_by('-stamp'), lat, lng, radius)[:500]
     return {'calls': __buildTweetsResult(calls)}
 
 def dataGetCallCheckins(callId):

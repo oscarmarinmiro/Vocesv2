@@ -71,7 +71,8 @@ def getCalls(request):
     response = dataGetCalls()
     return HttpResponse(json.dumps(response), content_type='application/json')
 
-def getCallInRadius(request, lat, lng, radius):
+def getCallsInRadius(request, lat, lng, radius):
+    #print "getCallInRadius lat %s--lng %s--radius %s--" % (lat, lng, radius)
     lat = float(lat)
     lng = float(lng)
     radius = float(radius)
