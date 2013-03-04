@@ -105,12 +105,6 @@ $(document).ready(function()
         return false;
     }
     //END Make call
-    //BEGIN Show calls.
-    function menuShowCalls() {
-        callDetail = false;
-        callNode = null;
-    }
-    //END Show calls.
     function menuAt()
     {
         if( /Android/i.test(navigator.userAgent) ) {
@@ -153,18 +147,6 @@ $(document).ready(function()
         $('#infoextra').html("");
 
         return false;
-
-    }
-    function fillInfobox()
-    {
-        var myHtml="";
-        myHtml = '<a id="home" href="#">Home</a> | <a id="tag" href="#">#</a> | <a id="call" href="#">¡</a> | <a id="resetCalls" href="#">Mostrar convocatorias</a>';
-        $('#infomenu').html(myHtml);
-        $('#home').on("click",menuHome);
-        $('#tag').on("click",menuHash);
-        $('#call').on("click", menuConvoca);
-        $('#resetCalls').on('click', menuShowCalls);
-        //$('#at').on("click",menuAt);
 
     }
 
@@ -278,6 +260,7 @@ $(document).ready(function()
     //BEGIN Expand call checkins.
     function getCallCheckins(e){
         callNode = e;
+        console.log(e);
         var callId = e.target._popup._source.__data__;
         e.target.closePopup();
         var myUrl = "getCallCheckins/"+callId+"/";
@@ -307,8 +290,7 @@ $(document).ready(function()
         callDetail = true;
     }
     //END Expand call checkins.
-    //BEGIN Load calls on map.
-    function loadCalls() {
+    function drawMap(){
         console.log("Cargando marcadores...");
         var myZoom = map.getZoom();
         var myLatLng = map.getCenter();
@@ -325,24 +307,41 @@ $(document).ready(function()
         map.on('moveend',loadCalls);
         map.on('zoomend',loadCalls);
         map.on('dragend',loadCalls);
+    }
+    //BEGIN Load calls on map.
+    function loadCalls() {
+        drawMap();
         if (callDetail) {
             if (callNode != null) {getCallCheckins(callNode);}
             else {getCalls();}
         } else {getCalls();}
     }
     //END Load calls on map.
+    //BEGIN Show calls.
+    function menuShowCalls() {
+        callDetail = false;
+        callNode = null;
+        loadCalls();
+    }
+    //END Show calls.
+    function fillInfobox()
+    {
+        var myHtml="";
+        myHtml = '<a id="home" href="#">Home</a> | <a id="tag" href="#">#</a> | <a id="call" href="#">¡</a> | <a id="resetCalls" href="#">Mostrar convocatorias</a>';
+        $('#infomenu').html(myHtml);
+        $('#home').on("click",menuHome);
+        $('#tag').on("click",menuHash);
+        $('#call').on("click", menuConvoca);
+        $('#resetCalls').on('click', menuShowCalls);
+        //$('#at').on("click",menuAt);
+    }
 
     function circleClick(e)
     {
-
         var tweetId = e.target._popup._source.__data__;
-
         e.target.closePopup();
         var myUrl="getPointDetail/"+tweetId;
-
-        $.getJSON(myUrl,
-            function(data)
-            {
+        $.getJSON(myUrl, function(data){
             console.log(data);
             var myHtml = "";
             myHtml+=data.stamp+"<br>";
@@ -355,9 +354,6 @@ $(document).ready(function()
             myHtml+='<div id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</div>';
             //alex :D
             check(data.tweetId,myHtml);
-            //+='<input type="button" id="check" tweetId="'+data.tweetId+'" />';
-            //putInfo(myHtml);
-            //$(".check").on("click",function(){get(data.tweetId)});
             $("#check").on("click",function(e){
                 console.log("ID");
                 console.log(this.getAttribute("tweetId"));
@@ -385,75 +381,44 @@ $(document).ready(function()
         });
     }
 
-        function loadMarkersFirst()
-          {
+    function loadMarkersFirst(){
         console.log("Cargando marcadores...");
-
-
-
         var i;
-
         var myZoom = map.getZoom();
         var myLatLng = map.getCenter();
-
         var myBounds = map.getBounds();
-
         var myUrl="getPointsGeo/"+myBounds.getSouthWest().lat+"/"+myBounds.getSouthWest().lng+"/"+myBounds.getNorthEast().lat+"/"+myBounds.getNorthEast().lng+"/";
-
         console.log(myUrl);
-
-
-          $("#map").remove();
-          $("body").append("<div id='map'></div>");
+        $("#map").remove();
+        $("body").append("<div id='map'></div>");
 ////        map = L.map('map',{touchZoom:true}).setView([40.415750595628374, -3.6977791786193848], 14);
         map = L.map('map',{touchZoom:true}).setView(myLatLng, myZoom);
         L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/997/256/{z}/{x}/{y}.png', {
             maxZoom: 18,
             attribution: 'An idea of <a href="https://twitter.com/_JuanLi">@_juanli</a> y <a href="https://twitter.com/oscarmarinmiro">@oscarmarinmiro</a>. Implemented by <a href="http://www.outliers.es">Outliers Collective </a> and <a href="https://twitter.com/nihilistBird"> @nihilistbird</a> <br>Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
         }).addTo(map);
-
         L.marker(locLatLng).addTo(map);
-
-            map.on('locationfound', onLocationFound);
-
-            map.on('locationerror', onLocationError);
-
-            map.on('moveend',loadMarkersFirst);
-            map.on('zoomend',loadMarkersFirst);
-            map.on('dragend',loadMarkersFirst);
-
-
-//
-//
-//
-//        $("<div id='cargando' class='ui-loader ui-body-b modalwindow'></div>").appendTo("body");
-//
+        map.on('locationfound', onLocationFound);
+        map.on('locationerror', onLocationError);
+        map.on('moveend',loadMarkersFirst);
+        map.on('zoomend',loadMarkersFirst);
+        map.on('dragend',loadMarkersFirst);
         $.getJSON(myUrl,
             function(data) {
-
                 var hts = data.tagFacets;
-
-
                 var index = 0;
-
                 // build a hashtag map in order to apply color scale in circle drawing
-
                 for(var ht in hts)
                 {
                     hashtagMap[ht] = index;
                     hashtagCount[ht] = hts[ht];
-
                     index++;
                 }
-
                 console.log(hashtagMap);
-
                 var points = data.points;
-
                 for(var i=0;i<points.length;i++)
                 {
                     var point = points[i];
-
                     var circle = L.circle([point.lat,point.lng],CIRCLE_SIZE,
                         {
                           color:"black",
@@ -463,81 +428,13 @@ $(document).ready(function()
                           fillOpacity: 1.0,
                           opacity: 1.0
                         });
-
-
                     circle.bindPopup("Cargando....................................................");
                     circle.__data__= point.tweetId;
-
                     circle.on('click',circleClick);
                     circle.on('mousedown',circleClick);
-
-
                     circle.addTo(map);
                 }
-//
-//
-//                first = false;
-//
-//                console.log(data.tweets.length);
-//
-//                for (var i=0;i<data.tweets.length;i++)
-//                {
-//                    var tweet = data.tweets[i];
-//
-//                    var circle = L.circle([tweet.lat, tweet.long], 50, {
-//                        color: "black",
-//                        weight:1,
-//                        stroke:true,
-//                        fillColor: tweet.color,
-//                        //fillOpacity: tweet.opacity,
-//                        //opacity:tweet.opacity
-//                        fillOpacity: 1.0,
-//                        opacity: 1.0
-//
-//                    });
-//
-//                    circle.bindPopup("Cargando....................................................");
-//                    circle.__data__= tweet.tweetId;
-//
-//                    circle.on('click',circleClick);
-//                    circle.on('mousedown',circleClick);
-//
-//
-//                    circle.addTo(map);
-//
-//
-//                }
-//
-//                var legendHtml="";
-//
-//
-//                var tuitPopHtml ='';
-//                tuitPopHtml+= '<span style="font-size:20px;color:#FFF">Click on your chosen hashtag</span><span style="font-size:15px"><br>Remember to open your Twitter mobile app before<br> and to activate geolocation<br></span>';
-//
-//                var tag;
-//
-//                for (tag in data.colores)
-//                {
-//
-//                    legendHtml+="&nbsp;<font color='"+data.colores[tag]+"'>#"+tag+"</font>";
-//                    tuitPopHtml+="&nbsp;<a style='font-size:30px;' href='https://twitter.com/intent/tweet?text="+"%23globalnoise%20%23"+tag+"'><font  color='"+data.colores[tag]+"'>#"+tag+"</font></a><br>";
-//
-//                }
-//                //console.log(legendHtml);
-//
-//                tuitPopHtml+="";
-//
-//                legendHtml+="<br><a style='background-color: #000;color:#FFF;font-size:20px;' href='#' onclick='abrePop();'>Tweet pressing here</a>";
-//
-//
-//                $('#mensaje').html();
-//                $('#mensaje').html(legendHtml+"<span style='line-height:1px;font-size:10px'><br><a href='http://voces25s.wordpress.com/'>voces25s.wordpress.com</a><br>"+moment().format('D') +" Oct 2012 "+moment().format("h.mm a")+"</span>");
-//
-//                $('#popupTuitContent').html(tuitPopHtml);
-//
-//
                }).complete(function() {
-//                $('#cargando').remove();});
             console.log("Carga completada...");});
 
     }
