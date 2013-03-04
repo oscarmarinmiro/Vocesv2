@@ -113,8 +113,11 @@ while(True):
                     #It's a call!
                     tweet.inReplyToId = -1
                 else:
-                    # We need to retrieve to which call it's replying to
-                    tweet.inReplyToId = dStatus['in_reply_to_status_id']
+                    if 'in_reply_to_status_id' in dStatus:
+                        # We need to retrieve to which call it's replying to
+                        tweet.inReplyToId = dStatus['in_reply_to_status_id']
+                    else:
+                        continue
                 #END Call detection.
                 tweet.userId = user
 

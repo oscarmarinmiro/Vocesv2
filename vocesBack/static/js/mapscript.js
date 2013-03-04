@@ -345,8 +345,8 @@ $(document).ready(function()
             console.log(data);
             var myHtml = '<div class="tweet">';
             myHtml+='<div class="meta">';
-            myHtml+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("MMM DDDo YYYY HH:mm:ss")+"</span><br>";
-            myHtml+='<span class="author">@'+data.userNick+"("+data.userName+")</span><br>";
+            myHtml+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("MMM Do YYYY HH:mm:ss")+"</span><br>";
+            myHtml+='<span class="author">@'+data.userNick+"<br/ >"+data.userName+"</span><br />";
             myHtml+='<img class="picture" src="'+data.userImg+'"><br>';
             myHtml+='</div>';
             myHtml+=data.text+"<br>";
