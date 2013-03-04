@@ -53,7 +53,7 @@ def dataSearchPointDetail(tweetId):
 
     tweet = Tweet.objects.get(tweetId = int(tweetId))
 
-    myTweet = {'tweetId':str(tweet.tweetId),'lat':tweet.tweetgeo.lat,'lng':tweet.tweetgeo.lng,'stamp':tweet.tweetgeo.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':tweet.tweetgeo.hashTag,'votes':tweet.tweetgeo.votes,'relevance':tweet.tweetgeo.relevanceFirst,'text':tweet.text,'media':tweet.mediaUrl,'userName':tweet.userId.name,'userKarma':tweet.userId.karma,'userNick':tweet.userId.screenName,'userId':tweet.userId.userId,'userImg':tweet.userId.profileImgUrl,'relevanceFirst':tweet.tweetgeo.relevanceFirst}
+    myTweet = {'tweetId':str(tweet.tweetId),'lat':tweet.lat,'lng':tweet.lng,'stamp':tweet.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':tweet.hashTag,'votes':tweet.votes,'relevance':tweet.relevanceFirst,'text':tweet.text,'media':tweet.mediaUrl,'userName':tweet.userId.name,'userKarma':tweet.userId.karma,'userNick':tweet.userId.screenName,'userId':tweet.userId.userId,'userImg':tweet.userId.profileImgUrl,'relevanceFirst':tweet.relevanceFirst}
 
     return myTweet
 
