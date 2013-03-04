@@ -46,6 +46,9 @@ var CIRCLE_SIZE = 20;
 
 var locLatLng;
 
+var callDetail = false;
+var callNode = null;
+
 $(document).ready(function()
 {
 
@@ -102,6 +105,12 @@ $(document).ready(function()
         return false;
     }
     //END Make call
+    //BEGIN Show calls.
+    function menuShowCalls() {
+        callDetail = false;
+        callNode = null;
+    }
+    //END Show calls.
     function menuAt()
     {
         if( /Android/i.test(navigator.userAgent) ) {
@@ -149,14 +158,12 @@ $(document).ready(function()
     function fillInfobox()
     {
         var myHtml="";
-
-        myHtml = '<a id="home" href="#">Home</a> | <a id="tag" href="#">#</a> | <a id="call" href="#">¡</a>';
-
+        myHtml = '<a id="home" href="#">Home</a> | <a id="tag" href="#">#</a> | <a id="call" href="#">¡</a> | <a id="resetCalls" href="#">Mostrar convocatorias</a>';
         $('#infomenu').html(myHtml);
-
         $('#home').on("click",menuHome);
         $('#tag').on("click",menuHash);
         $('#call').on("click", menuConvoca);
+        $('#resetCalls').on('click', menuShowCalls);
         //$('#at').on("click",menuAt);
 
     }
@@ -270,6 +277,7 @@ $(document).ready(function()
     //END Retrieve calls in map.
     //BEGIN Expand call checkins.
     function getCallCheckins(e){
+        callNode = e;
         var callId = e.target._popup._source.__data__;
         e.target.closePopup();
         var myUrl = "getCallCheckins/"+callId+"/";
@@ -296,6 +304,7 @@ $(document).ready(function()
                 circle.addTo(map);
             }
         }).complete(function() {console.log("Carga completada...");});
+        callDetail = true;
     }
     //END Expand call checkins.
     //BEGIN Load calls on map.
@@ -316,7 +325,10 @@ $(document).ready(function()
         map.on('moveend',loadCalls);
         map.on('zoomend',loadCalls);
         map.on('dragend',loadCalls);
-        getCalls();
+        if (callDetail) {
+            if (callNode != null) {getCallCheckins(callNode);}
+            else {getCalls();}
+        } else {getCalls();}
     }
     //END Load calls on map.
 
@@ -332,60 +344,45 @@ $(document).ready(function()
             function(data)
             {
             console.log(data);
-
             var myHtml = "";
-
             myHtml+=data.stamp+"<br>";
-
             myHtml+="@"+data.userNick+"<br>";
-
             myHtml+='<img src="'+data.userImg+'"><br>';
-
             myHtml+=data.userName+"<br>";
-
             myHtml+=data.text+"<br>";
-
             myHtml+=data.hashTag+"<br>";
-
             myHtml+='<img width="100" height="100" src="'+data.media+'"><br>';
-
             myHtml+='<div id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</div>';
             //alex :D
             check(data.tweetId,myHtml);
-//+='<input type="button" id="check" tweetId="'+data.tweetId+'" />';
-            
-
+            //+='<input type="button" id="check" tweetId="'+data.tweetId+'" />';
             //putInfo(myHtml);
-
             //$(".check").on("click",function(){get(data.tweetId)});
-            $("#check").on("click",function(e)
-                    {
-                        console.log("ID");
-                        console.log(this.getAttribute("tweetId"));
-                        var data = [
-                            this.getAttribute("tweetId"),
-                            navigator.userAgent,
-                            [ screen.height, screen.width, screen.colorDepth ].join("x"),
-                            ( new Date() ).getTimezoneOffset(),
-                            !!window.sessionStorage,
-                            !!window.localStorage,
-                            $.map( navigator.plugins, function(p) {
-                              return [
-                                p.name,
-                                p.description,
-                                $.map( p, function(mt) {
-                                  return [ mt.type, mt.suffixes ].join("~");
-                                }).join(",")
-                              ].join("::");
-                            }).join(";")
-                          ].join("###");
-                          var fingerprint = md5( data )
-                          console.log(fingerprint);
-                          $.ajax( 'check/'+this.getAttribute("tweetId")+'/'+fingerprint );
-                    });
-                    
+            $("#check").on("click",function(e){
+                console.log("ID");
+                console.log(this.getAttribute("tweetId"));
+                var data = [
+                    this.getAttribute("tweetId"),
+                    navigator.userAgent,
+                    [ screen.height, screen.width, screen.colorDepth ].join("x"),
+                    ( new Date() ).getTimezoneOffset(),
+                    !!window.sessionStorage,
+                    !!window.localStorage,
+                    $.map( navigator.plugins, function(p) {
+                      return [
+                        p.name,
+                        p.description,
+                        $.map( p, function(mt) {
+                          return [ mt.type, mt.suffixes ].join("~");
+                        }).join(",")
+                      ].join("::");
+                    }).join(";")
+                  ].join("###");
+                  var fingerprint = md5( data )
+                  console.log(fingerprint);
+                  $.ajax( 'check/'+this.getAttribute("tweetId")+'/'+fingerprint );
+            });
         });
-
     }
 
         function loadMarkersFirst()
