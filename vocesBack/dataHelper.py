@@ -8,7 +8,6 @@ from datetime import datetime
 
 MAX_RECORDS = 500
 
-
 def dataSearchGeo(latMin,lngMin,latMax,lngMax):
     tweets = Tweet.objects.filter(lat__lte=latMax,lat__gte=latMin,lng__gte=lngMin,lng__lte=lngMax).order_by('-stamp')[:500]
 
@@ -88,7 +87,7 @@ def dataAlreadyChecked(fingerprint):
 #BEGIN Calls management.
 def __buildTweetsResult(calls):
     for call in calls:
-        yield ({'callId':str(call.tweetId),'lat':call.lat,'lng':call.lng,
+        yield ({'id':str(call.tweetId),'lat':call.lat,'lng':call.lng,
                 'stamp':call.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':call.hashTag,'votes':call.votes,
                 'relevance':call.relevanceFirst})
 
@@ -105,7 +104,8 @@ def __withind(queryset, lat, lng, radius):
             yield item
 
 def dataGetCallsInRadius(lat, lng, radius):
-    calls = __withind(Tweet.objects.filter(inReplyToId=-1).order_by('-stamp'), lat, lng, radius)[:500]
+    calls = Tweet.objects.filter(inReplyToId=-1).order_by('-stamp')
+    calls = __withind(calls, lat, lng, radius)[:500]
     return {'calls': __buildTweetsResult(calls)}
 
 def dataGetCallCheckins(callId):

@@ -16,6 +16,7 @@ from dataHelper import dataSearchGeo,dataSearchGeoHash,dataSearchPointDetail,dat
 
 # Create your views here.
 
+
 # AJAX Views
 
 def searchGeo(request,latMin,lngMin,latMax,lngMax):

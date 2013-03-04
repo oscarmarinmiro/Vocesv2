@@ -239,15 +239,91 @@ $(document).ready(function()
                     });
     }
 
+    //BEGIN Retrieve calls in map.
+    function getCalls(){
+        var lat = map.getCenter().lat;
+        var lng = map.getCenter().lng;
+        var radius = 1000.0 / map.getZoom(); //Should depend on zoom level.
+        var myUrl = "getCallsInRadius/"+lat+"/"+lng+"/"+radius+"/";
+        console.log('URL: ' + myUrl);
+        $.getJSON(myUrl, function(data){
+            var calls = data.calls;
+            for(var i=0;i<calls.length;i++)
+            {
+                var call = calls[i];
+                var circle = L.circle([call.lat,call.lng],CIRCLE_SIZE,{
+                    color:"black",
+                    weight:1,
+                    stroke:true,
+                    fillColor: c_category10[hashtagMap[call.hashTag]],
+                    fillOpacity: 1.0,
+                    opacity: 1.0
+                });
+                circle.bindPopup("Cargando....................................................");
+                circle.__data__= call.id;
+                circle.on('click',getCallCheckins);
+                circle.on('mousedown',getCallCheckins);
+                circle.addTo(map);
+            }
+        }).complete(function() {console.log("Carga completada...");});
+    }
+    //END Retrieve calls in map.
+    //BEGIN Expand call checkins.
+    function getCallCheckins(e){
+        var callId = e.target._popup._source.__data__;
+        e.target.closePopup();
+        var myUrl = "getCallCheckins/"+callId+"/";
+        console('URL: ' + myUrl);
+        $.getJSON(myUrl, function(data){
+            var callTweets = data.tweets;
+            for(var i=0;i<callTweets.length;i++)
+            {
+                var tweet = callTweets[i];
+                var circle = L.circle([tweet.lat,tweet.lng],CIRCLE_SIZE,{
+                    color:"black",
+                    weight:1,
+                    stroke:true,
+                    fillColor: c_category10[hashtagMap[tweet.hashTag]],
+                    fillOpacity: 1.0,
+                    opacity: 1.0
+                });
+                circle.bindPopup("Cargando....................................................");
+                circle.__data__= tweet.id;
+                circle.on('click',circleClick);
+                circle.on('mousedown',circleClick);
+                circle.addTo(map);
+            }
+        }).complete(function() {console.log("Carga completada...");});
+    }
+    //END Expand call checkins.
+    //BEGIN Load calls on map.
+    function loadCalls() {
+        console.log("Cargando marcadores...");
+        var myZoom = map.getZoom();
+        var myLatLng = map.getCenter();
+        $("#map").remove();
+        $("body").append("<div id='map'></div>");
+        map = L.map('map',{touchZoom:true}).setView(myLatLng, myZoom);
+        L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/997/256/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: 'An idea of <a href="https://twitter.com/_JuanLi">@_juanli</a> y <a href="https://twitter.com/oscarmarinmiro">@oscarmarinmiro</a>. Implemented by <a href="http://www.outliers.es">Outliers Collective </a> and <a href="https://twitter.com/nihilistBird"> @nihilistbird</a> <br>Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
+        }).addTo(map);
+        L.marker(locLatLng).addTo(map);
+        map.on('locationfound', onLocationFound);
+        map.on('locationerror', onLocationError);
+        map.on('moveend',loadCalls);
+        map.on('zoomend',loadCalls);
+        map.on('dragend',loadCalls);
+        getCalls();
+    }
+    //END Load calls on map.
+
     function circleClick(e)
     {
 
         var tweetId = e.target._popup._source.__data__;
 
         e.target.closePopup();
-
-
-
         var myUrl="getPointDetail/"+tweetId;
 
         $.getJSON(myUrl,
@@ -477,7 +553,8 @@ $(document).ready(function()
         console.log("Location found...");
         locLatLng = e.latlng;
 
-        loadMarkersFirst();
+        //loadMarkersFirst();
+        loadCalls();
     }
 
     var  L_PREFER_CANVAS =true;
@@ -500,8 +577,8 @@ $(document).ready(function()
     var refreshId = setInterval(function()
     {
 
-        loadMarkersFirst();
-
+        //loadMarkersFirst();
+        loadCalls();
 
     }, 60000);
 

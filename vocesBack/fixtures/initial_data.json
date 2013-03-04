@@ -145,7 +145,8 @@
             "relevanceFirst": 0,
             "hashTag": "test",
             "lat": 41.357711799999997,
-            "lng": 2.09850096
+            "lng": 2.09850096,
+            "inReplyToId":-1
         }
     },
     {
@@ -163,7 +164,8 @@
             "relevanceFirst": 0,
             "hashTag": "test",
             "lat": 41.357730019999998,
-            "lng": 2.09850928
+            "lng": 2.09850928,
+            "inReplyToId": 302801846957899778
         }
     },
     {
@@ -181,7 +183,8 @@
             "relevanceFirst": 0,
             "hashTag": "test3",
             "lat": 41.357729329999998,
-            "lng": 2.09851652
+            "lng": 2.09851652,
+            "inReplyToId": 302801846957899778
         }
     },
     {

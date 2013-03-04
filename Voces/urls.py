@@ -27,8 +27,8 @@ urlpatterns = patterns('',
                        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
                        url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT, 'show_indexes': True}),
                        #BEGIN Call management urls.
-                       url(r'^getCalls$', views.getCalls, name='getCalls'),
-                       url(r'^getCallsInRadius/(?P<lat>[\d.-]+)/(?P<lng>[\d.-]+)/(?P<radius>[\d.-]+)$', views.dataGetCallsInRadius, name='getCallsInRadius'),
-                       url(r'^getCallCheckins/(?P<callId>[\d]+)$', views.getCallCheckins, name='getCallCheckins'),
+                       url(r'^getCalls/$', views.getCalls, name='getCalls'),
+                       url(r'^getCallsInRadius/(?P<lat>[\d.-]+)/(?P<lng>[\d.-]+)/(?P<radius>[\d.-]+)/$', views.dataGetCallsInRadius, name='getCallsInRadius'),
+                       url(r'^getCallCheckins/(?P<callId>[\d]+)/$', views.getCallCheckins, name='getCallCheckins'),
                        #END Call management urls.
                        )
