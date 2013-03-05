@@ -42,13 +42,13 @@ $(document).ready(function()
 {
     //TODO: modificar tamaños :-P
     var voicesIcon = L.icon({
-        iconUrl: '/imgs/voices-marker.png',
-        iconRetinaUrl: '/imgs/voices-marker@2x.png',
+        iconUrl: 'static/imgs/voices-marker.png',
+        iconRetinaUrl: 'static/imgs/voices-marker@2x.png',
         iconSize: [36, 37],
         iconAnchor: [17, 35],
         popupAnchor: [-3, -42],
-        shadowUrl: '/imgs/voices-marker-shadow.png',
-        shadowRetinaUrl: '/imgs/voices-marker-shadow@2x.png',
+        shadowUrl: 'static/imgs/voices-marker-shadow.png',
+        shadowRetinaUrl: 'static/imgs/voices-marker-shadow@2x.png',
         shadowSize: [42, 43],
         shadowAnchor: [17, 35]
     });
