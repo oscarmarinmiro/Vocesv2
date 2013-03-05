@@ -34,7 +34,7 @@ var c_category20c = [
 ];
 var hashtagMap = {};
 var hashtagCount = {};
-var CIRCLE_SIZE = 20;
+var CIRCLE_SIZE = 30;
 var locLatLng;
 var callDetail = false;
 var callNode = null;
@@ -296,24 +296,24 @@ $(document).ready(function()
         console.log("Cargando marcadores...");
         var myZoom = map.getZoom();
         var myLatLng = map.getCenter();
-        $("#map").remove();
+        /*$("#map").remove();
         $("body").append("<div id='map'></div>");
         map = L.map('map',{touchZoom:true}).setView(myLatLng, myZoom);
         //L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/997/256/{z}/{x}/{y}.png', {
         L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/88572/256/{z}/{x}/{y}.png', {
             maxZoom: 18,
             attribution: 'An idea of <a href="https://twitter.com/_JuanLi">@_juanli</a> y <a href="https://twitter.com/oscarmarinmiro">@oscarmarinmiro</a>. Implemented by <a href="http://www.outliers.es">Outliers Collective </a> and <a href="https://twitter.com/nihilistBird"> @nihilistbird</a> <br>Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
-        }).addTo(map);
+        }).addTo(map);*/
         L.marker(locLatLng).addTo(map);
-        map.on('locationfound', onLocationFound);
+        /*map.on('locationfound', onLocationFound);
         map.on('locationerror', onLocationError);
         map.on('moveend',loadCalls);
         map.on('zoomend',loadCalls);
-        map.on('dragend',loadCalls);
+        map.on('dragend',loadCalls);*/
     }
     //BEGIN Load calls on map.
     function loadCalls() {
-        //drawMap();
+        drawMap();
         if (callDetail) {
             if (callNode != null) {getCallCheckins(callNode);}
             else {getCalls();}
