@@ -251,7 +251,7 @@ $(document).ready(function()
         var call = e.target._popup._source.__data__;
         var callId = call.id;
         e.target.closePopup();
-        var myUrl="getPointDetail/"+tweetId;
+        var myUrl="getPointDetail/"+callId;
         $.getJSON(myUrl, function(data){
             console.log(data);
             var myHtml = '<div class="tweet">';
