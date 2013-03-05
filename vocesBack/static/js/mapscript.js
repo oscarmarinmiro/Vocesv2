@@ -311,7 +311,6 @@ $(document).ready(function()
         callsLayer.addLayer(callMarker);
         //callMarker.addTo(map);
         callsLayer.addLayer(callMarker);
-        e.target.closePopup();
         var myUrl = "getCallCheckins/"+callId+"/";
         console.log('URL: ' + myUrl);
         $.getJSON(myUrl, function(data){
