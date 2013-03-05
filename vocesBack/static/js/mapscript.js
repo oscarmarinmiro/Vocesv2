@@ -218,7 +218,7 @@ $(document).ready(function()
                           var fingerprint = md5( data )
                           console.log(fingerprint);
                           $.ajax( {url:'check/'+this.getAttribute("tweetId")+'/'+fingerprint,
-                                   success:function(d,statusText,xkk){if(d['code']=='OK'){$("#check").css('display', 'none')};$("#checkinsCount").html('CheckIns count: '+d['count']);}} 
+                            success:function(d,statusText,xkk){if(d['code']=='OK'){$("#check").css('display', 'none')};$("#checkinsCount").html('CheckIns count: '+d['count']);}}
                           );
                     });
     }
@@ -238,21 +238,69 @@ $(document).ready(function()
                 var callMarker = L.marker([call.lat, call.lng], {icon: voicesIcon});
                 callMarker.bindPopup("Cargando....................................................");
                 callMarker.__data__= call;
-                callMarker.on('click',getCallCheckins);
-                callMarker.on('mousedown',getCallCheckins);
+                callMarker.on('click',callClick);
+                callMarker.on('mousedown',callClick);
                 //callMarker.addTo(map);
                 callsLayer.addLayer(callMarker);
             }
         }).complete(function() {console.log("Carga completada...");});
     }
     //END Retrieve calls in map.
+    //BEGIN Get call information.
+    function callClick(e) {
+        var call = e.target._popup._source.__data__;
+        var callId = call.id;
+        e.target.closePopup();
+        var myUrl="getPointDetail/"+tweetId;
+        $.getJSON(myUrl, function(data){
+            console.log(data);
+            var myHtml = '<div class="tweet">';
+            myHtml+='<div class="meta">';
+            myHtml+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("MMM Do YYYY HH:mm:ss")+"</span><br>";
+            myHtml+='<span class="author">@'+data.userNick+"</span><br />";
+            myHtml+='<img class="picture" src="'+data.userImg+'"><br>';
+            myHtml+='</div>';
+            myHtml+='<span class="tweet">'+data.text+"</span><br>";
+            myHtml+='<span class="ht">'+data.hashTag+"</span><br>";
+            myHtml+='<a id="callFocus" href="#">Focus on this</a>';
+            myHtml+='<div id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</div>';
+            myHtml+='</div>';
+            $("#callFocus").on("click", getCallCheckins);
+            $("#callFocus").on("mousedowng", getCallCheckins);
+            //alex :D
+            check(data.tweetId,myHtml);
+            $("#check").on("click",function(e){
+                console.log("ID");
+                console.log(this.getAttribute("tweetId"));
+                var data = [
+                    this.getAttribute("tweetId"),
+                    navigator.userAgent,
+                    [ screen.height, screen.width, screen.colorDepth ].join("x"),
+                    ( new Date() ).getTimezoneOffset(),
+                    !!window.sessionStorage,
+                    !!window.localStorage,
+                    $.map( navigator.plugins, function(p) {
+                        return [
+                            p.name,
+                            p.description,
+                            $.map( p, function(mt) {
+                                return [ mt.type, mt.suffixes ].join("~");
+                            }).join(",")
+                        ].join("::");
+                    }).join(";")
+                ].join("###");
+                var fingerprint = md5( data )
+                console.log(fingerprint);
+                $.ajax( 'check/'+this.getAttribute("tweetId")+'/'+fingerprint );
+            });
+        });
+    }
+    //END Get call information.
     //BEGIN Expand call checkins.
-    function getCallCheckins(e){
-        callNode = e;
-        console.log(e);
+    function getCallCheckins(call){
+        callNode = call;
         callsLayer.clearLayers();
         //Paint call.
-        var call = e.target._popup._source.__data__;
         var callId = call.id;
         var callMarker = L.marker([call.lat, call.lng], {icon: voicesIcon});
         callMarker.bindPopup("Cargando....................................................");
@@ -284,8 +332,8 @@ $(document).ready(function()
                 });
                 circle.bindPopup("Cargando....................................................");
                 circle.__data__= tweet.id;
-                circle.on('click',circleClick);
-                circle.on('mousedown',circleClick);
+                circle.on('click',tweetClick);
+                circle.on('mousedown',tweetClick);
                 //circle.addTo(map);
                 tweetsLayer.addLayer(circle);
             }
@@ -340,7 +388,7 @@ $(document).ready(function()
         //$('#at').on("click",menuAt);
     }
 
-    function circleClick(e)
+    function tweetClick(e)
     {
         var tweetId = e.target._popup._source.__data__;
         e.target.closePopup();
@@ -350,40 +398,13 @@ $(document).ready(function()
             var myHtml = '<div class="tweet">';
             myHtml+='<div class="meta">';
             myHtml+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("MMM Do YYYY HH:mm:ss")+"</span><br>";
-            myHtml+='<span class="author">@'+data.userNick+"<br/ >"+data.userName+"</span><br />";
+            myHtml+='<span class="author">@'+data.userNick+"</span><br />";
             myHtml+='<img class="picture" src="'+data.userImg+'"><br>';
             myHtml+='</div>';
             myHtml+=data.text+"<br>";
             myHtml+=data.hashTag+"<br>";
             myHtml+='<img width="100" height="100" src="'+data.media+'"><br>';
-            myHtml+='<div id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</div>';
             myHtml+='</div>';
-            //alex :D
-            check(data.tweetId,myHtml);
-            $("#check").on("click",function(e){
-                console.log("ID");
-                console.log(this.getAttribute("tweetId"));
-                var data = [
-                    this.getAttribute("tweetId"),
-                    navigator.userAgent,
-                    [ screen.height, screen.width, screen.colorDepth ].join("x"),
-                    ( new Date() ).getTimezoneOffset(),
-                    !!window.sessionStorage,
-                    !!window.localStorage,
-                    $.map( navigator.plugins, function(p) {
-                      return [
-                        p.name,
-                        p.description,
-                        $.map( p, function(mt) {
-                          return [ mt.type, mt.suffixes ].join("~");
-                        }).join(",")
-                      ].join("::");
-                    }).join(";")
-                  ].join("###");
-                  var fingerprint = md5( data )
-                  console.log(fingerprint);
-                  $.ajax( 'check/'+this.getAttribute("tweetId")+'/'+fingerprint );
-            });
         });
     }
 
