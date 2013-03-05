@@ -265,8 +265,8 @@ $(document).ready(function()
             myHtml+='<a id="callFocus" href="#">Focus on this</a>';
             myHtml+='<div id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</div>';
             myHtml+='</div>';
-            $("#callFocus").on("click", getCallCheckins);
-            $("#callFocus").on("mousedowng", getCallCheckins);
+            $("#callFocus").on("click", getCallCheckins(call));
+            $("#callFocus").on("mousedowng", getCallCheckins(call));
             //alex :D
             check(data.tweetId,myHtml);
             $("#check").on("click",function(e){
