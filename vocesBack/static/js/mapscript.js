@@ -1,14 +1,11 @@
 // TODO: Probar el metodo de hacer layers y anyadir ahi los circulos, con el volumen de circulos esperado
 // Para ver si ha desaparecido el bug del quitar una layer (lentisimo en android) y se puede quitar
 // lo de mapa de usar y tirar
-
 var replyAccount = "@vote_outliers";
-
 var c_category10 = [
     "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
     "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"
 ];
-
 var c_category20 = [
     "#1f77b4", "#aec7e8",
     "#ff7f0e", "#ffbb78",
@@ -21,7 +18,6 @@ var c_category20 = [
     "#bcbd22", "#dbdb8d",
     "#17becf", "#9edae5"
 ];
-
 var c_category20b = [
     "#393b79", "#5254a3", "#6b6ecf", "#9c9ede",
     "#637939", "#8ca252", "#b5cf6b", "#cedb9c",
@@ -29,7 +25,6 @@ var c_category20b = [
     "#843c39", "#ad494a", "#d6616b", "#e7969c",
     "#7b4173", "#a55194", "#ce6dbd", "#de9ed6"
 ];
-
 var c_category20c = [
     "#3182bd", "#6baed6", "#9ecae1", "#c6dbef",
     "#e6550d", "#fd8d3c", "#fdae6b", "#fdd0a2",
@@ -37,25 +32,42 @@ var c_category20c = [
     "#756bb1", "#9e9ac8", "#bcbddc", "#dadaeb",
     "#636363", "#969696", "#bdbdbd", "#d9d9d9"
 ];
-
 var hashtagMap = {};
-
 var hashtagCount = {};
-
 var CIRCLE_SIZE = 20;
-
 var locLatLng;
-
 var callDetail = false;
 var callNode = null;
-
 $(document).ready(function()
 {
-
+    //TODO: modificar tamaños :-P
+    var voicesIcon = L.icon({
+        iconUrl: '/imgs/voices-marker.png',
+        iconRetinaUrl: '/imgs/voices-marker@2x.png',
+        iconSize: [36, 37],
+        iconAnchor: [17, 35],
+        popupAnchor: [-3, -42],
+        shadowUrl: '/imgs/voices-marker-shadow.png',
+        shadowRetinaUrl: '/imgs/voices-marker-shadow@2x.png',
+        shadowSize: [42, 43],
+        shadowAnchor: [17, 35]
+    });
+    var  L_PREFER_CANVAS=true;
+    var map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,enableHighAccuracy:true});
+    map.on('locationfound', onLocationFound);
+    map.on('locationerror', onLocationError);
+    //L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/997/256/{z}/{x}/{y}.png', {
+    L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/88572/256/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
+    }).addTo(map);
+    var callsLayer = L.layerGroup([])
+        .addTo(map);
+    var tweetsLayer = L.layerGroup([])
+        .addTo(map);
     function menuHome()
     {
         console.log("home");
-
         map.setView(locLatLng,18);
         return false;
     }
@@ -65,18 +77,13 @@ $(document).ready(function()
         console.log(hashtagCount);
         console.log(hashtagMap);
         console.log(c_category10);
-
         myHtml="";
-
         myHtml+="Trending Topics<br>";
-
         for (var ht in hashtagCount)
         {
             myHtml+='<span style="color:'+c_category10[hashtagMap[ht]]+';">'+ht+':'+hashtagCount[ht]+'</span><br>';
         }
-
         putInfo(myHtml);
-
         return false;
     }
     //BEGIN Make call
@@ -126,10 +133,8 @@ $(document).ready(function()
                 {
                     location = "https://twitter.com/intent/tweet?text="+replyAccount+"%20";
                 }
-
             }
         }
-
         console.log("at");
         return false;
     }
@@ -137,27 +142,19 @@ $(document).ready(function()
     function extendInfobox()
     {
         $('#infobox').css("height","300px");
-
-
     }
     function contractInfobox()
     {
         $('#infobox').css("height","50px");
-
         $('#infoextra').html("");
-
         return false;
-
     }
 
     function putInfo(html)
     {
         extendInfobox();
-
         html+='<a id="close" href="#">Cerrar</a>';
-
         $('#infoextra').html(html);
-
         $('#close').on("click",function(){contractInfobox();});
 
     }
@@ -193,12 +190,10 @@ $(document).ready(function()
 
     function fillInfo(tweetId,htmlText,ok)
     {
-
         if(ok == 'KO'){
             htmlText+='<input type="button" id="check" tweetId="'+tweetId+'" />';
         }
         putInfo(htmlText);
-
         $("#check").on("click",function(e)
                     {
                         console.log("ID");
@@ -227,9 +222,9 @@ $(document).ready(function()
                           );
                     });
     }
-
     //BEGIN Retrieve calls in map.
     function getCalls(){
+        tweetsLayer.clearLayers();
         var lat = map.getCenter().lat;
         var lng = map.getCenter().lng;
         var radius = 1000.0 / map.getZoom(); //Should depend on zoom level.
@@ -240,19 +235,13 @@ $(document).ready(function()
             for(var i=0;i<calls.length;i++)
             {
                 var call = calls[i];
-                var circle = L.circle([call.lat,call.lng],CIRCLE_SIZE,{
-                    color:"black",
-                    weight:1,
-                    stroke:true,
-                    fillColor: c_category10[hashtagMap[call.hashTag]],
-                    fillOpacity: 1.0,
-                    opacity: 1.0
-                });
-                circle.bindPopup("Cargando....................................................");
-                circle.__data__= call.id;
-                circle.on('click',getCallCheckins);
-                circle.on('mousedown',getCallCheckins);
-                circle.addTo(map);
+                var callMarker = L.marker([call.lat, call.lng], {icon: voicesIcon});
+                callMarker.bindPopup("Cargando....................................................");
+                callMarker.__data__= call;
+                callMarker.on('click',getCallCheckins);
+                callMarker.on('mousedown',getCallCheckins);
+                //callMarker.addTo(map);
+                callsLayer.addLayer(callMarker);
             }
         }).complete(function() {console.log("Carga completada...");});
     }
@@ -261,7 +250,19 @@ $(document).ready(function()
     function getCallCheckins(e){
         callNode = e;
         console.log(e);
-        var callId = e.target._popup._source.__data__;
+        callsLayer.clearLayers();
+        //Paint call.
+        var call = e.target._popup._source.__data__;
+        var callId = call.id;
+        var callMarker = L.marker([call.lat, call.lng], {icon: voicesIcon});
+        callMarker.bindPopup("Cargando....................................................");
+        callMarker.__data__= call;
+        callMarker.on('click',getCallCheckins);
+        callMarker.on('mousedown',getCallCheckins);
+        //circle.addTo(map);
+        callsLayer.addLayer(callMarker);
+        //callMarker.addTo(map);
+        callsLayer.addLayer(callMarker);
         e.target.closePopup();
         var myUrl = "getCallCheckins/"+callId+"/";
         console.log('URL: ' + myUrl);
@@ -273,7 +274,7 @@ $(document).ready(function()
             {
                 var tweet = callTweets[i];
                 var circle = L.circle([tweet.lat,tweet.lng],CIRCLE_SIZE,{
-                    color:"red",
+                    color:"#f9be17",
                     weight:1,
                     stroke:true,
                     fillColor: c_category10[hashtagMap[tweet.hashTag]],
@@ -284,7 +285,8 @@ $(document).ready(function()
                 circle.__data__= tweet.id;
                 circle.on('click',circleClick);
                 circle.on('mousedown',circleClick);
-                circle.addTo(map);
+                //circle.addTo(map);
+                tweetsLayer.addLayer(circle);
             }
         }).complete(function() {console.log("Carga completada...");});
         callDetail = true;
@@ -311,7 +313,7 @@ $(document).ready(function()
     }
     //BEGIN Load calls on map.
     function loadCalls() {
-        drawMap();
+        //drawMap();
         if (callDetail) {
             if (callNode != null) {getCallCheckins(callNode);}
             else {getCalls();}
@@ -442,47 +444,22 @@ $(document).ready(function()
             console.log("Carga completada...");});
 
     }
-
 	function onLocationError(e) {
-
         alert(e.message);
 	}
-
 	function onLocationFound(e)
 	{
         console.log("Location found...");
         locLatLng = e.latlng;
-
         //loadMarkersFirst();
         loadCalls();
     }
-
-    var  L_PREFER_CANVAS =true;
-
-	var map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,enableHighAccuracy:true});
-
-	map.on('locationfound', onLocationFound);
-
-	map.on('locationerror', onLocationError);
-
-
-    //L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/997/256/{z}/{x}/{y}.png', {
-    L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/88572/256/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
-    }).addTo(map);
-
     fillInfobox();
-
-
     var refreshId = setInterval(function()
     {
-
         //loadMarkersFirst();
         loadCalls();
-
     }, 60000);
-
 });
 
 
