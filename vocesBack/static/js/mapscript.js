@@ -274,10 +274,11 @@ $(document).ready(function()
             {
                 var tweet = callTweets[i];
                 var circle = L.circle([tweet.lat,tweet.lng],CIRCLE_SIZE,{
-                    color:"#f9be17",
+                    color:"black",
                     weight:1,
                     stroke:true,
-                    fillColor: c_category10[hashtagMap[tweet.hashTag]],
+                    //fillColor: c_category10[hashtagMap[tweet.hashTag]],
+                    fillColor: "black",
                     fillOpacity: 1.0,
                     opacity: 1.0
                 });
