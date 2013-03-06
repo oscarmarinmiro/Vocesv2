@@ -8,7 +8,7 @@ html, body, #mapPage, #map {
 }
 #infobox
 {
-    width: 200px;
+    width: 150px;
     height: 50px;
     position:fixed;
     top: 12px;
@@ -38,7 +38,7 @@ html, body, #mapPage, #map {
 .tweet .meta .date{
     font-size: 12px;
 }
-#focusButton {
+.button {
     -moz-box-shadow: inset 0px 1px 0px 0px #fceaca;
     -webkit-box-shadow: inset 0px 1px 0px 0px #fceaca;
     box-shadow: inset 0px 1px 0px 0px #fceaca;
@@ -58,14 +58,15 @@ html, body, #mapPage, #map {
     padding: 6px 6px;
     text-decoration: none;
     text-shadow: 1px 1px 0px #ce8e28;
+    cursor: pointer;
 }
-#focusButton:hover {
+.button:hover {
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffe174), color-stop(1, #ffce79));
     background: -moz-linear-gradient(center top, #ffe174 5%, #ffce79 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe174', endColorstr='#ffce79');
     background-color: #ffe174;
 }
-#focusButton:active {
+.button:active {
     position: relative;
     top: 1px;
 }

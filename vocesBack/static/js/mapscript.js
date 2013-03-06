@@ -139,7 +139,7 @@ $(document).ready(function()
     function putInfo(html)
     {
         extendInfobox();
-        html+='<a id="close" href="#">Cerrar</a>';
+        html+='<br /><a id="close" href="#">Cerrar</a>';
         $('#infoextra').html(html);
         $('#close').on("click",function(){contractInfobox();});
 
@@ -256,11 +256,9 @@ $(document).ready(function()
         console.log("Call clicked!")
         var call = e.target._popup._source.__data__;
         var callId = call.id;
-        callNode = call;
         e.target.closePopup();
         var myUrl="getPointDetail/"+callId;
         $.getJSON(myUrl, function(data){
-            console.log(data);
             var myHtml = '<div class="tweet">';
             myHtml+='<div class="meta">';
             myHtml+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("MMM Do YYYY HH:mm:ss")+"</span><br />";
@@ -270,11 +268,26 @@ $(document).ready(function()
             myHtml+='</div>';
             myHtml+='<span class="tweet">'+data.text+"</span><br />";
             myHtml+='<span class="ht">'+data.hashTag+"</span><br /><br />";
-            myHtml+='<a id="focusButton" href="#">Focus on this</a><br /><br />';
+            if(callDetail){
+                myHtml+='<div class="button" id="unfocusButton">Unfocus</div><br /><br />';
+            }else{
+                myHtml+='<div class="button" id="focusButton">Focus on this</div><br /><br />';
+            }
             myHtml+='</div>';
+            $("#unfocusButton").on("click", function() {
+                console.log("Clicked unfocus +++");
+                callDetail = false;
+                callNode = null;
+                loadCalls();
+                callClick(e);});
+            $("#focusButton").on("click", function() {
+                console.log("Clicked focus +++");
+                callNode = call;
+                callDetail = true;
+                getCallCheckins(call);
+                callClick(e)});
             //alex :D
             check(callId,myHtml);
-            $("#focusButton").on("click", getCallCheckins);
             $("#check").on("click",function(e){
                 console.log("ID");
                 console.log(this.getAttribute("tweetId"));
@@ -303,7 +316,7 @@ $(document).ready(function()
     }
     //END Get call information.
     //BEGIN Expand call checkins.
-    function getCallCheckins(){
+    function getCallCheckins(call){
         console.log("Get call checkins!!!");
         var myLatLng = map.getCenter();
         var myZoom = map.getZoom();
@@ -319,13 +332,9 @@ $(document).ready(function()
             maxZoom: 18,
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
         }).addTo(map);
-        callsLayer = L.layerGroup([])
-            .addTo(map);
-        tweetsLayer = L.layerGroup([])
-            .addTo(map);
         L.marker(locLatLng).addTo(map);
         //var call = e.target._popup._source.__data__;
-        call = callNode;
+        callNode = call;
         console.log("Antes");
         console.log(call);
         console.log("Despues");
@@ -373,22 +382,14 @@ $(document).ready(function()
         } else {getCalls();}
     }
     //END Load calls on map.
-    //BEGIN Show calls.
-    function menuShowCalls() {
-        callDetail = false;
-        callNode = null;
-        loadCalls();
-    }
-    //END Show calls.
     function fillInfobox()
     {
         var myHtml="";
-        myHtml = '<a id="home" href="#">Home</a> | <a id="tag" href="#">#</a> | <a id="call" href="#">¡</a> | <a id="resetCalls" href="#">Reset</a>';
+        myHtml = '<a id="home" href="#">Home</a> | <a id="tag" href="#">#</a> | <a id="call" href="#">¡</a>';
         $('#infomenu').html(myHtml);
         $('#home').on("click",menuHome);
         $('#tag').on("click",menuHash);
         $('#call').on("click", menuConvoca);
-        $('#resetCalls').on('click', menuShowCalls);
         //$('#at').on("click",menuAt);
     }
     function tweetClick(e)
