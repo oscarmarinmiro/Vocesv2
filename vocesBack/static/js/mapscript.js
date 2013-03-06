@@ -142,7 +142,6 @@ $(document).ready(function()
         html+='<br /><a id="close" href="#">Cerrar</a>';
         $('#infoextra').html(html);
         $('#close').on("click",function(){contractInfobox();});
-
     }
 
 //alex
@@ -268,26 +267,14 @@ $(document).ready(function()
             myHtml+='</div>';
             myHtml+='<span class="tweet">'+data.text+"</span><br />";
             myHtml+='<span class="ht">'+data.hashTag+"</span><br /><br />";
-            if(callDetail){
-                myHtml+='<div class="button" id="unfocusButton">Unfocus</div><br /><br />';
+            if (callDetail) {
+                myHtml+='<a class="button" id="unfocusButton">Unfocus</a><br /><br />';
             }else{
-                myHtml+='<div class="button" id="focusButton">Focus on this</div><br /><br />';
+                myHtml+='<a class="button" id="focusButton">Focus</a><br /><br />';
             }
             myHtml+='</div>';
-            $("#unfocusButton").on("click", function() {
-                console.log("Clicked unfocus +++");
-                callDetail = false;
-                callNode = null;
-                loadCalls();
-                callClick(e);});
-            $("#focusButton").on("click", function() {
-                console.log("Clicked focus +++");
-                callNode = call;
-                callDetail = true;
-                getCallCheckins(call);
-                callClick(e)});
             //alex :D
-            check(callId,myHtml);
+            //check(callId,myHtml);
             $("#check").on("click",function(e){
                 console.log("ID");
                 console.log(this.getAttribute("tweetId"));
@@ -312,6 +299,19 @@ $(document).ready(function()
                 console.log(fingerprint);
                 $.ajax( 'check/'+this.getAttribute("tweetId")+'/'+fingerprint );
             });
+            putInfo(myHtml);
+            $("#unfocusButton").on("click", function() {
+                console.log("Clicked unfocus +++");
+                callDetail = false;
+                callNode = null;
+                loadCalls();
+                callClick(e);});
+            $("#focusButton").on("click", function() {
+                console.log("Clicked focus +++");
+                callNode = call;
+                callDetail = true;
+                getCallCheckins(call);
+                callClick(e)});
         });
     }
     //END Get call information.
@@ -335,11 +335,6 @@ $(document).ready(function()
         L.marker(locLatLng).addTo(map);
         //var call = e.target._popup._source.__data__;
         callNode = call;
-        console.log("Antes");
-        console.log(call);
-        console.log("Despues");
-        callsLayer.clearLayers();
-        tweetsLayer.clearLayers();
         //Paint call.
         var callId = call.id;
         var callMarker = L.marker([call.lat, call.lng], {icon: voicesIcon});
@@ -350,12 +345,11 @@ $(document).ready(function()
         var myUrl = "getCallCheckins/"+callId+"/";
         console.log('URL: ' + myUrl);
         $.getJSON(myUrl, function(data){
-            console.log(data);
             var callTweets = data.tweets;
-            console.log(callTweets);
             for(var i=0;i<callTweets.length;i++)
             {
                 var tweet = callTweets[i];
+                console.log(tweet);
                 var circle = L.circle([tweet.lat,tweet.lng],CIRCLE_SIZE,{
                     color:"black",
                     weight:1,
