@@ -403,6 +403,7 @@ $(document).ready(function()
             myHtml+=data.hashTag+"<br>";
             myHtml+='<img width="100" height="100" src="'+data.media+'"><br>';
             myHtml+='</div>';
+            putInfo(myHtml);
         });
     }
 	function onLocationError(e) {
