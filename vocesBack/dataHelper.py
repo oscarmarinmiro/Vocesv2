@@ -2,7 +2,7 @@ __author__ = 'oscarmarinmiro'
 
 from django.utils import timezone
 from models import Tweet, User, CheckIn
-from math import sqrt, pow
+from math import sqrt, pow, pi, acos, sin, cos
 
 from datetime import datetime
 
@@ -98,7 +98,14 @@ def dataGetCalls():
     return {'calls': __buildTweetsResult(calls)}
 
 def __pdistance(x1, y1, x2, y2):
-    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2))
+    EARTH_RADIUS = 6378.137
+    rad_x1 = x1 / 180 * pi
+    rad_y1 = y1 / 180 * pi
+    rad_x2 = x2 / 180 * pi
+    rad_y2 = y2 / 180 * pi
+    e = acos( sin(rad_x1) * sin(rad_x2) + cos(rad_x1)*cos(rad_x2)*cos(rad_y2-rad_y1))
+    return e * EARTH_RADIUS
+    #return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2))
 
 def __withind(queryset, lat, lng, radius):
     result = list()

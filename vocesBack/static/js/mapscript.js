@@ -38,40 +38,25 @@ var CIRCLE_SIZE = 30;
 var locLatLng;
 var callDetail = false;
 var callNode = null;
+var voicesIcon = L.icon({
+    iconUrl: 'static/imgs/voices-marker.png',
+    iconRetinaUrl: 'static/imgs/voices-marker@2x.png',
+    iconSize: [36, 37],
+    iconAnchor: [17, 35],
+    popupAnchor: [-3, -42],
+    shadowUrl: 'static/imgs/voices-marker-shadow.png',
+    shadowRetinaUrl: 'static/imgs/voices-marker-shadow@2x.png',
+    shadowSize: [42, 43],
+    shadowAnchor: [17, 35]
+});
 $(document).ready(function()
 {
-    //TODO: modificar tamaños :-P
-    var voicesIcon = L.icon({
-        iconUrl: 'static/imgs/voices-marker.png',
-        iconRetinaUrl: 'static/imgs/voices-marker@2x.png',
-        iconSize: [36, 37],
-        iconAnchor: [17, 35],
-        popupAnchor: [-3, -42],
-        shadowUrl: 'static/imgs/voices-marker-shadow.png',
-        shadowRetinaUrl: 'static/imgs/voices-marker-shadow@2x.png',
-        shadowSize: [42, 43],
-        shadowAnchor: [17, 35]
-    });
-    var  L_PREFER_CANVAS=true;
-    var map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,enableHighAccuracy:true});
-    map.on('locationfound', onLocationFound);
-    map.on('locationerror', onLocationError);
-    //L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/997/256/{z}/{x}/{y}.png', {
-    L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/88572/256/{z}/{x}/{y}.png', {
-        maxZoom: 18,
-        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
-    }).addTo(map);
-    var callsLayer = L.layerGroup([])
-        .addTo(map);
-    var tweetsLayer = L.layerGroup([])
-        .addTo(map);
     function menuHome()
     {
         console.log("home");
         map.setView(locLatLng,18);
         return false;
     }
-
     function menuHash()
     {
         console.log(hashtagCount);
@@ -225,9 +210,14 @@ $(document).ready(function()
     //BEGIN Retrieve calls in map.
     function getCalls(){
         tweetsLayer.clearLayers();
+        callsLayer.clearLayers();
         var lat = map.getCenter().lat;
         var lng = map.getCenter().lng;
-        var radius = 1000.0 / map.getZoom(); //Should depend on zoom level.
+        var bounds = map.getBounds();
+        var long_1 = bounds.getWest() / 180 * Math.PI;
+        var long_2 = bounds.getEast() / 180 * Math.PI;
+        var e = Math.acos(Math.cos(long_2-long_1)) * 6378.137;
+        var radius = 2 * e;
         var myUrl = "getCallsInRadius/"+lat+"/"+lng+"/"+radius+"/";
         console.log('URL: ' + myUrl);
         $.getJSON(myUrl, function(data){
@@ -239,7 +229,6 @@ $(document).ready(function()
                 callMarker.bindPopup("Cargando....................................................");
                 callMarker.__data__= call;
                 callMarker.on('click',callClick);
-                callMarker.on('mousedown',callClick);
                 //callMarker.addTo(map);
                 callsLayer.addLayer(callMarker);
             }
@@ -250,6 +239,7 @@ $(document).ready(function()
     function callClick(e) {
         var call = e.target._popup._source.__data__;
         var callId = call.id;
+        callNode = call;
         e.target.closePopup();
         var myUrl="getPointDetail/"+callId;
         $.getJSON(myUrl, function(data){
@@ -265,8 +255,6 @@ $(document).ready(function()
             myHtml+='<a id="callFocus" href="#">Focus on this</a>';
             myHtml+='<div id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</div>';
             myHtml+='</div>';
-            $("#callFocus").on("click", getCallCheckins(call));
-            $("#callFocus").on("mousedowng", getCallCheckins(call));
             //alex :D
             check(data.tweetId,myHtml);
             $("#check").on("click",function(e){
@@ -289,24 +277,30 @@ $(document).ready(function()
                         ].join("::");
                     }).join(";")
                 ].join("###");
-                var fingerprint = md5( data )
+                var fingerprint = md5( data );
                 console.log(fingerprint);
                 $.ajax( 'check/'+this.getAttribute("tweetId")+'/'+fingerprint );
             });
+            $("#callFocus").on("click", getCallCheckins);
+            $("#callFocus").on("mousedowng", getCallCheckins);
         });
     }
     //END Get call information.
     //BEGIN Expand call checkins.
-    function getCallCheckins(call){
-        callNode = call;
+    function getCallCheckins(){
+        //var call = e.target._popup._source.__data__;
+        call = callNode;
+        console.log("Antes");
+        console.log(call);
+        console.log("Despues");
         callsLayer.clearLayers();
+        tweetsLayer.clearLayers();
         //Paint call.
         var callId = call.id;
         var callMarker = L.marker([call.lat, call.lng], {icon: voicesIcon});
         callMarker.bindPopup("Cargando....................................................");
         callMarker.__data__= call;
-        callMarker.on('click',getCallCheckins);
-        callMarker.on('mousedown',getCallCheckins);
+        callMarker.on('click',callClick);
         //circle.addTo(map);
         callsLayer.addLayer(callMarker);
         //callMarker.addTo(map);
@@ -344,20 +338,8 @@ $(document).ready(function()
         console.log("Cargando marcadores...");
         var myZoom = map.getZoom();
         var myLatLng = map.getCenter();
-        /*$("#map").remove();
-        $("body").append("<div id='map'></div>");
-        map = L.map('map',{touchZoom:true}).setView(myLatLng, myZoom);
-        //L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/997/256/{z}/{x}/{y}.png', {
-        L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/88572/256/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: 'An idea of <a href="https://twitter.com/_JuanLi">@_juanli</a> y <a href="https://twitter.com/oscarmarinmiro">@oscarmarinmiro</a>. Implemented by <a href="http://www.outliers.es">Outliers Collective </a> and <a href="https://twitter.com/nihilistBird"> @nihilistbird</a> <br>Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
-        }).addTo(map);*/
+        console.log(locLatLng);
         L.marker(locLatLng).addTo(map);
-        /*map.on('locationfound', onLocationFound);
-        map.on('locationerror', onLocationError);
-        map.on('moveend',loadCalls);
-        map.on('zoomend',loadCalls);
-        map.on('dragend',loadCalls);*/
     }
     //BEGIN Load calls on map.
     function loadCalls() {
@@ -386,7 +368,6 @@ $(document).ready(function()
         $('#resetCalls').on('click', menuShowCalls);
         //$('#at').on("click",menuAt);
     }
-
     function tweetClick(e)
     {
         var tweetId = e.target._popup._source.__data__;
@@ -406,65 +387,6 @@ $(document).ready(function()
             myHtml+='</div>';
         });
     }
-
-    function loadMarkersFirst(){
-        console.log("Cargando marcadores...");
-        var i;
-        var myZoom = map.getZoom();
-        var myLatLng = map.getCenter();
-        var myBounds = map.getBounds();
-        var myUrl="getPointsGeo/"+myBounds.getSouthWest().lat+"/"+myBounds.getSouthWest().lng+"/"+myBounds.getNorthEast().lat+"/"+myBounds.getNorthEast().lng+"/";
-        console.log(myUrl);
-        $("#map").remove();
-        $("body").append("<div id='map'></div>");
-////        map = L.map('map',{touchZoom:true}).setView([40.415750595628374, -3.6977791786193848], 14);
-        map = L.map('map',{touchZoom:true}).setView(myLatLng, myZoom);
-        //L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/997/256/{z}/{x}/{y}.png', {
-        L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/88572/256/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: 'An idea of <a href="https://twitter.com/_JuanLi">@_juanli</a> y <a href="https://twitter.com/oscarmarinmiro">@oscarmarinmiro</a>. Implemented by <a href="http://www.outliers.es">Outliers Collective </a> and <a href="https://twitter.com/nihilistBird"> @nihilistbird</a> <br>Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
-        }).addTo(map);
-        L.marker(locLatLng).addTo(map);
-        map.on('locationfound', onLocationFound);
-        map.on('locationerror', onLocationError);
-        map.on('moveend',loadMarkersFirst);
-        map.on('zoomend',loadMarkersFirst);
-        map.on('dragend',loadMarkersFirst);
-        $.getJSON(myUrl,
-            function(data) {
-                var hts = data.tagFacets;
-                var index = 0;
-                // build a hashtag map in order to apply color scale in circle drawing
-                for(var ht in hts)
-                {
-                    hashtagMap[ht] = index;
-                    hashtagCount[ht] = hts[ht];
-                    index++;
-                }
-                console.log(hashtagMap);
-                var points = data.points;
-                for(var i=0;i<points.length;i++)
-                {
-                    var point = points[i];
-                    var circle = L.circle([point.lat,point.lng],CIRCLE_SIZE,
-                        {
-                          color:"black",
-                          weight:1,
-                          stroke:true,
-                          fillColor: c_category10[hashtagMap[point.hashTag]],
-                          fillOpacity: 1.0,
-                          opacity: 1.0
-                        });
-                    circle.bindPopup("Cargando....................................................");
-                    circle.__data__= point.tweetId;
-                    circle.on('click',circleClick);
-                    circle.on('mousedown',circleClick);
-                    circle.addTo(map);
-                }
-               }).complete(function() {
-            console.log("Carga completada...");});
-
-    }
 	function onLocationError(e) {
         alert(e.message);
 	}
@@ -472,13 +394,26 @@ $(document).ready(function()
 	{
         console.log("Location found...");
         locLatLng = e.latlng;
-        //loadMarkersFirst();
         loadCalls();
     }
+    var L_PREFER_CANVAS=true;
+    var map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,enableHighAccuracy:true});
+    L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/88572/256/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
+    }).addTo(map);
+    var callsLayer = L.layerGroup([])
+        .addTo(map);
+    var tweetsLayer = L.layerGroup([])
+        .addTo(map);
+    map.on('locationfound', onLocationFound);
+    map.on('locationerror', onLocationError);
+    map.on('moveend',loadCalls);
+    map.on('zoomend',loadCalls);
+    map.on('dragend',loadCalls);
     fillInfobox();
     var refreshId = setInterval(function()
     {
-        //loadMarkersFirst();
         loadCalls();
     }, 60000);
 });
