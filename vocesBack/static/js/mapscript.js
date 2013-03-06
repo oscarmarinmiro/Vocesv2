@@ -50,10 +50,6 @@ var voicesIcon = L.icon({
     shadowAnchor: [17, 35]
 });
 var map;
-var callsLayer;
-var tweetsLayer;
-var myLatLng;
-var myBounds;
 $(document).ready(function()
 {
     function menuHome()
@@ -214,12 +210,12 @@ $(document).ready(function()
     }
     //BEGIN Retrieve calls in map.
     function getCalls(){
-        console.log(map);
-        myLatLng = map.getCenter();
-        myBounds = map.getBounds();
+        var myLatLng = map.getCenter();
+        var myBounds = map.getBounds();
+        var myZoom = map.getZoom();
         $("#map").remove();
         $("body").append('<div id="map"></div>');
-        map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,enableHighAccuracy:true});
+        map = L.map('map',{touchZoom:true}).setView(myLatLng, myZoom);
         map.on('locationfound', onLocationFound);
         map.on('locationerror', onLocationError);
         map.on('moveend',loadCalls);
@@ -229,23 +225,15 @@ $(document).ready(function()
             maxZoom: 18,
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
         }).addTo(map);
-        callsLayer = L.layerGroup([])
-            .addTo(map);
-        tweetsLayer = L.layerGroup([])
-            .addTo(map);
         L.marker(locLatLng).addTo(map);
-        tweetsLayer.clearLayers();
-        callsLayer.clearLayers();
         var lat = myLatLng.lat;
         var lng = myLatLng.lng;
         var bounds = myBounds;
-        console.log(bounds);
         var lat_1 = bounds.getSouthWest().lat / 180 * Math.PI;
         var lat_2 = bounds.getSouthEast().lat / 180 * Math.PI;
         var long_1 = bounds.getSouthWest().lng / 180 * Math.PI;
         var long_2 = bounds.getSouthEast().lng / 180 * Math.PI;
-        var ed = Math.acos(Math.sin(lat_1) * Math.sin(lat_2) + Math.cos(lat_1) * Math.cos(lat_2) * Math.cos(long_2-long_1)) * 6378.137;
-        var radius = 2 * ed;
+        var radius = Math.acos(Math.sin(lat_1) * Math.sin(lat_2) + Math.cos(lat_1) * Math.cos(lat_2) * Math.cos(long_2-long_1)) * 6378.137;
         var myUrl = "getCallsInRadius/"+lat+"/"+lng+"/"+radius+"/";
         console.log('URL: ' + myUrl);
         $.getJSON(myUrl, function(data){
@@ -258,13 +246,14 @@ $(document).ready(function()
                 callMarker.__data__= call;
                 callMarker.on('click',callClick);
                 //callMarker.addTo(map);
-                callsLayer.addLayer(callMarker);
+                callMarker.addTo(map);
             }
         }).complete(function() {console.log("Carga completada...");});
     }
     //END Retrieve calls in map.
     //BEGIN Get call information.
     function callClick(e) {
+        console.log("Call clicked!")
         var call = e.target._popup._source.__data__;
         var callId = call.id;
         callNode = call;
@@ -274,17 +263,18 @@ $(document).ready(function()
             console.log(data);
             var myHtml = '<div class="tweet">';
             myHtml+='<div class="meta">';
-            myHtml+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("MMM Do YYYY HH:mm:ss")+"</span><br>";
+            myHtml+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("MMM Do YYYY HH:mm:ss")+"</span><br />";
             myHtml+='<span class="author">@'+data.userNick+"</span><br />";
+            myHtml+='<span id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</span>';
             myHtml+='<img class="picture" src="'+data.userImg+'"><br>';
             myHtml+='</div>';
-            myHtml+='<span class="tweet">'+data.text+"</span><br>";
-            myHtml+='<span class="ht">'+data.hashTag+"</span><br>";
-            myHtml+='<a id="callFocus" href="#">Focus on this</a>';
-            myHtml+='<div id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</div>';
+            myHtml+='<span class="tweet">'+data.text+"</span><br />";
+            myHtml+='<span class="ht">'+data.hashTag+"</span><br /><br />";
+            myHtml+='<a id="focusButton" href="#">Focus on this</a><br /><br />';
             myHtml+='</div>';
             //alex :D
-            check(data.tweetId,myHtml);
+            check(callId,myHtml);
+            $("#focusButton").on("click", getCallCheckins);
             $("#check").on("click",function(e){
                 console.log("ID");
                 console.log(this.getAttribute("tweetId"));
@@ -309,19 +299,17 @@ $(document).ready(function()
                 console.log(fingerprint);
                 $.ajax( 'check/'+this.getAttribute("tweetId")+'/'+fingerprint );
             });
-            $("#callFocus").on("click", getCallCheckins);
-            $("#callFocus").on("mousedowng", getCallCheckins);
         });
     }
     //END Get call information.
     //BEGIN Expand call checkins.
     function getCallCheckins(){
-        console.log(map);
-        myLatLng = map.getCenter();
-        myBounds = map.getBounds();
+        console.log("Get call checkins!!!");
+        var myLatLng = map.getCenter();
+        var myZoom = map.getZoom();
         $("#map").remove();
         $("body").append('<div id="map"></div>');
-        map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,enableHighAccuracy:true});
+        map = L.map('map',{touchZoom:true}).setView(myLatLng, myZoom);
         map.on('locationfound', onLocationFound);
         map.on('locationerror', onLocationError);
         map.on('moveend',loadCalls);
@@ -349,10 +337,7 @@ $(document).ready(function()
         callMarker.bindPopup("Cargando....................................................");
         callMarker.__data__= call;
         callMarker.on('click',callClick);
-        //circle.addTo(map);
-        callsLayer.addLayer(callMarker);
-        //callMarker.addTo(map);
-        callsLayer.addLayer(callMarker);
+        callMarker.addTo(map);;
         var myUrl = "getCallCheckins/"+callId+"/";
         console.log('URL: ' + myUrl);
         $.getJSON(myUrl, function(data){
@@ -374,9 +359,7 @@ $(document).ready(function()
                 circle.bindPopup("Cargando....................................................");
                 circle.__data__= tweet.id;
                 circle.on('click',tweetClick);
-                circle.on('mousedown',tweetClick);
-                //circle.addTo(map);
-                tweetsLayer.addLayer(circle);
+                circle.addTo(map);
             }
         }).complete(function() {console.log("Carga completada...");});
         callDetail = true;
