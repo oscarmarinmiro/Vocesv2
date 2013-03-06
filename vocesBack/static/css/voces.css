@@ -3,7 +3,7 @@ body {
     margin: 0;
     font-family: Futura, "Helvetica Neue", sans-serif;
 }
-html, body, #map {
+html, body, #mapPage, #map {
     height: 100%;
 }
 #infobox

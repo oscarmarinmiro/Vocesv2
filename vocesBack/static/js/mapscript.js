@@ -49,6 +49,11 @@ var voicesIcon = L.icon({
     shadowSize: [42, 43],
     shadowAnchor: [17, 35]
 });
+var map;
+var callsLayer;
+var tweetsLayer;
+var myLatLng;
+var myBounds;
 $(document).ready(function()
 {
     function menuHome()
@@ -209,15 +214,38 @@ $(document).ready(function()
     }
     //BEGIN Retrieve calls in map.
     function getCalls(){
+        console.log(map);
+        myLatLng = map.getCenter();
+        myBounds = map.getBounds();
+        $("#map").remove();
+        $("body").append('<div id="map"></div>');
+        map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,enableHighAccuracy:true});
+        map.on('locationfound', onLocationFound);
+        map.on('locationerror', onLocationError);
+        map.on('moveend',loadCalls);
+        map.on('zoomend',loadCalls);
+        map.on('dragend',loadCalls);
+        L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/88572/256/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
+        }).addTo(map);
+        callsLayer = L.layerGroup([])
+            .addTo(map);
+        tweetsLayer = L.layerGroup([])
+            .addTo(map);
+        L.marker(locLatLng).addTo(map);
         tweetsLayer.clearLayers();
         callsLayer.clearLayers();
-        var lat = map.getCenter().lat;
-        var lng = map.getCenter().lng;
-        var bounds = map.getBounds();
-        var long_1 = bounds.getWest() / 180 * Math.PI;
-        var long_2 = bounds.getEast() / 180 * Math.PI;
-        var e = Math.acos(Math.cos(long_2-long_1)) * 6378.137;
-        var radius = 2 * e;
+        var lat = myLatLng.lat;
+        var lng = myLatLng.lng;
+        var bounds = myBounds;
+        console.log(bounds);
+        var lat_1 = bounds.getSouthWest().lat / 180 * Math.PI;
+        var lat_2 = bounds.getSouthEast().lat / 180 * Math.PI;
+        var long_1 = bounds.getSouthWest().lng / 180 * Math.PI;
+        var long_2 = bounds.getSouthEast().lng / 180 * Math.PI;
+        var ed = Math.acos(Math.sin(lat_1) * Math.sin(lat_2) + Math.cos(lat_1) * Math.cos(lat_2) * Math.cos(long_2-long_1)) * 6378.137;
+        var radius = 2 * ed;
         var myUrl = "getCallsInRadius/"+lat+"/"+lng+"/"+radius+"/";
         console.log('URL: ' + myUrl);
         $.getJSON(myUrl, function(data){
@@ -288,6 +316,26 @@ $(document).ready(function()
     //END Get call information.
     //BEGIN Expand call checkins.
     function getCallCheckins(){
+        console.log(map);
+        myLatLng = map.getCenter();
+        myBounds = map.getBounds();
+        $("#map").remove();
+        $("body").append('<div id="map"></div>');
+        map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,enableHighAccuracy:true});
+        map.on('locationfound', onLocationFound);
+        map.on('locationerror', onLocationError);
+        map.on('moveend',loadCalls);
+        map.on('zoomend',loadCalls);
+        map.on('dragend',loadCalls);
+        L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/88572/256/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
+        }).addTo(map);
+        callsLayer = L.layerGroup([])
+            .addTo(map);
+        tweetsLayer = L.layerGroup([])
+            .addTo(map);
+        L.marker(locLatLng).addTo(map);
         //var call = e.target._popup._source.__data__;
         call = callNode;
         console.log("Antes");
@@ -334,16 +382,8 @@ $(document).ready(function()
         callDetail = true;
     }
     //END Expand call checkins.
-    function drawMap(){
-        console.log("Cargando marcadores...");
-        var myZoom = map.getZoom();
-        var myLatLng = map.getCenter();
-        console.log(locLatLng);
-        L.marker(locLatLng).addTo(map);
-    }
     //BEGIN Load calls on map.
     function loadCalls() {
-        drawMap();
         if (callDetail) {
             if (callNode != null) {getCallCheckins(callNode);}
             else {getCalls();}
@@ -397,20 +437,13 @@ $(document).ready(function()
         loadCalls();
     }
     var L_PREFER_CANVAS=true;
-    var map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,enableHighAccuracy:true});
+    map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,enableHighAccuracy:true});
+    map.on('locationfound', onLocationFound);
+    map.on('locationerror', onLocationError);
     L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/88572/256/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
     }).addTo(map);
-    var callsLayer = L.layerGroup([])
-        .addTo(map);
-    var tweetsLayer = L.layerGroup([])
-        .addTo(map);
-    map.on('locationfound', onLocationFound);
-    map.on('locationerror', onLocationError);
-    map.on('moveend',loadCalls);
-    map.on('zoomend',loadCalls);
-    map.on('dragend',loadCalls);
     fillInfobox();
     var refreshId = setInterval(function()
     {
