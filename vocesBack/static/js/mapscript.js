@@ -274,6 +274,7 @@ $(document).ready(function(){
     //Item selected functions.
     var callSelected=function(e){
         console.log('At callSelected');
+        e.target.closePopup();
         if(callNode!=e.target._popup._source.__data__){
             callNode=e.target._popup._source.__data__;
             $.when(retrieveCallCheckins(callNode.id)).then(updateMap);
@@ -282,6 +283,7 @@ $(document).ready(function(){
     };
     var replySelected=function(e){
         console.log('At replySelected');
+        e.target.closePopup();
         replyInfo(e.target._popup._source.__data__);
     };
     //Menu functions.
