@@ -1,280 +1,176 @@
 // TODO: Probar el metodo de hacer layers y anyadir ahi los circulos, con el volumen de circulos esperado
 // Para ver si ha desaparecido el bug del quitar una layer (lentisimo en android) y se puede quitar
 // lo de mapa de usar y tirar
-var replyAccount = "@vote_outliers";
-var c_category10 = [
+var replyAccount='@vote_outliers';
+var c_category10=[
     "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
     "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"
 ];
-var c_category20 = [
-    "#1f77b4", "#aec7e8",
-    "#ff7f0e", "#ffbb78",
-    "#2ca02c", "#98df8a",
-    "#d62728", "#ff9896",
-    "#9467bd", "#c5b0d5",
-    "#8c564b", "#c49c94",
-    "#e377c2", "#f7b6d2",
-    "#7f7f7f", "#c7c7c7",
-    "#bcbd22", "#dbdb8d",
-    "#17becf", "#9edae5"
-];
-var c_category20b = [
-    "#393b79", "#5254a3", "#6b6ecf", "#9c9ede",
-    "#637939", "#8ca252", "#b5cf6b", "#cedb9c",
-    "#8c6d31", "#bd9e39", "#e7ba52", "#e7cb94",
-    "#843c39", "#ad494a", "#d6616b", "#e7969c",
-    "#7b4173", "#a55194", "#ce6dbd", "#de9ed6"
-];
-var c_category20c = [
-    "#3182bd", "#6baed6", "#9ecae1", "#c6dbef",
-    "#e6550d", "#fd8d3c", "#fdae6b", "#fdd0a2",
-    "#31a354", "#74c476", "#a1d99b", "#c7e9c0",
-    "#756bb1", "#9e9ac8", "#bcbddc", "#dadaeb",
-    "#636363", "#969696", "#bdbdbd", "#d9d9d9"
-];
-var hashtagMap = {};
-var hashtagCount = {};
-var CIRCLE_SIZE = 30;
+var hashtagMap={};
+var hashtagCount={};
+var CIRCLE_SIZE=30;
 var locLatLng;
-var callDetail = false;
-var callNode = null;
-var voicesIcon = L.icon({
-    iconUrl: 'static/imgs/voices-marker.png',
-    iconRetinaUrl: 'static/imgs/voices-marker@2x.png',
-    iconSize: [36, 37],
-    iconAnchor: [17, 35],
-    popupAnchor: [-3, -42],
-    shadowUrl: 'static/imgs/voices-marker-shadow.png',
-    shadowRetinaUrl: 'static/imgs/voices-marker-shadow@2x.png',
-    shadowSize: [42, 43],
-    shadowAnchor: [17, 35]
+var calls;
+var checkins;
+var callNode=null;
+//Icons
+var defaultIcon = L.icon({
+    iconUrl: 'static/imgs/markers/call-marker.png',
+    iconSize: [36, 36],
+    iconAnchor: [17, 34],
+    popupAnchor: [-3, -42]
 });
+var scaleIcons = [
+    L.icon({
+        iconUrl: 'static/imgs/markers/call-marker-0.png',
+        iconSize: [37, 36],
+        iconAnchor: [17, 34],
+        popupAnchor: [-3, -42]}),
+    L.icon({
+        iconUrl: 'static/imgs/markers/call-marker-1.png',
+        iconSize: [37, 36],
+        iconAnchor: [17, 34],
+        popupAnchor: [-3, -42]}),
+    L.icon({
+        iconUrl: 'static/imgs/markers/call-marker-2.png',
+        iconSize: [37, 36],
+        iconAnchor: [17, 34],
+        popupAnchor: [-3, -42]}),
+    L.icon({
+        iconUrl: 'static/imgs/markers/call-marker-3.png',
+        iconSize: [37, 36],
+        iconAnchor: [17, 34],
+        popupAnchor: [-3, -42]}),
+    L.icon({
+        iconUrl: 'static/imgs/markers/call-marker-4.png',
+        iconSize: [37, 36],
+        iconAnchor: [17, 34],
+        popupAnchor: [-3, -42]})
+];
 var map;
-$(document).ready(function()
-{
-    function menuHome()
-    {
-        console.log("home");
-        map.setView(locLatLng,18);
-        return false;
-    }
-    function menuHash()
-    {
-        console.log(hashtagCount);
-        console.log(hashtagMap);
-        console.log(c_category10);
-        myHtml="";
-        myHtml+="Trending Topics<br>";
-        for (var ht in hashtagCount)
-        {
-            myHtml+='<span style="color:'+c_category10[hashtagMap[ht]]+';">'+ht+':'+hashtagCount[ht]+'</span><br>';
-        }
-        putInfo(myHtml);
-        return false;
-    }
-    //BEGIN Make call
-    function menuConvoca() {
-        var callSymbol = '%C2%A1';
-        if( /Android/i.test(navigator.userAgent) ) {
-            location = "https://twitter.com/intent/tweet?text="+replyAccount+"%20"+callSymbol+"%20";
-        }
-        else
-        {
-            if( /iPad/i.test(navigator.userAgent) ) {
-                location = "twitter://post?message="+replyAccount+"%20"+callSymbol+"%20";
-            }
-            else
-            {
-                if( /iPhone/i.test(navigator.userAgent) ) {
-                    location = "twitter://post?message="+replyAccount+"%20"+callSymbol+"%20";
-                }
-                else
-                {
-                    location = "https://twitter.com/intent/tweet?text="+replyAccount+"%20"+callSymbol+"%20";
-                }
-            }
-        }
-        console.log("¡");
-        return false;
-    }
-    //END Make call
-    function menuAt()
-    {
-        if( /Android/i.test(navigator.userAgent) ) {
-            //window.open("https://twitter.com/intent/tweet?text="+replyAccount+"%20");
-            location = "https://twitter.com/intent/tweet?text="+replyAccount+"%20";
-        }
-        else
-        {
-            if( /iPad/i.test(navigator.userAgent) ) {
-//                window.open("twitter://post?message="+replyAccount+" ");
-                location = "twitter://post?message="+replyAccount+"%20";
-            }
-            else
-            {
-                if( /iPhone/i.test(navigator.userAgent) ) {
-                    location = "twitter://post?message="+replyAccount+"%20";
-                }
-                else
-                {
-                    location = "https://twitter.com/intent/tweet?text="+replyAccount+"%20";
-                }
-            }
-        }
-        console.log("at");
-        return false;
-    }
-
-    function extendInfobox()
-    {
-        $('#infobox').css("height","300px");
-    }
-    function contractInfobox()
-    {
-        $('#infobox').css("height","50px");
-        $('#infoextra').html("");
-        return false;
-    }
-
-    function putInfo(html)
-    {
-        extendInfobox();
-        html+='<br /><a id="close" href="#">Cerrar</a>';
-        $('#infoextra').html(html);
-        $('#close').on("click",function(){contractInfobox();});
-    }
-
-//alex
-    function check(tweetId,htmlText)
-    {
+$(document).ready(function(){
+    var decideIcon=function(level){
+        console.log('At decideIcon');
+        if(level>100){return scaleIcons[4];}
+        else if(level<=100 && level>75){return scaleIcons[3];}
+        else if(level<=75 && level>50){return scaleIcons[2];}
+        else if(level<=50 && level>25){return scaleIcons[1];}
+        else{return scaleIcons[0];}
+    };
+    var check=function(tweetId,htmlText){
+        console.log('At check');
         var data = [
             tweetId,
             navigator.userAgent,
             [ screen.height, screen.width, screen.colorDepth ].join("x"),
-              ( new Date() ).getTimezoneOffset(),
-              !!window.sessionStorage,
-              !!window.localStorage,
-              $.map( navigator.plugins, function(p) {
-                   return [
-                         p.name,
-                         p.description,
-                         $.map( p, function(mt) {
-                           return [ mt.type, mt.suffixes ].join("~");
-                         }).join(",")
-                     ].join("::");
-                 }).join(";")
-            ].join("###");
+            ( new Date() ).getTimezoneOffset(),
+            !!window.sessionStorage,
+            !!window.localStorage,
+            $.map( navigator.plugins, function(p) {
+                return [
+                    p.name,
+                    p.description,
+                    $.map( p, function(mt) {
+                        return [ mt.type, mt.suffixes ].join("~");
+                    }).join(",")
+                ].join("::");
+            }).join(";")
+        ].join("###");
         var fingerprint = md5( data )
         console.log("fingerprintCH");
         console.log(fingerprint);
-        //$.ajax( 'alreadyChecked/'+tweetId+'/'+fingerprint );
         var checkedUrl = 'alreadyChecked/'+fingerprint;
         $.getJSON(checkedUrl,function(d){console.log("already");console.log(d['code']);fillInfo(tweetId,htmlText,d['code'])});
         return true;
-    }
-
-    function fillInfo(tweetId,htmlText,ok)
-    {
+    };
+    var fillInfo=function(tweetId,htmlText,ok){
+        console.log('At fillInfo');
         if(ok == 'KO'){
             htmlText+='<input type="button" id="check" tweetId="'+tweetId+'" />';
         }
         putInfo(htmlText);
         $("#check").on("click",function(e)
-                    {
-                        console.log("ID");
-                        console.log(this.getAttribute("tweetId"));
-                        var data = [
-                            this.getAttribute("tweetId"),
-                            navigator.userAgent,
-                            [ screen.height, screen.width, screen.colorDepth ].join("x"),
-                            ( new Date() ).getTimezoneOffset(),
-                            !!window.sessionStorage,
-                            !!window.localStorage,
-                            $.map( navigator.plugins, function(p) {
-                              return [
-                                p.name,
-                                p.description,
-                                $.map( p, function(mt) {
-                                  return [ mt.type, mt.suffixes ].join("~");
-                                }).join(",")
-                              ].join("::");
-                            }).join(";")
-                          ].join("###");
-                          var fingerprint = md5( data )
-                          console.log(fingerprint);
-                          $.ajax( {url:'check/'+this.getAttribute("tweetId")+'/'+fingerprint,
-                            success:function(d,statusText,xkk){if(d['code']=='OK'){$("#check").css('display', 'none')};$("#checkinsCount").html('CheckIns count: '+d['count']);}}
-                          );
-                    });
+        {
+            console.log("ID");
+            console.log(this.getAttribute("tweetId"));
+            var data = [
+                this.getAttribute("tweetId"),
+                navigator.userAgent,
+                [ screen.height, screen.width, screen.colorDepth ].join("x"),
+                ( new Date() ).getTimezoneOffset(),
+                !!window.sessionStorage,
+                !!window.localStorage,
+                $.map( navigator.plugins, function(p) {
+                    return [
+                        p.name,
+                        p.description,
+                        $.map( p, function(mt) {
+                            return [ mt.type, mt.suffixes ].join("~");
+                        }).join(",")
+                    ].join("::");
+                }).join(";")
+            ].join("###");
+            var fingerprint = md5( data )
+            console.log(fingerprint);
+            $.ajax({url:'check/'+this.getAttribute("tweetId")+'/'+fingerprint,
+                    success:function(d,statusText,xkk){if(d['code']=='OK'){$("#check").css('display', 'none')};$("#checkinsCount").html('CheckIns count: '+d['count']);}});
+        });
     }
-    //BEGIN Retrieve calls in map.
-    function getCalls(){
-        var myLatLng = map.getCenter();
-        var myBounds = map.getBounds();
-        var myZoom = map.getZoom();
-        $("#map").remove();
-        $("body").append('<div id="map"></div>');
-        map = L.map('map',{touchZoom:true}).setView(myLatLng, myZoom);
-        map.on('locationfound', onLocationFound);
-        map.on('locationerror', onLocationError);
-        map.on('moveend',loadCalls);
-        map.on('zoomend',loadCalls);
-        map.on('dragend',loadCalls);
-        L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/88572/256/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
-        }).addTo(map);
-        L.marker(locLatLng).addTo(map);
-        var lat = myLatLng.lat;
-        var lng = myLatLng.lng;
-        var bounds = myBounds;
-        var lat_1 = bounds.getSouthWest().lat / 180 * Math.PI;
-        var lat_2 = bounds.getSouthEast().lat / 180 * Math.PI;
-        var long_1 = bounds.getSouthWest().lng / 180 * Math.PI;
-        var long_2 = bounds.getSouthEast().lng / 180 * Math.PI;
-        var radius = Math.acos(Math.sin(lat_1) * Math.sin(lat_2) + Math.cos(lat_1) * Math.cos(lat_2) * Math.cos(long_2-long_1)) * 6378.137;
-        var myUrl = "getCallsInRadius/"+lat+"/"+lng+"/"+radius+"/";
-        console.log('URL: ' + myUrl);
-        $.getJSON(myUrl, function(data){
-            var calls = data.calls;
-            for(var i=0;i<calls.length;i++)
-            {
-                var call = calls[i];
-                var callMarker = L.marker([call.lat, call.lng], {icon: voicesIcon});
-                callMarker.bindPopup("Cargando....................................................");
-                callMarker.__data__= call;
-                callMarker.on('click',callClick);
-                //callMarker.addTo(map);
-                callMarker.addTo(map);
-            }
-        }).complete(function() {console.log("Carga completada...");});
-    }
-    //END Retrieve calls in map.
-    //BEGIN Get call information.
-    function callClick(e) {
-        console.log("Call clicked!")
-        var call = e.target._popup._source.__data__;
-        var callId = call.id;
-        e.target.closePopup();
-        var myUrl="getPointDetail/"+callId;
-        $.getJSON(myUrl, function(data){
-            var myHtml = '<div class="tweet">';
-            myHtml+='<div class="meta">';
-            myHtml+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("MMM Do YYYY HH:mm:ss")+"</span><br />";
-            myHtml+='<span class="author">@'+data.userNick+"</span><br />";
-            myHtml+='<span id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</span>';
-            myHtml+='<img class="picture" src="'+data.userImg+'"><br>';
-            myHtml+='</div>';
-            myHtml+='<span class="tweet">'+data.text+"</span><br />";
-            myHtml+='<span class="ht">'+data.hashTag+"</span><br /><br />";
-            if (callDetail) {
-                myHtml+='<a class="button" id="unfocusButton">Unfocus</a><br /><br />';
-            }else{
-                myHtml+='<a class="button" id="focusButton">Focus</a><br /><br />';
-            }
-            myHtml+='</div>';
+    //Data retrieval functions.
+    var retrieveCalls=function(){
+        console.log('At retrieveCalls');
+        var url='getCalls/';
+        console.log('URL: '+url);
+        $.getJSON(url,function(data){calls = data.calls;}).complete(function(){console.log('Carga completada...' );});
+        return true;
+    };
+    var updateData=function(){
+        console.log('At updateCalls');
+        calls=retrieveCalls();
+        if(callNode!=null){retrieveCallCheckins(callNode.id);}
+    };
+    var retrieveCallCheckins=function(id){
+        console.log('At retrieveCallCheckins');
+        var url='getCallCheckins/'+id+'/';
+        console.log('URL: '+ url);
+        $.getJSON(url,function(data){checkins=data;console.log(checkins);}).complete(function(){console.log('Carga completada...');});
+        console.log(checkins);
+        return true;
+    };
+    //Display functions.
+    function openInfobox(){
+        console.log('At openInfobox');
+        $('#infobox').css('height','300px');
+    };
+    function closeInfobox(){
+        console.log('At closeInfobox');
+        $('#infoextra').html("");
+        $('#infobox').css('height','50px');
+    };
+    var display = function(html){
+        console.log('At display');
+        openInfobox();
+        html+='<br /><a id="close" href="#">Cerrar</a>';
+        $('#infoextra').html(html);
+        $('#close').on('click',function(){closeInfobox();});
+    };
+    var callInfo = function(){
+        console.log('At callInfo');
+        callId=callNode.id;
+        var url="getPointDetail/"+callId;
+        $.getJSON(url, function(data){
+            var html = '<div class="tweet">';
+            html+='<div class="meta">';
+            html+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("MMM Do YYYY HH:mm:ss")+"</span><br />";
+            html+='<span class="author">@'+data.userNick+"</span><br />";
+            html+='<span id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</span>';
+            html+='<img class="picture" src="'+data.userImg+'"><br>';
+            html+='</div>';
+            html+='<span class="tweet">'+data.text+"</span><br />";
+            html+='<span class="ht">'+data.hashTag+"</span><br /><br />";
+            html+='</div>';
             //alex :D
-            //check(callId,myHtml);
+            check(callId,html);
             $("#check").on("click",function(e){
                 console.log("ID");
                 console.log(this.getAttribute("tweetId"));
@@ -299,25 +195,27 @@ $(document).ready(function()
                 console.log(fingerprint);
                 $.ajax( 'check/'+this.getAttribute("tweetId")+'/'+fingerprint );
             });
-            putInfo(myHtml);
-            $("#unfocusButton").on("click", function() {
-                console.log("Clicked unfocus +++");
-                callDetail = false;
-                callNode = null;
-                loadCalls();
-                callClick(e);});
-            $("#focusButton").on("click", function() {
-                console.log("Clicked focus +++");
-                callNode = call;
-                callDetail = true;
-                getCallCheckins(call);
-                callClick(e)});
+            display(html);
         });
-    }
-    //END Get call information.
-    //BEGIN Expand call checkins.
-    function getCallCheckins(call){
-        console.log("Get call checkins!!!");
+    };
+    var replyInfo = function(id){
+        console.log('At replyInfo');
+        var url="getPointDetail/"+id;
+        $.getJSON(url, function(data){
+            var html = '<div class="tweet">';
+            html+='<div class="meta">';
+            html+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("MMM Do YYYY HH:mm:ss")+"</span><br />";
+            html+='<span class="author">@'+data.userNick+"</span><br />";
+            html+='<img class="picture" src="'+data.userImg+'"><br>';
+            html+='</div>';
+            html+='<span class="tweet">'+data.text+"</span><br />";
+            html+='<span class="ht">'+data.hashTag+"</span><br /><br />";
+            html+='</div>';
+            display(html);
+        });
+    };
+    var paintMap = function(){
+        console.log('At paintMap');
         var myLatLng = map.getCenter();
         var myZoom = map.getZoom();
         $("#map").remove();
@@ -325,96 +223,116 @@ $(document).ready(function()
         map = L.map('map',{touchZoom:true}).setView(myLatLng, myZoom);
         map.on('locationfound', onLocationFound);
         map.on('locationerror', onLocationError);
-        map.on('moveend',loadCalls);
-        map.on('zoomend',loadCalls);
-        map.on('dragend',loadCalls);
+        map.on('moveend',updateMap);
+        map.on('zoomend',updateMap);
+        map.on('dragend',updateMap);
         L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/88572/256/{z}/{x}/{y}.png', {
             maxZoom: 18,
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
         }).addTo(map);
+    };
+    var paintUserPosition=function(){
+        console.log('At paintUserPosition');
         L.marker(locLatLng).addTo(map);
-        //var call = e.target._popup._source.__data__;
-        callNode = call;
-        //Paint call.
-        var callId = call.id;
-        var callMarker = L.marker([call.lat, call.lng], {icon: voicesIcon});
-        callMarker.bindPopup("Cargando....................................................");
-        callMarker.__data__= call;
-        callMarker.on('click',callClick);
-        callMarker.addTo(map);;
-        var myUrl = "getCallCheckins/"+callId+"/";
-        console.log('URL: ' + myUrl);
-        $.getJSON(myUrl, function(data){
-            var callTweets = data.tweets;
-            for(var i=0;i<callTweets.length;i++)
-            {
-                var tweet = callTweets[i];
-                console.log(tweet);
-                var circle = L.circle([tweet.lat,tweet.lng],CIRCLE_SIZE,{
-                    color:"black",
-                    weight:1,
-                    stroke:true,
-                    //fillColor: c_category10[hashtagMap[tweet.hashTag]],
-                    fillColor: "black",
-                    fillOpacity: 1.0,
-                    opacity: 1.0
-                });
-                circle.bindPopup("Cargando....................................................");
-                circle.__data__= tweet.id;
-                circle.on('click',tweetClick);
-                circle.addTo(map);
+    };
+    var paintCalls=function(){
+        console.log('At paintCalls');
+        for(var i=0;i<calls.length;i++)
+        {
+            var call = calls[i];
+            var marker;
+            if(call == callNode){
+                marker = L.marker([call.lat, call.lng], {icon: decideIcon(call.votes)});
+            }else{
+                marker = L.marker([call.lat, call.lng], {icon: defaultIcon});
             }
-        }).complete(function() {console.log("Carga completada...");});
-        callDetail = true;
+            marker.bindPopup("Cargando....................................................");
+            marker.__data__= call;
+            marker.on('click',callSelected);
+            marker.addTo(map);
+        }
+    };
+    var paintCallReplies=function(){
+        console.log('At paintCallReplies');
+        console.log(checkins);
+        for(var i=0;i<checkins.tweets.length;i++){
+            var tweet=checkins.tweets[i];
+            var circle=L.circle([tweet.lat,tweet.lng],CIRCLE_SIZE,{
+                color:"black",
+                weight:1,
+                stroke:true,
+                fillColor: "black",
+                fillOpacity: 1.0,
+                opacity: 1.0
+            });
+            circle.bindPopup("Cargando....................................................");
+            circle.__data__= tweet.id;
+            circle.on('click',replySelected);
+            circle.addTo(map);
+        }
+    };
+    //Item selected functions.
+    var callSelected=function(e){
+        console.log('At callSelected');
+        if(callNode!=e.target._popup._source.__data__){
+            callNode=e.target._popup._source.__data__;
+            $.when(retrieveCallCheckins(callNode.id)).then(updateMap);
+        }else{updateMap();}
+        callInfo();
+    };
+    var replySelected=function(e){
+        console.log('At replySelected');
+        replyInfo(e.target._popup._source.__data__.id);
+    };
+    //Menu functions.
+    var menuHome=function(){
+        map.setView(locLatLng,18);
+    };
+    var menuHash=function(){
+        console.log('At menuHash');
+        console.log(c_category10);
+        html="";
+        html+="Trending Topics<br>";
+        for (var ht in hashtagCount){html+='<span style="color:'+c_category10[hashtagMap[ht]]+';">'+ht+':'+hashtagCount[ht]+'</span><br>';}
+        display(html);
     }
-    //END Expand call checkins.
-    //BEGIN Load calls on map.
-    function loadCalls() {
-        if (callDetail) {
-            if (callNode != null) {getCallCheckins(callNode);}
-            else {getCalls();}
-        } else {getCalls();}
-    }
-    //END Load calls on map.
-    function fillInfobox()
-    {
-        var myHtml="";
-        myHtml = '<a id="home" href="#">Home</a> | <a id="tag" href="#">#</a> | <a id="call" href="#">¡</a>';
-        $('#infomenu').html(myHtml);
+    var menuCall=function(){
+        console.log('At menuCall');
+        var callSymbol = '%C2%A1';
+        if(/Android/i.test(navigator.userAgent)){location = "https://twitter.com/intent/tweet?text="+replyAccount+"%20"+callSymbol+"%20";}
+        else{
+            if(/iPad/i.test(navigator.userAgent)){location = "twitter://post?message="+replyAccount+"%20"+callSymbol+"%20";}
+            else{
+                if(/iPhone/i.test(navigator.userAgent)){location = "twitter://post?message="+replyAccount+"%20"+callSymbol+"%20";}
+                else{location = "https://twitter.com/intent/tweet?text="+replyAccount+"%20"+callSymbol+"%20";}
+            }
+        }
+    };
+    var menu=function(){
+        console.log('At menu');
+        var html="";
+        html = '<a id="home" href="#">Home</a> | <a id="tag" href="#">#</a> | <a id="call" href="#">¡</a>';
+        $('#infomenu').html(html);
         $('#home').on("click",menuHome);
         $('#tag').on("click",menuHash);
-        $('#call').on("click", menuConvoca);
-        //$('#at').on("click",menuAt);
-    }
-    function tweetClick(e)
-    {
-        var tweetId = e.target._popup._source.__data__;
-        e.target.closePopup();
-        var myUrl="getPointDetail/"+tweetId;
-        $.getJSON(myUrl, function(data){
-            console.log(data);
-            var myHtml = '<div class="tweet">';
-            myHtml+='<div class="meta">';
-            myHtml+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("MMM Do YYYY HH:mm:ss")+"</span><br>";
-            myHtml+='<span class="author">@'+data.userNick+"</span><br />";
-            myHtml+='<img class="picture" src="'+data.userImg+'"><br>';
-            myHtml+='</div>';
-            myHtml+=data.text+"<br>";
-            myHtml+=data.hashTag+"<br>";
-            myHtml+='<img width="100" height="100" src="'+data.media+'"><br>';
-            myHtml+='</div>';
-            putInfo(myHtml);
-        });
-    }
-	function onLocationError(e) {
-        alert(e.message);
-	}
-	function onLocationFound(e)
-	{
+        $('#call').on("click", menuCall);
+    };
+    //Map events handlers.
+    var onLocationError=function(e){console.log('At onLocationError');alert(e.message);};
+    var onLocationFound=function(e){
+        console.log('At onLocationFound');
         console.log("Location found...");
         locLatLng = e.latlng;
-        loadCalls();
-    }
+        $.when(updateData()).then(updateMap);
+    };
+    var updateMap=function(){
+        console.log('At updateMap');
+        paintMap();
+        paintUserPosition();
+        paintCalls();
+        if(callNode!=null){paintCallReplies();}
+    };
+    //First time run.
     var L_PREFER_CANVAS=true;
     map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,enableHighAccuracy:true});
     map.on('locationfound', onLocationFound);
@@ -423,11 +341,8 @@ $(document).ready(function()
         maxZoom: 18,
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
     }).addTo(map);
-    fillInfobox();
-    var refreshId = setInterval(function()
-    {
-        loadCalls();
-    }, 60000);
+    menu();
+    var refresher = setInterval(function(){updateData();},60000);
 });
 
 
