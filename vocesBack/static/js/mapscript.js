@@ -247,6 +247,7 @@ $(document).ready(function(){
                 marker = L.marker([call.lat, call.lng], {icon: defaultIcon});
             }
             marker.__data__= call;
+            marker.bindPopup("Cargando");
             marker.on('click',callSelected);
             marker.addTo(map);
         }
@@ -265,6 +266,7 @@ $(document).ready(function(){
                 opacity: 1.0
             });
             circle.__data__= tweet.id;
+            circle.bindPopup("Cargando");
             circle.on('click',replySelected);
             circle.addTo(map);
         }
