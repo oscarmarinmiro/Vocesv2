@@ -282,7 +282,7 @@ $(document).ready(function(){
     };
     var replySelected=function(e){
         console.log('At replySelected');
-        replyInfo(e.target._popup._source.__data__.id);
+        replyInfo(e.target._popup._source.__data__);
     };
     //Menu functions.
     var menuHome=function(){
