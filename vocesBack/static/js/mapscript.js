@@ -88,7 +88,7 @@ $(document).ready(function(){
         if(ok == 'KO'){
             htmlText+='<input type="button" id="check" tweetId="'+tweetId+'" />';
         }
-        putInfo(htmlText);
+        display(htmlText);
         $("#check").on("click",function(e)
         {
             console.log("ID");
@@ -128,14 +128,13 @@ $(document).ready(function(){
         console.log('At updateCalls');
         calls=retrieveCalls();
         if(callNode!=null){retrieveCallCheckins(callNode.id);}
+        else{paintMap();}
     };
     var retrieveCallCheckins=function(id){
         console.log('At retrieveCallCheckins');
         var url='getCallCheckins/'+id+'/';
         console.log('URL: '+ url);
-        $.getJSON(url,function(data){checkins=data;console.log(checkins);}).complete(function(){console.log('Carga completada...');});
-        console.log(checkins);
-        return true;
+        $.getJSON(url,function(data){checkins=data;console.log(checkins);}).complete(function(){console.log('Carga completada...');paintMap();});
     };
     //Display functions.
     function openInfobox(){
@@ -223,34 +222,36 @@ $(document).ready(function(){
         map = L.map('map',{touchZoom:true}).setView(myLatLng, myZoom);
         map.on('locationfound', onLocationFound);
         map.on('locationerror', onLocationError);
-        map.on('moveend',updateMap);
-        map.on('zoomend',updateMap);
-        map.on('dragend',updateMap);
+        map.on('moveend',paintMap);
+        map.on('zoomend',paintMap);
+        map.on('dragend',paintMap);
         L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/88572/256/{z}/{x}/{y}.png', {
             maxZoom: 18,
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
         }).addTo(map);
+        paintUserPosition();
     };
     var paintUserPosition=function(){
         console.log('At paintUserPosition');
         L.marker(locLatLng).addTo(map);
+        paintCalls();
     };
     var paintCalls=function(){
         console.log('At paintCalls');
-        for(var i=0;i<calls.length;i++)
-        {
-            var call = calls[i];
+        for(var i=0;i<calls.length;i++){
+            var call=calls[i];
             var marker;
-            if(call == callNode){
-                marker = L.marker([call.lat, call.lng], {icon: decideIcon(call.votes)});
+            if(call==callNode){
+                marker=L.marker([call.lat, call.lng], {icon: decideIcon(call.votes)});
             }else{
-                marker = L.marker([call.lat, call.lng], {icon: defaultIcon});
+                marker=L.marker([call.lat, call.lng], {icon: defaultIcon});
             }
             marker.__data__= call;
             marker.bindPopup("Cargando");
             marker.on('click',callSelected);
             marker.addTo(map);
         }
+        if(callNode!=null){paintCallReplies();}
     };
     var paintCallReplies=function(){
         console.log('At paintCallReplies');
@@ -277,8 +278,8 @@ $(document).ready(function(){
         e.target.closePopup();
         if(callNode!=e.target._popup._source.__data__){
             callNode=e.target._popup._source.__data__;
-            $.when(retrieveCallCheckins(callNode.id)).then(updateMap);
-        }else{updateMap();}
+            retrieveCallCheckins(callNode.id);
+        }else{paintMap();}
         callInfo();
     };
     var replySelected=function(e){
@@ -325,14 +326,7 @@ $(document).ready(function(){
         console.log('At onLocationFound');
         console.log("Location found...");
         locLatLng = e.latlng;
-        $.when(updateData()).then(updateMap);
-    };
-    var updateMap=function(){
-        console.log('At updateMap');
-        paintMap();
-        paintUserPosition();
-        paintCalls();
-        if(callNode!=null){paintCallReplies();}
+        updateData();
     };
     //First time run.
     var L_PREFER_CANVAS=true;
@@ -346,6 +340,3 @@ $(document).ready(function(){
     menu();
     var refresher = setInterval(function(){updateData();},60000);
 });
-
-
-
