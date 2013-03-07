@@ -9,6 +9,6 @@ TODO
 BUGS
 ====
 
-[ ] A veces el click en convocatoria no me cambia su estado (Oscar)
-[ ] Cerrar info de todo al cerrar convocatoria
-[ ] No pedir por geo ni al cambiar el mapa. Sólo pedir cada N minutos con un setInterval; y al entrar
+[ ] A veces el click en convocatoria no me cambia su estado (Report:Oscar)
+[ ] Cerrar info de todo al cerrar convocatoria (Report:Oscar)
+[ ] No pedir por geo ni al cambiar el mapa. Sólo pedir cada N minutos con un setInterval; y al entrar (Report:Oscar)
