@@ -246,7 +246,6 @@ $(document).ready(function(){
             }else{
                 marker = L.marker([call.lat, call.lng], {icon: defaultIcon});
             }
-            marker.bindPopup("Cargando....................................................");
             marker.__data__= call;
             marker.on('click',callSelected);
             marker.addTo(map);
@@ -265,7 +264,6 @@ $(document).ready(function(){
                 fillOpacity: 1.0,
                 opacity: 1.0
             });
-            circle.bindPopup("Cargando....................................................");
             circle.__data__= tweet.id;
             circle.on('click',replySelected);
             circle.addTo(map);
