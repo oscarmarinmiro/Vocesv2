@@ -13,6 +13,8 @@ var locLatLng;
 var calls;
 var checkins;
 var callNode=null;
+var callsLayerGroup;
+var checkinsLayerGroup;
 //Icons
 var defaultIcon = L.icon({
     iconUrl: 'static/imgs/markers/call-marker.png',
@@ -89,12 +91,11 @@ $(document).ready(function(){
             htmlText+='<input type="button" id="check" tweetId="'+tweetId+'" />';
         }
         display(htmlText);
-        $("#check").on("click",function(e)
-        {
-            console.log("ID");
-            console.log(this.getAttribute("tweetId"));
+        $("#check").on('click',function(e){
+            console.log('ID');
+            console.log(this.getAttribute('tweetId'));
             var data = [
-                this.getAttribute("tweetId"),
+                this.getAttribute('tweetId'),
                 navigator.userAgent,
                 [ screen.height, screen.width, screen.colorDepth ].join("x"),
                 ( new Date() ).getTimezoneOffset(),
@@ -109,11 +110,11 @@ $(document).ready(function(){
                         }).join(",")
                     ].join("::");
                 }).join(";")
-            ].join("###");
+            ].join('###');
             var fingerprint = md5( data )
             console.log(fingerprint);
-            $.ajax({url:'check/'+this.getAttribute("tweetId")+'/'+fingerprint,
-                    success:function(d,statusText,xkk){if(d['code']=='OK'){$("#check").css('display', 'none')};$("#checkinsCount").html('CheckIns count: '+d['count']);}});
+            $.ajax({url:'check/'+this.getAttribute('tweetId')+'/'+fingerprint,
+                    success:function(d,statusText,xkk){if(d['code']=='OK'){$("#check").css('display', 'none')};$('#checkinsCount').html('CheckIns count: '+d['count']);}});
         });
     }
     //Data retrieval functions.
@@ -213,8 +214,8 @@ $(document).ready(function(){
             display(html);
         });
     };
-    var paintMap = function(){
-        console.log('At paintMap');
+    var paintMapFirstTime = function(){
+        console.log('At paintMapFirstTime');
         var myLatLng = map.getCenter();
         var myZoom = map.getZoom();
         $("#map").remove();
@@ -229,6 +230,13 @@ $(document).ready(function(){
             maxZoom: 18,
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
         }).addTo(map);
+        callsLayerGroup=L.layerGroup([]).addTo(map);
+        checkinsLayerGroup=L.layerGroup([]).addTo(map);
+    }
+    var paintMap=function(){
+        console.log('At paintMap');
+        callsLayerGroup.clearLayers();
+        checkinsLayerGroup.clearLayers();
         paintUserPosition();
     };
     var paintUserPosition=function(){
@@ -249,7 +257,7 @@ $(document).ready(function(){
             marker.__data__= call;
             marker.bindPopup("Cargando");
             marker.on('click',callSelected);
-            marker.addTo(map);
+            callsLayerGroup.addLayer(marker);
         }
         if(callNode!=null){paintCallReplies();}
     };
@@ -269,18 +277,27 @@ $(document).ready(function(){
             circle.__data__= tweet.id;
             circle.bindPopup("Cargando");
             circle.on('click',replySelected);
-            circle.addTo(map);
+            checkinsLayerGroup.addLayer(circle);
         }
     };
     //Item selected functions.
     var callSelected=function(e){
         console.log('At callSelected');
         e.target.closePopup();
-        if(callNode!=e.target._popup._source.__data__){
+        if(callNode==null){
             callNode=e.target._popup._source.__data__;
             retrieveCallCheckins(callNode.id);
-        }else{paintMap();}
-        callInfo();
+            callInfo();
+        }else if(callNode!=e.target._popup._source.__data__){
+            callNode=e.target._popup._source.__data__;
+            retrieveCallCheckins(callNode.id);
+            callInfo();
+        }else{
+            callNode=null;
+            checkins=null;
+            paintMap();
+            closeInfobox();
+        }
     };
     var replySelected=function(e){
         console.log('At replySelected');
@@ -326,6 +343,7 @@ $(document).ready(function(){
         console.log('At onLocationFound');
         console.log("Location found...");
         locLatLng = e.latlng;
+        paintMapFirstTime();
         updateData();
     };
     //First time run.
@@ -338,5 +356,5 @@ $(document).ready(function(){
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
     }).addTo(map);
     menu();
-    var refresher = setInterval(function(){updateData();},60000);
+    var refresher = setInterval(function(){updateData();},600000);
 });
