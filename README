@@ -5,6 +5,7 @@ TODO
 [ ] Iconos de convocatoria
 [ ] Maqueta y CSS
 [ ] Integrar checkins
+[ ] Integrar trending topics
 [ ] Datos de pega para probar (con muchas convocatorias [100?] y unos 20 puntos por convocatoria)
 
 BUGS
@@ -14,5 +15,5 @@ BUGS
 diferentes convocatorias (haciendo el tour), pero no sé si está pidiendo algo de red que no llega
 [ ] Cerrar info de todo al cerrar convocatoria (Report:Oscar)
 [x] No pedir por geo ni al cambiar el mapa. Sólo pedir cada N minutos con un setInterval; y al entrar (Report:Oscar)
-[x] Es posible ordenar de diferente manera para que al solapar marquer de posición con uno de convocatoria, no me joda la interactividad
+[ ] Es posible ordenar de diferente manera para que al solapar marquer de posición con uno de convocatoria, no me joda la interactividad
 porque el de posición sale 'al frente' ?
