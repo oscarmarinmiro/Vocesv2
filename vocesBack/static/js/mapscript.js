@@ -59,63 +59,16 @@ $(document).ready(function(){
         else if(level<=50 && level>25){return scaleIcons[1];}
         else{return scaleIcons[0];}
     };
-    var check=function(tweetId,htmlText){
-        console.log('At check');
-        var data = [
-            tweetId,
-            navigator.userAgent,
-            [ screen.height, screen.width, screen.colorDepth ].join("x"),
-            ( new Date() ).getTimezoneOffset(),
-            !!window.sessionStorage,
-            !!window.localStorage,
-            $.map( navigator.plugins, function(p) {
-                return [
-                    p.name,
-                    p.description,
-                    $.map( p, function(mt) {
-                        return [ mt.type, mt.suffixes ].join("~");
-                    }).join(",")
-                ].join("::");
-            }).join(";")
-        ].join("###");
-        var fingerprint = md5( data )
-        console.log("fingerprintCH");
-        console.log(fingerprint);
-        var checkedUrl = 'alreadyChecked/'+fingerprint;
-        $.getJSON(checkedUrl,function(d){console.log("already");console.log(d['code']);fillInfo(tweetId,htmlText,d['code'])});
-        return true;
-    };
-    var fillInfo=function(tweetId,htmlText,ok){
-        console.log('At fillInfo');
-        if(ok == 'KO'){
-            htmlText+='<input type="button" id="check" tweetId="'+tweetId+'" />';
+    var checkinMe=function(id){
+        console.log('At checkinMe');
+        if(/Android/i.test(navigator.userAgent)){location = 'https://twitter.com/intent/tweet?in_reply_to_status_id='+id+'&text='+replyAccount+'%20';}
+        else{
+            if(/iPad/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+id+'&message='+replyAccount+'%20';}
+            else{
+                if(/iPhone/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+id+'&message='+replyAccount+'%20';}
+                else{location = 'https://twitter.com/intent/tweet?in_reply_to_status_id='+id+'&text='+replyAccount+'%20';}
+            }
         }
-        display(htmlText);
-        $("#check").on('click',function(e){
-            console.log('ID');
-            console.log(this.getAttribute('tweetId'));
-            var data = [
-                this.getAttribute('tweetId'),
-                navigator.userAgent,
-                [ screen.height, screen.width, screen.colorDepth ].join("x"),
-                ( new Date() ).getTimezoneOffset(),
-                !!window.sessionStorage,
-                !!window.localStorage,
-                $.map( navigator.plugins, function(p) {
-                    return [
-                        p.name,
-                        p.description,
-                        $.map( p, function(mt) {
-                            return [ mt.type, mt.suffixes ].join("~");
-                        }).join(",")
-                    ].join("::");
-                }).join(";")
-            ].join('###');
-            var fingerprint = md5( data )
-            console.log(fingerprint);
-            $.ajax({url:'check/'+this.getAttribute('tweetId')+'/'+fingerprint,
-                    success:function(d,statusText,xkk){if(d['code']=='OK'){$("#check").css('display', 'none')};$('#checkinsCount').html('CheckIns count: '+d['count']);}});
-        });
     }
     //Data retrieval functions.
     var retrieveCalls=function(){
@@ -168,33 +121,9 @@ $(document).ready(function(){
             html+='</div>';
             html+='<span class="tweet">'+data.text+"</span><br />";
             html+='<span class="ht">'+data.hashTag+"</span><br /><br />";
+            html+='<span class="button" id="checkin">Checkin</span><br /><br />';
             html+='</div>';
-            //alex :D
-            check(callId,html);
-            $("#check").on("click",function(e){
-                console.log("ID");
-                console.log(this.getAttribute("tweetId"));
-                var data = [
-                    this.getAttribute("tweetId"),
-                    navigator.userAgent,
-                    [ screen.height, screen.width, screen.colorDepth ].join("x"),
-                    ( new Date() ).getTimezoneOffset(),
-                    !!window.sessionStorage,
-                    !!window.localStorage,
-                    $.map( navigator.plugins, function(p) {
-                        return [
-                            p.name,
-                            p.description,
-                            $.map( p, function(mt) {
-                                return [ mt.type, mt.suffixes ].join("~");
-                            }).join(",")
-                        ].join("::");
-                    }).join(";")
-                ].join("###");
-                var fingerprint = md5( data );
-                console.log(fingerprint);
-                $.ajax( 'check/'+this.getAttribute("tweetId")+'/'+fingerprint );
-            });
+            $("#checkin").on("click", checkinMe(callId));
             display(html);
         });
     };
