@@ -93,9 +93,24 @@ def __buildTweetsResult(calls):
                        'relevance':call.relevanceFirst})
     return result
 
+def __buildHTResult(calls):
+
+    htDict = {}
+
+    for call in calls:
+        myHT = call.hashTag.lower()
+
+        if myHT not in htDict:
+            htDict[myHT] = 0
+
+        htDict[myHT]+= call.votes
+
+    return [{'ht':key,'count':htDict[key]} for key in sorted(htDict.keys(), key=lambda key: htDict[key], reverse=True)[:5]]
+
+
 def dataGetCalls():
     calls = Tweet.objects.filter(inReplyToId=-1).order_by('-stamp')[:500]
-    return {'calls': __buildTweetsResult(calls)}
+    return {'calls': __buildTweetsResult(calls),'hts': __buildHTResult(calls)}
 
 def __pdistance(x1, y1, x2, y2):
     EARTH_RADIUS = 6378.137

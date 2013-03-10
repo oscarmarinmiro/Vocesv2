@@ -70,3 +70,14 @@ html, body, #mapPage, #map {
     position: relative;
     top: 1px;
 }
+.ht
+{
+    font-size:20px;
+    cursor:pointer;
+    color: #077;
+}
+
+.hton
+{
+    color:#FFF;
+}

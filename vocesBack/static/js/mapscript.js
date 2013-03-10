@@ -1,11 +1,13 @@
 // TODO: Probar el metodo de hacer layers y anyadir ahi los circulos, con el volumen de circulos esperado
 // Para ver si ha desaparecido el bug del quitar una layer (lentisimo en android) y se puede quitar
 // lo de mapa de usar y tirar
+
+
 var replyAccount='@vote_outliers';
-var c_category10=[
-    "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
-    "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"
-];
+
+
+var htFilter = "__all__";
+
 var hashtagMap={};
 var hashtagCount={};
 var CIRCLE_SIZE=30;
@@ -15,7 +17,12 @@ var checkins;
 var callNode=null;
 var callsLayerGroup;
 var checkinsLayerGroup;
+
+
+
 //Icons
+
+
 var defaultIcon = L.icon({
     iconUrl: 'static/imgs/markers/call-marker.png',
     iconSize: [36, 36],
@@ -51,6 +58,9 @@ var scaleIcons = [
 ];
 var map;
 $(document).ready(function(){
+
+    // Function that returns a Leaflet icon depending on a metric [0-100]
+
     var decideIcon=function(level){
         console.log('At decideIcon');
         if(level>100){return scaleIcons[4];}
@@ -75,7 +85,11 @@ $(document).ready(function(){
         console.log('At retrieveCalls');
         var url='getCalls/';
         console.log('URL: '+url);
-        $.getJSON(url,function(data){calls = data.calls;}).complete(function(){console.log('Carga completada...' );});
+        $.getJSON(url,function(data){
+            calls = data.calls;
+            hashtagCount = data.hts;
+            hashtagCount.push({'ht':"__all__"});
+            }).complete(function(){console.log('Carga completada...' );});
         return true;
     };
     var updateData=function(){
@@ -175,20 +189,25 @@ $(document).ready(function(){
     };
     var paintCalls=function(){
         console.log('At paintCalls');
+
         for(var i=0;i<calls.length;i++){
             var call=calls[i];
-            var marker;
-            if(call==callNode){
-                marker=L.marker([call.lat, call.lng], {icon: decideIcon(call.votes)});
-            }else{
-                marker=L.marker([call.lat, call.lng], {icon: defaultIcon});
+            if ((htFilter=='__all__')||(call.hashTag == htFilter))
+            {
+                var marker;
+                if(call==callNode){
+                    marker=L.marker([call.lat, call.lng], {icon: decideIcon(call.votes)});
+                }else{
+                    // BUG? NO hay que decidir dependiendo de los votos independientemente de si es la seleccionada o no?
+                    marker=L.marker([call.lat, call.lng], {icon: defaultIcon});
+                }
+                marker.__data__= call;
+                marker.bindPopup("Cargando");
+                marker.on('click',callSelected);
+                callsLayerGroup.addLayer(marker);
             }
-            marker.__data__= call;
-            marker.bindPopup("Cargando");
-            marker.on('click',callSelected);
-            callsLayerGroup.addLayer(marker);
         }
-        if(callNode!=null){paintCallReplies();}
+        if((callNode!=null) && ((htFilter=='__all__')||(callNode.hashTag == htFilter))){paintCallReplies();}
     };
     var paintCallReplies=function(){
         console.log('At paintCallReplies');
@@ -239,11 +258,15 @@ $(document).ready(function(){
     };
     var menuHash=function(){
         console.log('At menuHash');
-        console.log(c_category10);
         html="";
         html+="Trending Topics<br>";
-        for (var ht in hashtagCount){html+='<span style="color:'+c_category10[hashtagMap[ht]]+';">'+ht+':'+hashtagCount[ht]+'</span><br>';}
+        for (var i in hashtagCount)
+        {
+            var finalName = hashtagCount[i].ht=='__all__' ? 'todos':'#'+hashtagCount[i].ht;
+            html+= hashtagCount[i].ht==htFilter ? '<span class="ht hton" htname='+hashtagCount[i].ht+'>'+finalName+'</span><br>':'<span class="ht" htname='+hashtagCount[i].ht+'>'+"#"+hashtagCount[i].ht+'</span><br>';
+        }
         display(html);
+        $('.ht').on("click",function(){$('.ht').removeClass('hton');htFilter = $(this).attr("htname");$(this).attr('htname');$(this).addClass("hton");paintMap();});
     }
     var menuCall=function(){
         console.log('At menuCall');
