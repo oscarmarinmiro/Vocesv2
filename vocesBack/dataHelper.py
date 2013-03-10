@@ -136,7 +136,7 @@ def dataGetCallsInRadius(lat, lng, radius):
 
 def dataGetCallCheckins(callId):
     tweets = Tweet.objects.filter(inReplyToId=callId).order_by('-stamp')
-    checkins = CheckIn.objects.filter(tweetId=callId).order_by('-stamp')
+    checkins = CheckIn.objects.filter(callId=callId).order_by('-stamp')
     return {'checkins': [{'stamp': checkin.stamp.strftime("%Y%m%d%H%M%S")} for checkin in checkins],
             'tweets': __buildTweetsResult(tweets)}
 
