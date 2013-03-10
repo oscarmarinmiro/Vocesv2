@@ -226,7 +226,7 @@ $(document).ready(function(){
     };
     var paintUserPosition=function(){
         console.log('At paintUserPosition');
-        L.marker(locLatLng).setZIndexOffset(-1).addTo(map);
+        L.marker(locLatLng).setZIndexOffset(-100).addTo(map);
         paintCalls();
     };
     var paintCalls=function(){
