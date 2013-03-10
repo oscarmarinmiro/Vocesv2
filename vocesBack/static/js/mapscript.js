@@ -83,7 +83,9 @@ $(document).ready(function(){
         console.log('At mapMe');
         if(/Android/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&messageg='+replyAccount+'%20';}
         else{
+//            310785997703090177
             if(/iPad/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20';}
+//            if(/iPad/i.test(navigator.userAgent)){goto = 'twitter://post?in_reply_to_status_id='+callNode.id;alert(goto);location=goto;}
             else{
                 if(/iPhone/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20';}
                 else{location = 'https://twitter.com/intent/tweet?in_reply_to_status_id='+callNode.id+'&text='+replyAccount+'%20';}
@@ -155,9 +157,9 @@ $(document).ready(function(){
     var display = function(html,height){
         console.log('At display');
         openInfobox(height+"px");
-        html+='<br /><div id="close" class="close" href="#">Cerrar</div>';
+        html+='<br /><div class="close closeleft" href="#">Cerrar</div>';
         $('#infoextra').html(html);
-        $('#close').on('click',function(){closeInfobox();});
+        $('.close').on('click',function(){closeInfobox();});
     };
     var callInfo = function(){
         console.log('At callInfo');
@@ -170,9 +172,14 @@ $(document).ready(function(){
                 var html = '<div class="tweet">';
                 html+='<div class="birddate"><img src="static/imgs/bird_blue_16.png">';
                 html+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("DD.MM.YYYY HH:mm:ss")+"</span></div>";
-                html+='<div><img class="picture" src="'+data.userImg+'"></div>';
+                html+='<div style="float:left;padding-right:3px;"><img class="picture" src="'+data.userImg+'"></div>';
+                html+='<div style="float:left;">';
                 html+='<div class="author" target="_blank">'+data.userName+"</div>";
                 html+='<div class="nick"><a href="https://www.twitter.com/'+data.userNick+'">@'+data.userNick+'</a></div>';
+                html+='</div>';
+                html+='<div class="botonera" style="clear:both;"><div class="checkin" id="checkin">Checkin</div><div class="mapping" id="mapea">Mapea</div><div class="close" href="#">Cerrar</div></div>';
+                html+='<div style="clear:both;" id="checkinsCount">Checkin count: '+data.votes+'</div>';
+
                 //            html+='<span id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</span>';
                 html+='<div class="tweetText">'+normalizeTweet(data.text)+"</div>";
                 if(data.media!=null)
@@ -181,7 +188,6 @@ $(document).ready(function(){
                     html+='<img src="'+data.media+'"></a>';
                 }
                 html+='<div class="hton">Tag:'+data.hashTag+"</div>";
-                html+='<div class="checkin" id="checkin">Checkin</div><div class="mapping" id="mapea">Mapea</div>';
                 html+='</div>';
                 display(html,430);
 
@@ -200,22 +206,21 @@ $(document).ready(function(){
                 var html = '<div class="tweet">';
                 html+='<div class="birddate"><img src="static/imgs/bird_blue_16.png">';
                 html+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("DD.MM.YYYY HH:mm:ss")+"</span></div>";
-                html+='<div><img class="picture" src="'+data.userImg+'"></div>';
+                html+='<div style="float:left;padding-right:3px;"><img class="picture" src="'+data.userImg+'"></div>';
+                html+='<div style="float:left;">';
                 html+='<div class="author" target="_blank">'+data.userName+"</div>";
                 html+='<div class="nick"><a href="https://www.twitter.com/'+data.userNick+'">@'+data.userNick+'</a></div>';
-                //            html+='<span id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</span>';
-                html+='<div class="tweetText">'+normalizeTweet(data.text)+"</div>";
+                html+='</div>';
+                html+='<div class="botonera" style="clear:both;"><div class="close closeleft" href="#">Cerrar</div></div>';
+                html+='<div class="tweetText" style="clear:both;">'+normalizeTweet(data.text)+"</div>";
                 if(data.media!=null)
                 {
                     html+='<a href="http://twitter.com/'+data.userNick+"/status/"+data.userId+"/photo/1"+' target="_blank">';
                     html+='<img src="'+data.media+'"></a>';
                 }
                 html+='<div class="hton">Tag:'+data.hashTag+"</div>";
-                html+='<div class="checkin" id="checkin">Checkin</div><div class="mapping" id="mapea">Mapea</div>';
                 html+='</div>';
-
                 display(html,430);
-
             });
     };
     var paintMapFirstTime = function(){

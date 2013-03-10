@@ -8,11 +8,11 @@ html, body, #mapPage, #map {
 }
 #infobox
 {
-    width: 190px;
+    width: 200px;
     position:fixed;
     top: 12px;
     left:60px;
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgba(0,0,0,1.0);
     color: #FFF;
     z-index:1000;
     font-size:20px;
@@ -20,10 +20,16 @@ html, body, #mapPage, #map {
     padding: 8px;
     height:auto;
 }
-#infobox a
+#infomenu a
 {
     text-decoration: none;
-    color: #FFF;
+    color:#fff;
+}
+
+#infomenu a
+{
+    text-decoration: none;
+    color:#fff;
 }
 
 #infobox a:hover
@@ -39,7 +45,21 @@ html, body, #mapPage, #map {
     font-size:10px;
 }
 .tweet {
-    font-size: 15px;
+    font-size: 14px;
+}
+.tweet a{
+    text-decoration: none;
+}
+
+.tweet .tweetText
+{
+    color:#ffe174;
+}
+
+.tweet .tweetText a
+{
+    text-decoration: none;
+    color:#ffe174;
 }
 .tweet .birddate
 {
@@ -48,9 +68,17 @@ html, body, #mapPage, #map {
 
 .tweet .author
 {
-    font-size:20px;
+    font-size:14px;
     font-weight: bold;
+    clear:both;
 }
+
+
+.tweet .botonera
+{
+    float:left;
+}
+
 .tweet .nick a
 {
     color:#ffe174;
@@ -127,20 +155,29 @@ html, body, #mapPage, #map {
 
 .close
 {
-    font-size: 15px;
+    font-size: 12px;
     width: 40px;
     border: 1px solid white;
     padding: 3px;
+    margin-top:3px;
+    margin-left:10px;
     cursor:pointer;
     background: #FFF;
     color: #000;
-    clear:both;
+    float:left;
+    margin-bottom: 7px;
+}
+
+.closeleft
+{
+    margin-left:0px;
 }
 
 .checkin
 {
-    font-size: 15px;
-    width: 50px;
+    margin-top:3px;
+    font-size: 12px;
+    width: 40px;
     border: 1px solid white;
     padding: 3px;
     cursor:pointer;
@@ -150,8 +187,9 @@ html, body, #mapPage, #map {
 }
 .mapping
 {
-    font-size: 15px;
-    width: 50px;
+    margin-top:3px;
+    font-size: 12px;
+    width: 40px;
     border: 1px solid white;
     padding: 3px;
     margin-left:10px;
