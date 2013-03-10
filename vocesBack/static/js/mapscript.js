@@ -89,14 +89,13 @@ $(document).ready(function(){
             calls = data.calls;
             hashtagCount = data.hts;
             hashtagCount.push({'ht':"__all__"});
-            }).complete(function(){console.log('Carga completada...' );});
+            }).complete(function(){paintMap();console.log('Carga completada...' );});
         return true;
     };
     var updateData=function(){
         console.log('At updateCalls');
         calls=retrieveCalls();
         if(callNode!=null){retrieveCallCheckins(callNode.id);}
-        else{paintMap();}
     };
     var retrieveCallCheckins=function(id){
         console.log('At retrieveCallCheckins');
@@ -166,9 +165,9 @@ $(document).ready(function(){
         map = L.map('map',{touchZoom:true}).setView(myLatLng, myZoom);
         map.on('locationfound', onLocationFound);
         map.on('locationerror', onLocationError);
-        map.on('moveend',paintMap);
-        map.on('zoomend',paintMap);
-        map.on('dragend',paintMap);
+//        map.on('moveend',paintMap);
+//        map.on('zoomend',paintMap);
+//        map.on('dragend',paintMap);
         L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/88572/256/{z}/{x}/{y}.png', {
             maxZoom: 18,
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
@@ -184,7 +183,7 @@ $(document).ready(function(){
     };
     var paintUserPosition=function(){
         console.log('At paintUserPosition');
-        L.marker(locLatLng).addTo(map);
+        L.marker(locLatLng).setZIndexOffset(-10).addTo(map);
         paintCalls();
     };
     var paintCalls=function(){
@@ -308,5 +307,5 @@ $(document).ready(function(){
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
     }).addTo(map);
     menu();
-    var refresher = setInterval(function(){updateData();},600000);
+    var refresher = setInterval(function(){updateData();},60000);
 });
