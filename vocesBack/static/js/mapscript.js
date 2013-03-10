@@ -237,7 +237,11 @@ $(document).ready(function(){
             if ((htFilter=='__all__')||(call.hashTag == htFilter))
             {
                 var marker;
-                if(call==callNode){
+
+                console.log(call);
+                console.log(callNode);
+
+                if((callNode) && (call.id==callNode.id)){
                     marker=L.marker([call.lat, call.lng], {icon: decideIcon(call.votes)});
                 }else{
                     // BUG? NO hay que decidir dependiendo de los votos independientemente de si es la seleccionada o no?
@@ -278,7 +282,7 @@ $(document).ready(function(){
             callNode=e.target._popup._source.__data__;
             retrieveCallCheckins(callNode.id);
             callInfo();
-        }else if(callNode!=e.target._popup._source.__data__){
+        }else if(callNode.id!=e.target._popup._source.__data__.id){
             callNode=e.target._popup._source.__data__;
             retrieveCallCheckins(callNode.id);
             callInfo();
