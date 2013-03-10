@@ -1,28 +1,14 @@
-<!DOCTYPE html >
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1.0, user-scalable=no">
-
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
-	<link rel="stylesheet" href="static/css/voces.css" />
-
-	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-	<script src="http://code.jquery.com/jquery-migrate-1.1.1.min.js"></script>
-	<script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
-	<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
-    <script type="text/javascript" src="static/js/md5.js"></script>
-    <script src="static/js/moment.min.js"></script>
-	<script src="static/js/mapscript.js"></script>
-
-</head>
+{%  extends 'templateHeadCommon.html' %}
+{%  block headTitle %}
+	<title>Convoca home</title>
+{%  endblock %}
+{%  block body %}
 <body id="mapPage">
     <div id="map">
     </div>
 	<div id="infobox"><div id="infomenu"></div><hr><div id="infoextra"></div></div>
 </body>
-</html>
+{%  endblock %}
 
 
 
