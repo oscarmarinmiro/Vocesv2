@@ -1,0 +1,791 @@
+[
+    {
+        "pk": 8,
+        "model": "contenttypes.contenttype",
+        "fields": {
+            "model": "Config",
+            "name": "Config",
+            "app_label": "vocesBack"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "contenttypes.contenttype",
+        "fields": {
+            "model": "contenttype",
+            "name": "content type",
+            "app_label": "contenttypes"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "contenttypes.contenttype",
+        "fields": {
+            "model": "group",
+            "name": "group",
+            "app_label": "auth"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "contenttypes.contenttype",
+        "fields": {
+            "model": "logentry",
+            "name": "log entry",
+            "app_label": "admin"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "contenttypes.contenttype",
+        "fields": {
+            "model": "permission",
+            "name": "permission",
+            "app_label": "auth"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "contenttypes.contenttype",
+        "fields": {
+            "model": "session",
+            "name": "session",
+            "app_label": "sessions"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "contenttypes.contenttype",
+        "fields": {
+            "model": "site",
+            "name": "site",
+            "app_label": "sites"
+        }
+    },
+    {
+        "pk": 10,
+        "model": "contenttypes.contenttype",
+        "fields": {
+            "model": "Tweet",
+            "name": "Tweet",
+            "app_label": "vocesBack"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "contenttypes.contenttype",
+        "fields": {
+            "model": "user",
+            "name": "user",
+            "app_label": "auth"
+        }
+    },
+    {
+        "pk": 9,
+        "model": "contenttypes.contenttype",
+        "fields": {
+            "model": "User",
+            "name": "User",
+            "app_label": "vocesBack"
+        }
+    },
+    {
+        "pk": "987b82bf1e2406eabab9d31777f03164",
+        "model": "sessions.session",
+        "fields": {
+            "expire_date": "2013-03-02T15:07:36Z",
+            "session_data": "MjllZDY0YTQzNzJmMTA1MjIwYjNmMzE0NjViMzhhOTUxNmM0NThmZDqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQF1Lg==\n"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "sites.site",
+        "fields": {
+            "domain": "voces25s.es",
+            "name": "voces25s.es"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "vocesBack.config",
+        "fields": {
+            "sleepTime": 15,
+            "site": 1,
+            "oauthToken": "616082494-ZpnieAKy8OxvVOcKxZrIAl90Kl7ha6pyC7mvpKYK",
+            "lastBotTime": "2013-02-17T19:11:28Z",
+            "consumerKey": "TT0jgqhKZm6JYqV80OMrw",
+            "consumerSecret": "lqS1oyPFduvxIDVmmlccxPHF4AVIB3tXFbgIETQZE",
+            "lastId": 302847154978951168,
+            "maxPoints": 500,
+            "oauthSecret": "eFP9DashBJHIN8insuJ2prjmLwTnKhMwxDCOTGth1s"
+        }
+    },
+    {
+        "pk": 289284899,
+        "model": "vocesBack.User",
+        "fields": {
+            "profileImgUrl": "http://a0.twimg.com/profile_images/2647957708/2367032b9b30b0ded453879497a1b1f4_normal.jpeg",
+            "karma": 0,
+            "name": "Rajoy KE ASE!!!",
+            "screenName": "oscarmarinmiro"
+        }
+    },
+    {
+        "pk": 302801846957899778,
+        "model": "vocesBack.Tweet",
+        "fields": {
+            "text": "@vote_outliers #test nainonaiiiii http://t.co/PtKzm222",
+            "userId": 289284899,
+            "mediaUrl": "http://pbs.twimg.com/media/BDPErO3CAAAa_aG.jpg:thumb",
+            "inReplyToId": 666,
+            "rt": 0,
+            "votes": 0,
+            "relevanceSecond": 0,
+            "stamp": "2013-02-16T15:29:20Z",
+            "relevanceFirst": 0,
+            "hashTag": "test",
+            "lat": 41.357711799999997,
+            "lng": 2.09850096,
+            "inReplyToId":-1
+        }
+    },
+    {
+        "pk": 302802325280522240,
+        "model": "vocesBack.Tweet",
+        "fields": {
+            "text": "@vote_outliers #test nainonai http://t.co/0MDmut59",
+            "userId": 289284899,
+            "mediaUrl": "http://pbs.twimg.com/media/BDPFHEwCAAALkxz.jpg:thumb",
+            "inReplyToId": 666,
+            "rt": 0,
+            "votes": 0,
+            "relevanceSecond": 0,
+            "stamp": "2013-02-16T15:31:15Z",
+            "relevanceFirst": 0,
+            "hashTag": "test",
+            "lat": 41.377730019999998,
+            "lng": 2.09850928,
+            "inReplyToId": 302801846957899778
+        }
+    },
+    {
+        "pk": 302847154978951168,
+        "model": "vocesBack.Tweet",
+        "fields": {
+            "text": "@vote_outliers #test3 hola hola",
+            "userId": 289284899,
+            "mediaUrl": "",
+            "inReplyToId": 666,
+            "rt": 0,
+            "votes": 0,
+            "relevanceSecond": 0,
+            "stamp": "2013-02-16T18:29:23Z",
+            "relevanceFirst": 0,
+            "hashTag": "test3",
+            "lat": 41.357729329999998,
+            "lng": 2.19851652,
+            "inReplyToId": 302801846957899778
+        }
+    },
+    {
+        "pk": 19,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "add_logentry",
+            "name": "Can add log entry",
+            "content_type": 7
+        }
+    },
+    {
+        "pk": 20,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "change_logentry",
+            "name": "Can change log entry",
+            "content_type": 7
+        }
+    },
+    {
+        "pk": 21,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "delete_logentry",
+            "name": "Can delete log entry",
+            "content_type": 7
+        }
+    },
+    {
+        "pk": 4,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "add_group",
+            "name": "Can add group",
+            "content_type": 2
+        }
+    },
+    {
+        "pk": 5,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "change_group",
+            "name": "Can change group",
+            "content_type": 2
+        }
+    },
+    {
+        "pk": 6,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "delete_group",
+            "name": "Can delete group",
+            "content_type": 2
+        }
+    },
+    {
+        "pk": 1,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "add_permission",
+            "name": "Can add permission",
+            "content_type": 1
+        }
+    },
+    {
+        "pk": 2,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "change_permission",
+            "name": "Can change permission",
+            "content_type": 1
+        }
+    },
+    {
+        "pk": 3,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "delete_permission",
+            "name": "Can delete permission",
+            "content_type": 1
+        }
+    },
+    {
+        "pk": 7,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "add_user",
+            "name": "Can add user",
+            "content_type": 3
+        }
+    },
+    {
+        "pk": 8,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "change_user",
+            "name": "Can change user",
+            "content_type": 3
+        }
+    },
+    {
+        "pk": 9,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "delete_user",
+            "name": "Can delete user",
+            "content_type": 3
+        }
+    },
+    {
+        "pk": 10,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "add_contenttype",
+            "name": "Can add content type",
+            "content_type": 4
+        }
+    },
+    {
+        "pk": 11,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "change_contenttype",
+            "name": "Can change content type",
+            "content_type": 4
+        }
+    },
+    {
+        "pk": 12,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "delete_contenttype",
+            "name": "Can delete content type",
+            "content_type": 4
+        }
+    },
+    {
+        "pk": 13,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "add_session",
+            "name": "Can add session",
+            "content_type": 5
+        }
+    },
+    {
+        "pk": 14,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "change_session",
+            "name": "Can change session",
+            "content_type": 5
+        }
+    },
+    {
+        "pk": 15,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "delete_session",
+            "name": "Can delete session",
+            "content_type": 5
+        }
+    },
+    {
+        "pk": 16,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "add_site",
+            "name": "Can add site",
+            "content_type": 6
+        }
+    },
+    {
+        "pk": 17,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "change_site",
+            "name": "Can change site",
+            "content_type": 6
+        }
+    },
+    {
+        "pk": 18,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "delete_site",
+            "name": "Can delete site",
+            "content_type": 6
+        }
+    },
+    {
+        "pk": 22,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "add_config",
+            "name": "Can add config",
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 23,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "change_config",
+            "name": "Can change config",
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 24,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "delete_config",
+            "name": "Can delete config",
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 31,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "add_tweetgeo",
+            "name": "Can add tweet geo",
+            "content_type": 11
+        }
+    },
+    {
+        "pk": 32,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "change_tweetgeo",
+            "name": "Can change tweet geo",
+            "content_type": 11
+        }
+    },
+    {
+        "pk": 33,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "delete_tweetgeo",
+            "name": "Can delete tweet geo",
+            "content_type": 11
+        }
+    },
+    {
+        "pk": 28,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "add_tweetinfo",
+            "name": "Can add tweet info",
+            "content_type": 10
+        }
+    },
+    {
+        "pk": 29,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "change_tweetinfo",
+            "name": "Can change tweet info",
+            "content_type": 10
+        }
+    },
+    {
+        "pk": 30,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "delete_tweetinfo",
+            "name": "Can delete tweet info",
+            "content_type": 10
+        }
+    },
+    {
+        "pk": 25,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "add_userinfo",
+            "name": "Can add user info",
+            "content_type": 9
+        }
+    },
+    {
+        "pk": 26,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "change_userinfo",
+            "name": "Can change user info",
+            "content_type": 9
+        }
+    },
+    {
+        "pk": 27,
+        "model": "auth.permission",
+        "fields": {
+            "codename": "delete_userinfo",
+            "name": "Can delete user info",
+            "content_type": 9
+        }
+    },
+    {
+        "pk": 1,
+        "model": "auth.user",
+        "fields": {
+            "username": "voces",
+            "first_name": "",
+            "last_name": "",
+            "is_active": true,
+            "is_superuser": true,
+            "is_staff": true,
+            "last_login": "2013-02-16T15:07:36Z",
+            "groups": [],
+            "user_permissions": [],
+            "password": "pbkdf2_sha256$10000$PgD6fdqs9Qu4$BPY/Y6Rx1eoYXPtDN2PMhLtxrnrCvI4KOKFnIyqBlcY=",
+            "email": "voces@voces.com",
+            "date_joined": "2013-02-16T15:07:02Z"
+        }
+    },
+    {
+        "pk": 22,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 2,
+            "action_time": "2013-02-16T18:25:04Z",
+            "object_repr": "voces25s.es",
+            "object_id": "1",
+            "change_message": "Modificado/a lastId.",
+            "user": 1,
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 21,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 2,
+            "action_time": "2013-02-16T18:24:24Z",
+            "object_repr": "voces25s.es",
+            "object_id": "1",
+            "change_message": "Modificado/a lastId.",
+            "user": 1,
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 19,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 3,
+            "action_time": "2013-02-16T18:24:01Z",
+            "object_repr": "302801846957899778",
+            "object_id": "302801846957899778",
+            "change_message": "",
+            "user": 1,
+            "content_type": 10
+        }
+    },
+    {
+        "pk": 20,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 3,
+            "action_time": "2013-02-16T18:24:01Z",
+            "object_repr": "302802325280522240",
+            "object_id": "302802325280522240",
+            "change_message": "",
+            "user": 1,
+            "content_type": 10
+        }
+    },
+    {
+        "pk": 17,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 3,
+            "action_time": "2013-02-16T16:38:12Z",
+            "object_repr": "oscarmarinmiro",
+            "object_id": "289284899",
+            "change_message": "",
+            "user": 1,
+            "content_type": 9
+        }
+    },
+    {
+        "pk": 18,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 3,
+            "action_time": "2013-02-16T16:38:12Z",
+            "object_repr": "votefirstout",
+            "object_id": "616162491",
+            "change_message": "",
+            "user": 1,
+            "content_type": 9
+        }
+    },
+    {
+        "pk": 16,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 2,
+            "action_time": "2013-02-16T16:33:28Z",
+            "object_repr": "voces25s.es",
+            "object_id": "1",
+            "change_message": "Modificado/a lastId.",
+            "user": 1,
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 15,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 2,
+            "action_time": "2013-02-16T16:23:16Z",
+            "object_repr": "voces25s.es",
+            "object_id": "1",
+            "change_message": "No ha cambiado ning\u00fan campo.",
+            "user": 1,
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 14,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 2,
+            "action_time": "2013-02-16T16:22:34Z",
+            "object_repr": "voces25s.es",
+            "object_id": "1",
+            "change_message": "Modificado/a lastId.",
+            "user": 1,
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 13,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 2,
+            "action_time": "2013-02-16T16:01:15Z",
+            "object_repr": "Config object",
+            "object_id": "1",
+            "change_message": "Modificado/a lastId.",
+            "user": 1,
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 12,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 2,
+            "action_time": "2013-02-16T15:59:45Z",
+            "object_repr": "Config object",
+            "object_id": "1",
+            "change_message": "Modificado/a lastId.",
+            "user": 1,
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 11,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 2,
+            "action_time": "2013-02-16T15:51:46Z",
+            "object_repr": "Config object",
+            "object_id": "1",
+            "change_message": "Modificado/a lastId.",
+            "user": 1,
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 10,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 2,
+            "action_time": "2013-02-16T15:47:07Z",
+            "object_repr": "Config object",
+            "object_id": "1",
+            "change_message": "Modificado/a lastId.",
+            "user": 1,
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 9,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 2,
+            "action_time": "2013-02-16T15:46:33Z",
+            "object_repr": "Config object",
+            "object_id": "1",
+            "change_message": "Modificado/a lastId y lastBotTime.",
+            "user": 1,
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 8,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 2,
+            "action_time": "2013-02-16T15:42:05Z",
+            "object_repr": "Config object",
+            "object_id": "1",
+            "change_message": "Modificado/a lastId y lastBotTime.",
+            "user": 1,
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 7,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 2,
+            "action_time": "2013-02-16T15:41:44Z",
+            "object_repr": "Config object",
+            "object_id": "1",
+            "change_message": "No ha cambiado ning\u00fan campo.",
+            "user": 1,
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 6,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 2,
+            "action_time": "2013-02-16T15:41:31Z",
+            "object_repr": "Config object",
+            "object_id": "1",
+            "change_message": "Modificado/a lastId y lastBotTime.",
+            "user": 1,
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 5,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 2,
+            "action_time": "2013-02-16T15:36:36Z",
+            "object_repr": "Config object",
+            "object_id": "1",
+            "change_message": "Modificado/a lastId y lastBotTime.",
+            "user": 1,
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 4,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 2,
+            "action_time": "2013-02-16T15:36:12Z",
+            "object_repr": "Config object",
+            "object_id": "1",
+            "change_message": "Modificado/a lastId y lastBotTime.",
+            "user": 1,
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 3,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 2,
+            "action_time": "2013-02-16T15:12:32Z",
+            "object_repr": "Config object",
+            "object_id": "1",
+            "change_message": "Modificado/a lastId.",
+            "user": 1,
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 2,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 1,
+            "action_time": "2013-02-16T15:12:08Z",
+            "object_repr": "Config object",
+            "object_id": "1",
+            "change_message": "",
+            "user": 1,
+            "content_type": 8
+        }
+    },
+    {
+        "pk": 1,
+        "model": "admin.logentry",
+        "fields": {
+            "action_flag": 2,
+            "action_time": "2013-02-16T15:07:48Z",
+            "object_repr": "voces25s.es",
+            "object_id": "1",
+            "change_message": "Modificado/a domain y name.",
+            "user": 1,
+            "content_type": 6
+        }
+    }
+]
