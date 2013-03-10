@@ -8,7 +8,6 @@ var replyAccount='@vote_outliers';
 
 var htFilter = "__all__";
 
-var hashtagMap={};
 var hashtagCount={};
 var CIRCLE_SIZE=30;
 var locLatLng;
@@ -120,19 +119,19 @@ $(document).ready(function(){
         $.getJSON(url,function(data){checkins=data;console.log(checkins);}).complete(function(){console.log('Carga completada...');paintMap();});
     };
     //Display functions.
-    function openInfobox(){
+    function openInfobox(height){
         console.log('At openInfobox');
-        $('#infobox').css('height','300px');
+        $('#infobox').css('height',height);
     };
     function closeInfobox(){
         console.log('At closeInfobox');
         $('#infoextra').html("");
         $('#infobox').css('height','50px');
     };
-    var display = function(html){
+    var display = function(html,height){
         console.log('At display');
-        openInfobox();
-        html+='<br /><a id="close" href="#">Cerrar</a>';
+        openInfobox(height+"px");
+        html+='<br /><div id="close" class="close" href="#">Cerrar</div>';
         $('#infoextra').html(html);
         $('#close').on('click',function(){closeInfobox();});
     };
@@ -152,7 +151,7 @@ $(document).ready(function(){
             html+='<span class="ht">'+data.hashTag+"</span><br /><br />";
             html+='<span class="button" id="checkin">Checkin</span><br /><br />';
             html+='</div>';
-            display(html);
+            display(html,300);
             $("#checkin").on("click", checkinMe);
         });
     };
@@ -169,7 +168,7 @@ $(document).ready(function(){
             html+='<span class="tweet">'+data.text+"</span><br />";
             html+='<span class="ht">'+data.hashTag+"</span><br /><br />";
             html+='</div>';
-            display(html);
+            display(html,300);
         });
     };
     var paintMapFirstTime = function(){
@@ -199,7 +198,7 @@ $(document).ready(function(){
     };
     var paintUserPosition=function(){
         console.log('At paintUserPosition');
-        L.marker(locLatLng).setZIndexOffset(-10).addTo(map);
+        L.marker(locLatLng).setZIndexOffset(-1).addTo(map);
         paintCalls();
     };
     var paintCalls=function(){
@@ -274,15 +273,26 @@ $(document).ready(function(){
     var menuHash=function(){
         console.log('At menuHash');
         html="";
-        html+="Trending Topics<br>";
+        html+='<span class="extraHeader">Trending ahora</span>';
+        html+='<p class="extraContent">';
         for (var i in hashtagCount)
         {
             var finalName = hashtagCount[i].ht=='__all__' ? 'todos':'#'+hashtagCount[i].ht;
-            html+= hashtagCount[i].ht==htFilter ? '<span class="ht hton" htname='+hashtagCount[i].ht+'>'+finalName+'</span><br>':'<span class="ht" htname='+hashtagCount[i].ht+'>'+"#"+hashtagCount[i].ht+'</span><br>';
+            html+= hashtagCount[i].ht==htFilter ? '<span class="ht hton" htname='+hashtagCount[i].ht+'>'+finalName+'</span><br>':'<span class="ht" htname='+hashtagCount[i].ht+'>'+finalName+'</span><br>';
         }
-        display(html);
+        html+='</p>';
+        display(html,280);
         $('.ht').on("click",function(){$('.ht').removeClass('hton');htFilter = $(this).attr("htname");$(this).attr('htname');$(this).addClass("hton");paintMap();});
     }
+
+    var menuHelp=function(){
+        console.log('At menuhelp');
+        html="";
+        html+='<span class="extraHeader">¿Qué es \'convoca!\'?</span>';
+        html+='<p class="extraContent">Convoca es una plataforma para convocar convocatorias convocantes de convocadores para convocados</p>';
+        display(html,200);
+    }
+
     var menuCall=function(){
         console.log('At menuCall');
         var callSymbol = '%C2%A1';
@@ -298,11 +308,13 @@ $(document).ready(function(){
     var menu=function(){
         console.log('At menu');
         var html="";
-        html = '<a id="home" href="#">Home</a> | <a id="tag" href="#">#</a> | <a id="call" href="#">¡</a>';
+//        html = '<a id="home" href="#"><img src="static/imgs/marker_white.png" width="20" height="30"></a><a id="tag" href="#">#TT</a><a id="call" href="#">¡C!</a>';
+        html = '<a id="home" class="infomenu" href="#">H</a><a id="tag" class="infomenu" href="#">#</a><a id="call" href="#" class="infomenu">!</a><a id="help" href="#" class="infomenu">?</a>';
         $('#infomenu').html(html);
         $('#home').on("click",menuHome);
         $('#tag').on("click",menuHash);
         $('#call').on("click", menuCall);
+        $('#help').on("click", menuHelp);
     };
     //Map events handlers.
     var onLocationError=function(e){console.log('At onLocationError');alert(e.message);};

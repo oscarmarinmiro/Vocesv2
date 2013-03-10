@@ -1,14 +1,14 @@
 body {
     padding: 0;
     margin: 0;
-    font-family: Futura, "Helvetica Neue", sans-serif;
+    font-family: "candara", "Helvetica Neue", sans-serif;
 }
 html, body, #mapPage, #map {
     height: 100%;
 }
 #infobox
 {
-    width: 150px;
+    width: 200px;
     height: 50px;
     position:fixed;
     top: 12px;
@@ -27,6 +27,8 @@ html, body, #mapPage, #map {
 }
 #infoextra
 {
+    padding-top:20px;
+    padding-left:5px;
     font-size:10px;
 }
 .tweet {
@@ -72,12 +74,45 @@ html, body, #mapPage, #map {
 }
 .ht
 {
-    font-size:20px;
+    font-size: 20px;
     cursor:pointer;
-    color: #077;
+    color: #FFF;
 }
 
 .hton
 {
-    color:#FFF;
+    color:#ffe174;
+}
+
+#infomenu
+{
+    padding-left:10px;
+}
+
+.infomenu
+{
+    font-size:40px;
+    padding-right:35px;
+}
+
+.extraHeader
+{
+    font-size: 20px;
+    color:#ffe174;
+}
+
+.extraContent
+{
+    font-size: 12px;
+}
+
+.close
+{
+    font-size: 15px;
+    width: 40px;
+    border: 1px solid white;
+    padding: 3px;
+    cursor:pointer;
+    background: #FFF;
+    color: #000;
 }
