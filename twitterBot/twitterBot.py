@@ -12,7 +12,6 @@ import re
 import random
 import pprint
 from django.utils import timezone
-from django.db.models import F
 
 
 sys.path.append('../')
@@ -20,6 +19,7 @@ sys.path.append('../')
 os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
 
 from vocesBack.models import Config, User, Tweet, CheckIn
+from django.db.models import F
 
 # Estas son las credenciales de la app
 # La cuenta es vote_outliers en twitter, pass:vote2012pp
@@ -119,7 +119,7 @@ while(True):
                     if 'in_reply_to_status_id' in dStatus:
                         # We need to retrieve to which call it's replying to
                         tweet.inReplyToId = dStatus['in_reply_to_status_id']
-                        call = Tweet.objects.get(callId=tweet.inReplyToId)
+                        calls = Tweet.objects.filter(tweetId=tweet.inReplyToId)
                         calls.update(votes=F('votes') + 1)
                         for call in calls:
                             call.save()
@@ -135,7 +135,7 @@ while(True):
                     checkin.userId = dStatus['user']['id']
                     checkin.stamp = time.strftime('%Y-%m-%d %H:%M:%S',time.strptime(dStatus['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))
                     checkin.save()
-                    calls = Tweet.objects.filter(callId=checkin.callId)
+                    calls = Tweet.objects.filter(tweetId=checkin.callId)
                     calls.update(votes=F('votes') + 1)
                     for call in calls:
                         call.save()
