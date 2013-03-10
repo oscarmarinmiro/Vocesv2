@@ -58,6 +58,15 @@ var scaleIcons = [
 var map;
 $(document).ready(function(){
 
+    // Helper function to link twitter entities
+
+    var normalizeTweet = function(text)
+    {
+        return URI.withinString(text, function(url) {
+            return "<a href='"+url+"' target='_blank'>" + url + "</a>";
+        });
+    }
+
     // Function that returns a Leaflet icon depending on a metric [0-100]
 
     var decideIcon=function(level){
@@ -121,12 +130,12 @@ $(document).ready(function(){
     //Display functions.
     function openInfobox(height){
         console.log('At openInfobox');
-        $('#infobox').css('height',height);
+        //$('#infobox').css('height',height);
     };
     function closeInfobox(){
         console.log('At closeInfobox');
         $('#infoextra').html("");
-        $('#infobox').css('height','50px');
+        //$('#infobox').css('height','50px');
     };
     var display = function(html,height){
         console.log('At display');
@@ -141,17 +150,25 @@ $(document).ready(function(){
         var url="getPointDetail/"+callId;
         $.getJSON(url, function(data){
             var html = '<div class="tweet">';
-            html+='<div class="meta">';
-            html+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("MMM Do YYYY HH:mm:ss")+"</span><br />";
-            html+='<span class="author">@'+data.userNick+"</span><br />";
-            html+='<span id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</span>';
-            html+='<img class="picture" src="'+data.userImg+'"><br>';
+                html+='<div class="birddate"><img src="static/imgs/bird_blue_16.png">';
+                html+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("DD.MM.YYYY HH:mm:ss")+"</span></div>";
+                html+='<div><img class="picture" src="'+data.userImg+'"></div>';
+                html+='<div class="author" target="_blank">'+data.userName+"</div>";
+                html+='<div class="nick"><a href="https://www.twitter.com/'+data.userNick+'">@'+data.userNick+'</a></div>';
+    //            html+='<span id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</span>';
+                html+='<div class="tweetText">'+normalizeTweet(data.text)+"</div>";
+                if(data.media!=null)
+                {
+                    html+='<a href="http://twitter.com/'+data.userNick+"/status/"+data.userId+"/photo/1"+' target="_blank">';
+                    html+='<img src="'+data.media+'"></a>';
+                }
+
+//            <a href="http://twitter.com/disidencia007/status/250519959615197184/photo/1" target="_blank"><img src="http://p.twimg.com/A3oGk3JCUAA7m_I.jpg:thumb"></a>
+//                <img src="http://p.twimg.com/A3oGk3JCUAA7m_I.jpg:thumb">
+                html+='<div class="hton">Tag:'+data.hashTag+"</div>";
+                html+='<div class="checkin" id="checkin">Checkin</div><div class="mapping" id="mapea">Mapea</div>';
             html+='</div>';
-            html+='<span class="tweet">'+data.text+"</span><br />";
-            html+='<span class="ht">'+data.hashTag+"</span><br /><br />";
-            html+='<span class="button" id="checkin">Checkin</span><br /><br />';
-            html+='</div>';
-            display(html,300);
+            display(html,430);
             $("#checkin").on("click", checkinMe);
         });
     };
@@ -160,15 +177,26 @@ $(document).ready(function(){
         var url="getPointDetail/"+id;
         $.getJSON(url, function(data){
             var html = '<div class="tweet">';
-            html+='<div class="meta">';
-            html+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("MMM Do YYYY HH:mm:ss")+"</span><br />";
-            html+='<span class="author">@'+data.userNick+"</span><br />";
-            html+='<img class="picture" src="'+data.userImg+'"><br>';
+            html+='<div class="birddate"><img src="static/imgs/bird_blue_16.png">';
+            html+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("DD.MM.YYYY HH:mm:ss")+"</span></div>";
+            html+='<div><img class="picture" src="'+data.userImg+'"></div>';
+            html+='<div class="author" target="_blank">'+data.userName+"</div>";
+            html+='<div class="nick"><a href="https://www.twitter.com/'+data.userNick+'">@'+data.userNick+'</a></div>';
+            //            html+='<span id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</span>';
+            html+='<div class="tweetText">'+normalizeTweet(data.text)+"</div>";
+            if(data.media!=null)
+            {
+                html+='<a href="http://twitter.com/'+data.userNick+"/status/"+data.userId+"/photo/1"+' target="_blank">';
+                html+='<img src="'+data.media+'"></a>';
+            }
+
+//            <a href="http://twitter.com/disidencia007/status/250519959615197184/photo/1" target="_blank"><img src="http://p.twimg.com/A3oGk3JCUAA7m_I.jpg:thumb"></a>
+//                <img src="http://p.twimg.com/A3oGk3JCUAA7m_I.jpg:thumb">
+            html+='<div class="hton">Tag:'+data.hashTag+"</div>";
+            html+='<div class="checkin" id="checkin">Checkin</div><div class="mapping" id="mapea">Mapea</div>';
             html+='</div>';
-            html+='<span class="tweet">'+data.text+"</span><br />";
-            html+='<span class="ht">'+data.hashTag+"</span><br /><br />";
-            html+='</div>';
-            display(html,300);
+
+            display(html,430);
         });
     };
     var paintMapFirstTime = function(){
@@ -309,7 +337,7 @@ $(document).ready(function(){
         console.log('At menu');
         var html="";
 //        html = '<a id="home" href="#"><img src="static/imgs/marker_white.png" width="20" height="30"></a><a id="tag" href="#">#TT</a><a id="call" href="#">¡C!</a>';
-        html = '<a id="home" class="infomenu" href="#">H</a><a id="tag" class="infomenu" href="#">#</a><a id="call" href="#" class="infomenu">!</a><a id="help" href="#" class="infomenu">?</a>';
+        html = '<a id="home" class="infomenu" href="#">H</a><a id="tag" class="infomenu" href="#">#</a><a id="call" href="#" class="infomenu">!</a><a id="help" href="#" class="infomenu">?</a><span class="infomenu">LOGO</span>';
         $('#infomenu').html(html);
         $('#home').on("click",menuHome);
         $('#tag').on("click",menuHash);

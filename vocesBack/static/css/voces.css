@@ -8,7 +8,7 @@ html, body, #mapPage, #map {
 }
 #infobox
 {
-    width: 200px;
+    width: 250px;
     height: 50px;
     position:fixed;
     top: 12px;
@@ -19,26 +19,42 @@ html, body, #mapPage, #map {
     font-size:20px;
     border-radius: 8px;
     padding: 8px;
+    height:auto;
 }
 #infobox a
 {
-    color: #FFF;
     text-decoration: none;
+}
+#infomenu a
+{
+    color: #FFF;
 }
 #infoextra
 {
-    padding-top:20px;
+    padding-top:2px;
     padding-left:5px;
     font-size:10px;
 }
 .tweet {
-    font-size: 11px;
+    font-size: 15px;
 }
-.tweet .meta .author {
-    font-size: 14px;
+.tweet .birddate
+{
+    padding-bottom: 3px;
 }
-.tweet .meta .date{
-    font-size: 12px;
+
+.tweet .author
+{
+    font-size:20px;
+    font-weight: bold;
+}
+.tweet .nick a
+{
+    color:#ffe174;
+}
+.tweet a
+{
+    color:#ffe174;
 }
 .button {
     -moz-box-shadow: inset 0px 1px 0px 0px #fceaca;
@@ -91,8 +107,8 @@ html, body, #mapPage, #map {
 
 .infomenu
 {
-    font-size:40px;
-    padding-right:35px;
+    font-size:35px;
+    padding-right:20px;
 }
 
 .extraHeader
@@ -115,4 +131,31 @@ html, body, #mapPage, #map {
     cursor:pointer;
     background: #FFF;
     color: #000;
+    clear:both;
+}
+
+.checkin
+{
+    font-size: 15px;
+    width: 50px;
+    border: 1px solid white;
+    padding: 3px;
+    cursor:pointer;
+    background: #FFF;
+    color: #000;
+    float:left;
+}
+.mapping
+{
+    font-size: 15px;
+    width: 50px;
+    border: 1px solid white;
+    padding: 3px;
+    margin-left:10px;
+    cursor:pointer;
+    background: #FFF;
+    color: #000;
+    float:left;
+    margin-bottom: 7px;
+
 }
