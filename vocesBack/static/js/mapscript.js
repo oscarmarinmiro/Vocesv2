@@ -77,8 +77,10 @@ $(document).ready(function(){
         else if(level<=50 && level>25){return scaleIcons[1];}
         else{return scaleIcons[0];}
     };
-    var checkinMe=function(){
-        console.log('At checkinMe');
+
+
+    var mapMe=function(){
+        console.log('At mapMe');
         if(/Android/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&messageg='+replyAccount+'%20';}
         else{
             if(/iPad/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20';}
@@ -87,7 +89,20 @@ $(document).ready(function(){
                 else{location = 'https://twitter.com/intent/tweet?in_reply_to_status_id='+callNode.id+'&text='+replyAccount+'%20';}
             }
         }
+    };
+    var checkinMe=function(){
+        var checkinSymbol='*';
+        console.log('At checkinMe');
+        if(/Android/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&messageg='+replyAccount+'%20'+checkinSymbol+'%20';}
+        else{
+            if(/iPad/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20'+checkinSymbol+'%20';}
+            else{
+                if(/iPhone/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20'+checkinSymbol+'%20';}
+                else{location = 'https://twitter.com/intent/tweet?in_reply_to_status_id='+callNode.id+'&text='+replyAccount+'%20'+checkinSymbol+'%20';}
+            }
+        }
     }
+
     //Data retrieval functions.
     // OJO (OSCAR): He mezclado aqui el retrieveCalls y retrieveCallCheckings desde el updateData porque las dos
     // son asincronas, para crear una sola rama de paintMap en cada caso
@@ -148,80 +163,79 @@ $(document).ready(function(){
         console.log('At callInfo');
         callId=callNode.id;
         var url="getPointDetail/"+callId;
-        $.getJSON(url, function(data){
-            var html = '<div class="tweet">';
+        var data = null;
+        $.getJSON(url, function(datos){
+            data = datos;
+        }).complete(function(){
+                var html = '<div class="tweet">';
                 html+='<div class="birddate"><img src="static/imgs/bird_blue_16.png">';
                 html+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("DD.MM.YYYY HH:mm:ss")+"</span></div>";
                 html+='<div><img class="picture" src="'+data.userImg+'"></div>';
                 html+='<div class="author" target="_blank">'+data.userName+"</div>";
                 html+='<div class="nick"><a href="https://www.twitter.com/'+data.userNick+'">@'+data.userNick+'</a></div>';
-    //            html+='<span id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</span>';
+                //            html+='<span id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</span>';
                 html+='<div class="tweetText">'+normalizeTweet(data.text)+"</div>";
                 if(data.media!=null)
                 {
                     html+='<a href="http://twitter.com/'+data.userNick+"/status/"+data.userId+"/photo/1"+' target="_blank">';
                     html+='<img src="'+data.media+'"></a>';
                 }
-
-//            <a href="http://twitter.com/disidencia007/status/250519959615197184/photo/1" target="_blank"><img src="http://p.twimg.com/A3oGk3JCUAA7m_I.jpg:thumb"></a>
-//                <img src="http://p.twimg.com/A3oGk3JCUAA7m_I.jpg:thumb">
                 html+='<div class="hton">Tag:'+data.hashTag+"</div>";
                 html+='<div class="checkin" id="checkin">Checkin</div><div class="mapping" id="mapea">Mapea</div>';
-            html+='</div>';
-            display(html,430);
-            $("#checkin").on("click", checkinMe);
-        });
+                html+='</div>';
+                display(html,430);
+
+                $("#checkin").on("click", checkinMe);
+                $("#mapea").on("click", mapMe);
+
+            });
     };
     var replyInfo = function(id){
         console.log('At replyInfo');
         var url="getPointDetail/"+id;
-        $.getJSON(url, function(data){
-            var html = '<div class="tweet">';
-            html+='<div class="birddate"><img src="static/imgs/bird_blue_16.png">';
-            html+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("DD.MM.YYYY HH:mm:ss")+"</span></div>";
-            html+='<div><img class="picture" src="'+data.userImg+'"></div>';
-            html+='<div class="author" target="_blank">'+data.userName+"</div>";
-            html+='<div class="nick"><a href="https://www.twitter.com/'+data.userNick+'">@'+data.userNick+'</a></div>';
-            //            html+='<span id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</span>';
-            html+='<div class="tweetText">'+normalizeTweet(data.text)+"</div>";
-            if(data.media!=null)
-            {
-                html+='<a href="http://twitter.com/'+data.userNick+"/status/"+data.userId+"/photo/1"+' target="_blank">';
-                html+='<img src="'+data.media+'"></a>';
-            }
+        var data = null;
+        $.getJSON(url, function(datos){
+            data = datos;
+        }).complete(function(){
+                var html = '<div class="tweet">';
+                html+='<div class="birddate"><img src="static/imgs/bird_blue_16.png">';
+                html+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("DD.MM.YYYY HH:mm:ss")+"</span></div>";
+                html+='<div><img class="picture" src="'+data.userImg+'"></div>';
+                html+='<div class="author" target="_blank">'+data.userName+"</div>";
+                html+='<div class="nick"><a href="https://www.twitter.com/'+data.userNick+'">@'+data.userNick+'</a></div>';
+                //            html+='<span id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</span>';
+                html+='<div class="tweetText">'+normalizeTweet(data.text)+"</div>";
+                if(data.media!=null)
+                {
+                    html+='<a href="http://twitter.com/'+data.userNick+"/status/"+data.userId+"/photo/1"+' target="_blank">';
+                    html+='<img src="'+data.media+'"></a>';
+                }
+                html+='<div class="hton">Tag:'+data.hashTag+"</div>";
+                html+='<div class="checkin" id="checkin">Checkin</div><div class="mapping" id="mapea">Mapea</div>';
+                html+='</div>';
 
-//            <a href="http://twitter.com/disidencia007/status/250519959615197184/photo/1" target="_blank"><img src="http://p.twimg.com/A3oGk3JCUAA7m_I.jpg:thumb"></a>
-//                <img src="http://p.twimg.com/A3oGk3JCUAA7m_I.jpg:thumb">
-            html+='<div class="hton">Tag:'+data.hashTag+"</div>";
-            html+='<div class="checkin" id="checkin">Checkin</div><div class="mapping" id="mapea">Mapea</div>';
-            html+='</div>';
+                display(html,430);
 
-            display(html,430);
-        });
+            });
     };
     var paintMapFirstTime = function(){
         console.log('At paintMapFirstTime');
         var myLatLng = map.getCenter();
         var myZoom = map.getZoom();
+        console.log("¡¡¡¡¡¡¡¡TIRO EL MAPA!!!!!!!!!!!!!!");
         $("#map").remove();
         $("body").append('<div id="map"></div>');
         map = L.map('map',{touchZoom:true}).setView(myLatLng, myZoom);
         map.on('locationfound', onLocationFound);
         map.on('locationerror', onLocationError);
-//        map.on('moveend',paintMap);
-//        map.on('zoomend',paintMap);
-//        map.on('dragend',paintMap);
         L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/88572/256/{z}/{x}/{y}.png', {
             maxZoom: 18,
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
         }).addTo(map);
-        callsLayerGroup=L.layerGroup([]).addTo(map);
-        checkinsLayerGroup=L.layerGroup([]).addTo(map);
     }
     var paintMap=function(){
         console.log('At paintMap');
-        callsLayerGroup.clearLayers();
-        checkinsLayerGroup.clearLayers();
+        paintMapFirstTime();
         paintUserPosition();
     };
     var paintUserPosition=function(){
@@ -250,7 +264,7 @@ $(document).ready(function(){
                 marker.__data__= call;
                 marker.bindPopup("Cargando");
                 marker.on('click',callSelected);
-                callsLayerGroup.addLayer(marker);
+                map.addLayer(marker);
             }
         }
         if((callNode!=null) && ((htFilter=='__all__')||(callNode.hashTag == htFilter))){paintCallReplies();}
@@ -271,7 +285,7 @@ $(document).ready(function(){
             circle.__data__= tweet.id;
             circle.bindPopup("Cargando");
             circle.on('click',replySelected);
-            checkinsLayerGroup.addLayer(circle);
+            map.addLayer(circle);
         }
     };
     //Item selected functions.
