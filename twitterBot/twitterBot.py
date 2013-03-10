@@ -12,6 +12,7 @@ import re
 import random
 import pprint
 from django.utils import timezone
+from django.db.models import F
 
 
 sys.path.append('../')
@@ -118,6 +119,10 @@ while(True):
                     if 'in_reply_to_status_id' in dStatus:
                         # We need to retrieve to which call it's replying to
                         tweet.inReplyToId = dStatus['in_reply_to_status_id']
+                        call = Tweet.objects.get(callId=tweet.inReplyToId)
+                        calls.update(votes=F('votes') + 1)
+                        for call in calls:
+                            call.save()
                     else:
                         continue
                 #END Call detection.
@@ -130,6 +135,10 @@ while(True):
                     checkin.userId = dStatus['user']['id']
                     checkin.stamp = time.strftime('%Y-%m-%d %H:%M:%S',time.strptime(dStatus['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))
                     checkin.save()
+                    calls = Tweet.objects.filter(callId=checkin.callId)
+                    calls.update(votes=F('votes') + 1)
+                    for call in calls:
+                        call.save()
                 #END Checkin detection.
                 else:
                     #Mapeos & Calls
