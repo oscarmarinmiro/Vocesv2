@@ -17,6 +17,10 @@ class Config(Model):
     call_symbol = '¡'
     call_detection_regexp = "^@%s %s .*$" % (calls_twitter_account, call_symbol)
     #END Call detection constants.
+    #BEGIN Checkin detection constants.
+    checkin_symbol = '\*'
+    checkin_detection_regexp = "^@%s %s .*$" % (calls_twitter_account, checkin_symbol)
+    #END Checkin detection constants.
     oauthToken = CharField('Robot OauthToken',max_length=100,unique=True)
     oauthSecret = CharField('Robot OauthSecret',max_length=100,unique=True)
     consumerKey = CharField('Consumer key',max_length=100,unique=True)
@@ -27,7 +31,7 @@ class Config(Model):
     lastBotTime = DateTimeField('Last robot wake up for internal robot management (do not touch!)')
 
     class Meta:
-        verbose_name_plural = "Config"
+        verbose_name_plural = 'Config'
 
     def __unicode__(self):
         return self.site.name
@@ -44,7 +48,7 @@ class User(Model):
     karma = IntegerField()
 
     class Meta:
-        verbose_name_plural = "Users"
+        verbose_name_plural = 'Users'
 
     def __unicode__(self):
         return self.screenName
@@ -68,7 +72,7 @@ class Tweet(Model):
     relevanceSecond = IntegerField()
 
     class Meta:
-        verbose_name_plural = "Tweets"
+        verbose_name_plural = 'Tweets'
 
     def __unicode__(self):
         return str(self.tweetId)
@@ -78,13 +82,14 @@ class CheckIn(Model):
     """
     Checkins register
     """
-    fingerprint = CharField(max_length=32,unique=True,db_index=True,primary_key=True)
+    userId = ForeignKey(User)
     stamp = DateTimeField()
-    tweetId = BigIntegerField()
+    callId = ForeignKey(Tweet)
 
     class Meta:
-        verbose_name_plural = "CheckIns"
+        verbose_name_plural = 'CheckIns'
+        unique_together = (('userId', 'callId'),)
 
     def __unicode__(self):
-        return str(self.fingerprint)
+        return str('%s-%s' % (self.userId, self.callId))
                                           

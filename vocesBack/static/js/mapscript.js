@@ -77,14 +77,26 @@ $(document).ready(function(){
         else if(level<=50 && level>25){return scaleIcons[1];}
         else{return scaleIcons[0];}
     };
-    var checkinMe=function(){
-        console.log('At checkinMe');
+    var mapMe=function(){
+        console.log('At mapMe');
         if(/Android/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&messageg='+replyAccount+'%20';}
         else{
             if(/iPad/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20';}
             else{
                 if(/iPhone/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20';}
                 else{location = 'https://twitter.com/intent/tweet?in_reply_to_status_id='+callNode.id+'&text='+replyAccount+'%20';}
+            }
+        }
+    };
+    var checkinMe=function(){
+        var checkinSymbol='*';
+        console.log('At checkinMe');
+        if(/Android/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&messageg='+replyAccount+'%20'+checkinSymbol+'%20';}
+        else{
+            if(/iPad/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20'+checkinSymbol+'%20';}
+            else{
+                if(/iPhone/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20'+checkinSymbol+'%20';}
+                else{location = 'https://twitter.com/intent/tweet?in_reply_to_status_id='+callNode.id+'&text='+replyAccount+'%20'+checkinSymbol+'%20';}
             }
         }
     }
@@ -170,6 +182,7 @@ $(document).ready(function(){
             html+='</div>';
             display(html,430);
             $("#checkin").on("click", checkinMe);
+            $("#mapea").on("click", mapMe);
         });
     };
     var replyInfo = function(id){
