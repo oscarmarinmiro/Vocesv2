@@ -383,3 +383,4 @@ $(document).ready(function(){
     menu();
     var refresher = setInterval(function(){updateData();},60000);
 });
+
