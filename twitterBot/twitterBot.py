@@ -18,7 +18,7 @@ sys.path.append('../')
 
 os.environ["DJANGO_SETTINGS_MODULE"] = "settings"
 
-from vocesBack.models import Config, User, Tweet
+from vocesBack.models import Config, User, Tweet, CheckIn
 
 # Estas son las credenciales de la app
 # La cuenta es vote_outliers en twitter, pass:vote2012pp
@@ -41,7 +41,9 @@ CONSUMER_SECRET=ConfigObject.consumerSecret
 #BEGIN Call detection.
 CALL_DETECTION_REGEXP = re.compile(ConfigObject.call_detection_regexp, re.IGNORECASE)
 #END Call detection.
-
+#BEGIN Call detection.
+CHECKIN_DETECTION_REGEXP = re.compile(ConfigObject.checkin_detection_regexp, re.IGNORECASE)
+#END Call detection.
 
 def getSinceFromConfig():
     try:
@@ -121,26 +123,36 @@ while(True):
                 #END Call detection.
                 tweet.userId = user
 
-                # TBD
-                if 'entities' in status.data and 'media' in status.data['entities'] and status.data['entities']['media'][0]['type']=='photo':
-                    tweet.mediaUrl = status.data['entities']['media'][0]['media_url']+":thumb"
+                #BEGIN Checkin detection.
+                if CHECKIN_DETECTION_REGEXP.search(tweet.text):
+                    checkin = CheckIn()
+                    checkin.callId = dStatus['in_reply_to_status_id']
+                    checkin.userId = dStatus['user']['id']
+                    checkin.stamp = time.strftime('%Y-%m-%d %H:%M:%S',time.strptime(dStatus['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))
+                    checkin.save()
+                #END Checkin detection.
                 else:
-                    tweet.mediaUrl = ""
+                    #Mapeos & Calls
+                    # TBD
+                    if 'entities' in status.data and 'media' in status.data['entities'] and status.data['entities']['media'][0]['type']=='photo':
+                        tweet.mediaUrl = status.data['entities']['media'][0]['media_url']+":thumb"
+                    else:
+                        tweet.mediaUrl = ""
 
-                tweet.lat = dStatus['coordinates']['coordinates'][1]
-                tweet.lng = dStatus['coordinates']['coordinates'][0]
-                tweet.relevanceFirst = 0
-                tweet.relevanceSecond = 0
-                tweet.rt = 0
-                tweet.votes = 0
-                pprint.pprint(status.hashtags)
-                if dStatus['hashtags'] is not None:
-                    tweet.hashTag = dStatus['hashtags'][0].lower()
-                else:
-                    tweet.hashTag = ""
-                tweet.stamp = time.strftime('%Y-%m-%d %H:%M:%S',time.strptime(dStatus['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))
+                    tweet.lat = dStatus['coordinates']['coordinates'][1]
+                    tweet.lng = dStatus['coordinates']['coordinates'][0]
+                    tweet.relevanceFirst = 0
+                    tweet.relevanceSecond = 0
+                    tweet.rt = 0
+                    tweet.votes = 0
+                    pprint.pprint(status.hashtags)
+                    if dStatus['hashtags'] is not None:
+                        tweet.hashTag = dStatus['hashtags'][0].lower()
+                    else:
+                        tweet.hashTag = ""
+                    tweet.stamp = time.strftime('%Y-%m-%d %H:%M:%S',time.strptime(dStatus['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))
 
-                tweet.save()
+                    tweet.save()
             else:
                 print "Tweet %d already exists" % dStatus['id']
         else:
