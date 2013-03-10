@@ -82,8 +82,8 @@ $(document).ready(function(){
     var mapMe=function(){
         console.log('At mapMe');
         if(/Android/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&messageg='+replyAccount+'%20';}
-        else{
-
+        else
+        {
 //            310785997703090177
             if(/iPad/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20';}
 //            if(/iPad/i.test(navigator.userAgent)){goto = 'twitter://post?in_reply_to_status_id='+callNode.id;alert(goto);location=goto;}
