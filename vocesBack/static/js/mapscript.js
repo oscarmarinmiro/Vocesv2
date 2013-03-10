@@ -81,6 +81,8 @@ $(document).ready(function(){
         }
     }
     //Data retrieval functions.
+    // OJO (OSCAR): He mezclado aqui el retrieveCalls y retrieveCallCheckings desde el updateData porque las dos
+    // son asincronas, para crear una sola rama de paintMap en cada caso
     var retrieveCalls=function(){
         console.log('At retrieveCalls');
         var url='getCalls/';
@@ -89,13 +91,27 @@ $(document).ready(function(){
             calls = data.calls;
             hashtagCount = data.hts;
             hashtagCount.push({'ht':"__all__"});
-            }).complete(function(){paintMap();console.log('Carga completada...' );});
+            }).complete(function()
+                    {
+                        if(callNode!=null){
+                                var url='getCallCheckins/'+callNode.id+'/';
+                                console.log('URL: '+ url);
+                                $.getJSON(url,function(data){
+                                    checkins=data;console.log(checkins);
+                                    }).complete(function(){console.log('Carga completada...');paintMap();});
+                                }
+                        else
+                        {
+                        console.log('Carga completada...' );
+                        paintMap();
+                        }
+                    });
         return true;
     };
     var updateData=function(){
         console.log('At updateCalls');
         calls=retrieveCalls();
-        if(callNode!=null){retrieveCallCheckins(callNode.id);}
+
     };
     var retrieveCallCheckins=function(id){
         console.log('At retrieveCallCheckins');
