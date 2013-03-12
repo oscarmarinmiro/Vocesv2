@@ -1,7 +1,7 @@
 __author__ = 'oscarmarinmiro'
 
 from django.utils import timezone
-from models import Tweet, User, CheckIn
+from models import Tweet, User, CheckIn, Call
 from math import sqrt, pow, pi, acos, sin, cos
 
 from datetime import datetime
@@ -85,12 +85,16 @@ def dataAlreadyChecked(fingerprint):
         return {"code":"KO"}
 
 #BEGIN Calls management.
-def __buildTweetsResult(calls):
+def __buildTweetsResult(tweets):
     result = list()
-    for call in calls:
-        result.append({'id':str(call.tweetId),'lat':call.lat,'lng':call.lng,
-                       'stamp':call.stamp.strftime("%Y%m%d%H%M%S"),'hashTag':call.hashTag,'votes':call.votes,
-                       'relevance':call.relevanceFirst})
+    for tweet in tweets:
+        temp = {'id':str(tweet.tweetId),'lat': tweet.lat,'lng': tweet.lng,
+                'stamp': tweet.stamp.strftime("%Y%m%d%H%M%S"),'hashTag': tweet.hashTag,'votes': tweet.votes,
+                'relevance': tweet.relevanceFirst}
+        call = Call.objects.get(tweetId = tweet.tweetId)
+        if call is not None:
+            temp['callId'] = call.pk
+        result.append(temp)
     return result
 
 def __buildHTResult(calls):
