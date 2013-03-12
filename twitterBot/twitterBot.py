@@ -115,6 +115,9 @@ while(True):
                 if CALL_DETECTION_REGEXP.search(tweet.text):
                     #It's a call!
                     tweet.inReplyToId = -1
+                    call = Call()
+                    call.tweetId = tweet.tweetId
+                    call.save()
                 else:
                     if 'in_reply_to_status_id' in dStatus:
                         # We need to retrieve to which call it's replying to
@@ -162,6 +165,8 @@ while(True):
                     tweet.stamp = time.strftime('%Y-%m-%d %H:%M:%S',time.strptime(dStatus['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))
 
                     tweet.save()
+
+                        
             else:
                 print "Tweet %d already exists" % dStatus['id']
         else:

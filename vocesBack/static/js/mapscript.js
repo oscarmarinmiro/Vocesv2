@@ -262,10 +262,11 @@ $(document).ready(function(){
                 console.log(callNode);
 
                 if((callNode) && (call.id==callNode.id)){
-                    marker=L.marker([call.lat, call.lng], {icon: decideIcon(call.votes)});
+                    marker=L.marker([call.lat, call.lng], {icon: decideIcon(call['votes'])});
                 }else{
                     // BUG? NO hay que decidir dependiendo de los votos independientemente de si es la seleccionada o no?
-                    marker=L.marker([call.lat, call.lng], {icon: defaultIcon});
+                    //marker=L.marker([call.lat, call.lng], {icon: defaultIcon});
+                    marker=L.marker([call.lat, call.lng], {icon: decideIcon(call['votes'])});
                 }
                 marker.__data__= call;
                 marker.bindPopup("Cargando");
