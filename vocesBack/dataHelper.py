@@ -3,6 +3,7 @@ __author__ = 'oscarmarinmiro'
 from django.utils import timezone
 from models import Tweet, User, CheckIn, Call
 from math import sqrt, pow, pi, acos, sin, cos
+from django.core.exceptions import ObjectDoesNotExist
 
 from datetime import datetime
 
@@ -91,26 +92,22 @@ def __buildTweetsResult(tweets):
         temp = {'id':str(tweet.tweetId),'lat': tweet.lat,'lng': tweet.lng,
                 'stamp': tweet.stamp.strftime("%Y%m%d%H%M%S"),'hashTag': tweet.hashTag,'votes': tweet.votes,
                 'relevance': tweet.relevanceFirst}
-        call = Call.objects.get(tweetId = tweet.tweetId)
-        if call is not None:
+        try:
+            call = Call.objects.get(tweetId=tweet.tweetId)
             temp['callId'] = call.pk
+        except ObjectDoesNotExist:
+            pass
         result.append(temp)
     return result
 
 def __buildHTResult(calls):
-
     htDict = {}
-
     for call in calls:
         myHT = call.hashTag.lower()
-
         if myHT not in htDict:
             htDict[myHT] = 0
-
         htDict[myHT]+= call.votes
-
     return [{'ht':key,'count':htDict[key]} for key in sorted(htDict.keys(), key=lambda key: htDict[key], reverse=True)[:5]]
-
 
 def dataGetCalls():
     calls = Tweet.objects.filter(inReplyToId=-1).order_by('-stamp')[:500]
