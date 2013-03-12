@@ -81,9 +81,9 @@ $(document).ready(function(){
 
     var mapMe=function(){
         console.log('At mapMe');
-        if(/Android/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&messageg='+replyAccount+'%20';}
-        else
-        {
+        //if(/Android/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&messageg='+replyAccount+'%20';}
+        if(/Android/i.test(navigator.userAgent)){location = 'https://twitter.com/intent/tweet?in_reply_to_status_id='+callNode.id+'&text='+replyAccount+'%20';}
+        else{
 //            310785997703090177
             if(/iPad/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20';}
 //            if(/iPad/i.test(navigator.userAgent)){goto = 'twitter://post?in_reply_to_status_id='+callNode.id;alert(goto);location=goto;}
@@ -96,7 +96,8 @@ $(document).ready(function(){
     var checkinMe=function(){
         var checkinSymbol='*';
         console.log('At checkinMe');
-        if(/Android/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&messageg='+replyAccount+'%20'+checkinSymbol+'%20';}
+        //if(/Android/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&messageg='+replyAccount+'%20'+checkinSymbol+'%20';}
+        if(/Android/i.test(navigator.userAgent)){location = 'https://twitter.com/intent/tweet?in_reply_to_status_id='+callNode.id+'&text='+replyAccount+'%20'+checkinSymbol+'%20';}
         else{
             if(/iPad/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20'+checkinSymbol+'%20';}
             else{
@@ -349,7 +350,8 @@ $(document).ready(function(){
     var menuCall=function(){
         console.log('At menuCall');
         var callSymbol = '%C2%A1';
-        if(/Android/i.test(navigator.userAgent)){location = "twitter://post?message="+replyAccount+"%20"+callSymbol+"%20";}
+        //if(/Android/i.test(navigator.userAgent)){location = "twitter://post?message="+replyAccount+"%20"+callSymbol+"%20";}
+        if(/Android/i.test(navigator.userAgent)){location = "https://twitter.com/intent/tweet?text="+replyAccount+"%20"+callSymbol+"%20";}
         else{
             if(/iPad/i.test(navigator.userAgent)){location = "twitter://post?message="+replyAccount+"%20"+callSymbol+"%20";}
             else{

@@ -1,7 +1,7 @@
 # -*- coding: utf8 -*-
 
 from django.db.models import Model, CharField, BigIntegerField, IntegerField, DateTimeField, URLField, FloatField,\
-                             OneToOneField, ForeignKey
+                             OneToOneField, ForeignKey, OneToOneField
 from django.contrib.sites.models import Site
 
 class Config(Model):
@@ -52,6 +52,14 @@ class User(Model):
 
     def __unicode__(self):
         return self.screenName
+
+
+class Call(Model):
+    tweetId = OneToOneField(Tweet)
+
+    def __unicode__(self):
+        return str(self.tweetId)
+
 
 class Tweet(Model):
     """
