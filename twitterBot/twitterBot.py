@@ -161,7 +161,7 @@ while(True):
                     checkin.callId = reference_id
                     checkin.userId = User.objects.get(pk=dStatus['user']['id'])
                     checkin.stamp = time.strftime('%Y-%m-%d %H:%M:%S',time.strptime(dStatus['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))
-                    checkin.save()
+                    #checkin.save()
 
                     callUpdate = Call.objects.get(pk=checkin_match.groups()[0])
                     print "callupd :-%s-" % callUpdate
@@ -170,6 +170,8 @@ while(True):
                     tweetUpdate.votes=F('votes') + 1
                     tweetUpdate.save()
 
+                    #ESTO VA AQUI PARA EVITAR QUE SE BLOQUEE POR EL CHECKIN EN CASO DE FALLO EN EL UPDATE DE VOTOS. SINO NO SE ACTUALIZA EL LASTID PERO EL CHECKIN YA ESTA INSERTADO
+                    checkin.save()
 
                 #END Checkin detection.
                 elif mapping_match:
