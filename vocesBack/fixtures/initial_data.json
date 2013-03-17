@@ -1,5 +1,5 @@
 [
-    {
+   {
         "pk": 8,
         "model": "contenttypes.contenttype",
         "fields": {
