@@ -23,6 +23,15 @@ var checkinsLayerGroup;
 
 //Icons
 
+var markerIcon = L.icon({
+    iconUrl: 'static/imgs/markers/new/marker-icon.png',
+    shadowUrl: 'static/imgs/markers/new/marker-shadow.png',
+    shadowSize:   [50, 64],
+    iconSize:     [25, 41], // size of the icon
+    iconAnchor:   [12, 41], // point of the icon which will correspond to marker's location
+    shadowAnchor: [12,64]
+    }
+);
 
 var defaultIcon = L.icon({
     iconUrl: 'static/imgs/markers/call-marker.png',
@@ -30,34 +39,58 @@ var defaultIcon = L.icon({
     iconAnchor: [17, 34],
     popupAnchor: [-3, -42]
 });
-var scaleIcons = [
+var offIcons = [
     L.icon({
-        iconUrl: 'static/imgs/markers/call-marker-0.png',
+        iconUrl: 'static/imgs/markers/new/marker-0-off.png',
         iconSize: [37, 36],
         iconAnchor: [17, 34],
         popupAnchor: [-3, -42]}),
     L.icon({
-        iconUrl: 'static/imgs/markers/call-marker-1.png',
+        iconUrl: 'static/imgs/markers/new/marker-1-off.png',
         iconSize: [37, 36],
         iconAnchor: [17, 34],
         popupAnchor: [-3, -42]}),
     L.icon({
-        iconUrl: 'static/imgs/markers/call-marker-2.png',
+        iconUrl: 'static/imgs/markers/new/marker-2-off.png',
         iconSize: [37, 36],
         iconAnchor: [17, 34],
         popupAnchor: [-3, -42]}),
     L.icon({
-        iconUrl: 'static/imgs/markers/call-marker-3.png',
-        iconSize: [37, 36],
-        iconAnchor: [17, 34],
-        popupAnchor: [-3, -42]}),
-    L.icon({
-        iconUrl: 'static/imgs/markers/call-marker-4.png',
+        iconUrl: 'static/imgs/markers/new/marker-3-off.png',
         iconSize: [37, 36],
         iconAnchor: [17, 34],
         popupAnchor: [-3, -42]})
+
 ];
+
+var onIcons = [
+    L.icon({
+        iconUrl: 'static/imgs/markers/new/marker-0-on.png',
+        iconSize: [37, 36],
+        iconAnchor: [17, 34],
+        popupAnchor: [-3, -42]}),
+    L.icon({
+        iconUrl: 'static/imgs/markers/new/marker-1-on.png',
+        iconSize: [37, 36],
+        iconAnchor: [17, 34],
+        popupAnchor: [-3, -42]}),
+    L.icon({
+        iconUrl: 'static/imgs/markers/new/marker-2-on.png',
+        iconSize: [37, 36],
+        iconAnchor: [17, 34],
+        popupAnchor: [-3, -42]}),
+    L.icon({
+        iconUrl: 'static/imgs/markers/new/marker-3-on.png',
+        iconSize: [37, 36],
+        iconAnchor: [17, 34],
+        popupAnchor: [-3, -42]})
+
+];
+
+
 var map;
+
+
 $(document).ready(function(){
 
     // Helper function to link twitter entities
@@ -71,13 +104,21 @@ $(document).ready(function(){
 
     // Function that returns a Leaflet icon depending on a metric [0-100]
 
-    var decideIcon=function(level){
+    var decideIconOff=function(level){
         console.log('At decideIcon');
-        if(level>100){return scaleIcons[4];}
-        else if(level<=100 && level>75){return scaleIcons[3];}
-        else if(level<=75 && level>50){return scaleIcons[2];}
-        else if(level<=50 && level>25){return scaleIcons[1];}
-        else{return scaleIcons[0];}
+        if(level>75){return offIcons[3];}
+        else if(level<=75 && level>50){return offIcons[2];}
+        else if(level<=50 && level>25){return offIcons[1];}
+        else{return offIcons[0];}
+    };
+
+
+    var decideIconOn=function(level){
+        console.log('At decideIcon');
+        if(level>75){return onIcons[0];}
+        else if(level<=75 && level>50){return onIcons[0];}
+        else if(level<=50 && level>25){return onIcons[0];}
+        else{return onIcons[0];}
     };
 
 
@@ -249,7 +290,7 @@ $(document).ready(function(){
     };
     var paintUserPosition=function(){
         console.log('At paintUserPosition');
-        L.marker(locLatLng).setZIndexOffset(-100).addTo(map);
+        L.marker(locLatLng, {icon: markerIcon}).setZIndexOffset(-100).addTo(map);
         paintCalls();
     };
     var paintCalls=function(){
@@ -265,11 +306,11 @@ $(document).ready(function(){
                 console.log(callNode);
 
                 if((callNode) && (call.id==callNode.id)){
-                    marker=L.marker([call.lat, call.lng], {icon: decideIcon(call['votes'])});
+                    marker=L.marker([call.lat, call.lng], {icon: decideIconOn(call['votes'])});
                 }else{
                     // BUG? NO hay que decidir dependiendo de los votos independientemente de si es la seleccionada o no?
                     //marker=L.marker([call.lat, call.lng], {icon: defaultIcon});
-                    marker=L.marker([call.lat, call.lng], {icon: decideIcon(call['votes'])});
+                    marker=L.marker([call.lat, call.lng], {icon: decideIconOff(call['votes'])});
                 }
                 marker.__data__= call;
                 marker.bindPopup("Cargando");
@@ -285,10 +326,10 @@ $(document).ready(function(){
         for(var i=0;i<checkins.tweets.length;i++){
             var tweet=checkins.tweets[i];
             var circle=L.circle([tweet.lat,tweet.lng],CIRCLE_SIZE,{
-                color:"black",
-                weight:1,
+                color: "#000",
+                weight:3,
                 stroke:true,
-                fillColor: "black",
+                fillColor: "#ffe174",
                 fillOpacity: 1.0,
                 opacity: 1.0
             });

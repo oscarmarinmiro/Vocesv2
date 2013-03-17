@@ -201,3 +201,7 @@ html, body, #mapPage, #map {
     margin-bottom: 7px;
 
 }
+
+.leaflet-container a {
+    color: #000;
+}
