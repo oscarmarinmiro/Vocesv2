@@ -1,0 +1,202 @@
+body {
+    padding: 0;
+    margin: 0;
+    font-family: "candara", "Helvetica Neue", sans-serif;
+}
+html, body, #mapPage, #map {
+    height: 100%;
+}
+#infobox
+{
+    width: 200px;
+    position:fixed;
+    top: 12px;
+    left:60px;
+    background-color: rgba(0,0,0,1.0);
+    color: #FFF;
+    z-index:1000;
+    font-size:20px;
+    border-radius: 8px;
+    padding: 8px;
+    height:auto;
+}
+#infomenu a
+{
+    text-decoration: none;
+    color:#fff;
+}
+
+#infomenu a
+{
+    text-decoration: none;
+    color:#fff;
+}
+
+#infobox a:hover
+{
+    text-decoration: underline;
+}
+
+
+#infoextra
+{
+    padding-top:2px;
+    padding-left:5px;
+    font-size:10px;
+}
+.tweet {
+    font-size: 14px;
+}
+.tweet a{
+    text-decoration: none;
+}
+
+.tweet .tweetText
+{
+    color:#ffe174;
+}
+
+.tweet .tweetText a
+{
+    text-decoration: none;
+    color:#ffe174;
+}
+.tweet .birddate
+{
+    padding-bottom: 3px;
+}
+
+.tweet .author
+{
+    font-size:14px;
+    font-weight: bold;
+    clear:both;
+}
+
+
+.tweet .botonera
+{
+    float:left;
+}
+
+.tweet .nick a
+{
+    color:#ffe174;
+}
+.tweet a
+{
+    color:#ffe174;
+}
+.button {
+    -moz-box-shadow: inset 0px 1px 0px 0px #fceaca;
+    -webkit-box-shadow: inset 0px 1px 0px 0px #fceaca;
+    box-shadow: inset 0px 1px 0px 0px #fceaca;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffce79), color-stop(1, #ffe174));
+    background: -moz-linear-gradient(center top, #ffce79 5%, #ffe174 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffce79', endColorstr='#ffe174');
+    background-color: #ffce79;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    border: 1px solid #eeb44f;
+    display: inline-block;
+    color: #ffffff;
+    font-family: Verdana;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 6px 6px;
+    text-decoration: none;
+    text-shadow: 1px 1px 0px #ce8e28;
+    cursor: pointer;
+}
+.button:hover {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffe174), color-stop(1, #ffce79));
+    background: -moz-linear-gradient(center top, #ffe174 5%, #ffce79 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe174', endColorstr='#ffce79');
+    background-color: #ffe174;
+}
+.button:active {
+    position: relative;
+    top: 1px;
+}
+.ht
+{
+    font-size: 20px;
+    cursor:pointer;
+    color: #FFF;
+}
+
+.hton
+{
+    color:#ffe174;
+}
+
+#infomenu
+{
+    padding-left:10px;
+}
+
+.infomenu
+{
+    font-size:22px;
+    margin-right:15px;
+}
+
+.extraHeader
+{
+    font-size: 20px;
+    color:#ffe174;
+}
+
+.extraContent
+{
+    font-size: 12px;
+}
+
+.close
+{
+    font-size: 12px;
+    width: 40px;
+    border: 1px solid white;
+    padding: 3px;
+    margin-top:3px;
+    margin-left:10px;
+    cursor:pointer;
+    background: #FFF;
+    color: #000;
+    float:left;
+    margin-bottom: 7px;
+}
+
+.closeleft
+{
+    margin-left:0px;
+}
+
+.checkin
+{
+    margin-top:3px;
+    font-size: 12px;
+    width: 40px;
+    border: 1px solid white;
+    padding: 3px;
+    cursor:pointer;
+    background: #FFF;
+    color: #000;
+    float:left;
+}
+.mapping
+{
+    margin-top:3px;
+    font-size: 12px;
+    width: 40px;
+    border: 1px solid white;
+    padding: 3px;
+    margin-left:10px;
+    cursor:pointer;
+    background: #FFF;
+    color: #000;
+    float:left;
+    margin-bottom: 7px;
+
+}
