@@ -209,7 +209,7 @@ $(document).ready(function(){
     var callInfo = function(){
         console.log('At callInfo');
         callId=callNode.id;
-        var url="getPointDetail/"+callId;
+        var url="getPointDetail/"+callId+"/";
         var data = null;
         $.getJSON(url, function(datos){
             data = datos;
@@ -243,7 +243,7 @@ $(document).ready(function(){
     };
     var replyInfo = function(id){
         console.log('At replyInfo');
-        var url="getPointDetail/"+id;
+        var url="getPointDetail/"+id+"/";
         var data = null;
         $.getJSON(url, function(datos){
             data = datos;
