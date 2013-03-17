@@ -32,6 +32,13 @@ DATABASES = {
 
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
+
 SECRET_KEY = 'qv(b00q^wwzar%!2std%&amp;gj29uq_=ipq_noz9vwml)2+x#vgxc'
 
 # Used to provide absolute paths.  Normally the default is fine.

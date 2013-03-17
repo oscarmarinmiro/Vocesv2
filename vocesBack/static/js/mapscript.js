@@ -81,27 +81,28 @@ $(document).ready(function(){
 
     var mapMe=function(){
         console.log('At mapMe');
-        if(/Android/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&messageg='+replyAccount+'%20';}
-        else
-        {
+        if(/Android/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20['+callNode.callId+']%20';}
+        //if(/Android/i.test(navigator.userAgent)){location = 'https://twitter.com/intent/tweet?text='+replyAccount+'%20['+callNode.callId+']%20';}
+        else{
 //            310785997703090177
-            if(/iPad/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20';}
+            if(/iPad/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20['+callNode.callId+']%20';}
 //            if(/iPad/i.test(navigator.userAgent)){goto = 'twitter://post?in_reply_to_status_id='+callNode.id;alert(goto);location=goto;}
             else{
-                if(/iPhone/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20';}
-                else{location = 'https://twitter.com/intent/tweet?in_reply_to_status_id='+callNode.id+'&text='+replyAccount+'%20';}
+                if(/iPhone/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20['+callNode.callId+']%20';}
+                else{location = 'https://twitter.com/intent/tweet?in_reply_to_status_id='+callNode.id+'&text='+replyAccount+'%20['+callNode.callId+']%20';}
             }
         }
     };
     var checkinMe=function(){
         var checkinSymbol='*';
         console.log('At checkinMe');
-        if(/Android/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&messageg='+replyAccount+'%20'+checkinSymbol+'%20';}
+        if(/Android/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20'+checkinSymbol+'%20['+callNode.callId+']%20';}
+        //if(/Android/i.test(navigator.userAgent)){location = 'https://twitter.com/intent/tweet?text='+replyAccount+'%20'+checkinSymbol+'%20['+callNode.callId+']%20';}
         else{
-            if(/iPad/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20'+checkinSymbol+'%20';}
+            if(/iPad/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20'+checkinSymbol+'%20['+callNode.callId+']%20';}
             else{
-                if(/iPhone/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20'+checkinSymbol+'%20';}
-                else{location = 'https://twitter.com/intent/tweet?in_reply_to_status_id='+callNode.id+'&text='+replyAccount+'%20'+checkinSymbol+'%20';}
+                if(/iPhone/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20'+checkinSymbol+'%20['+callNode.callId+']%20';}
+                else{location = 'https://twitter.com/intent/tweet?in_reply_to_status_id='+callNode.id+'&text='+replyAccount+'%20'+checkinSymbol+'%20['+callNode.callId+']%20';}
             }
         }
     }
@@ -262,10 +263,11 @@ $(document).ready(function(){
                 console.log(callNode);
 
                 if((callNode) && (call.id==callNode.id)){
-                    marker=L.marker([call.lat, call.lng], {icon: decideIcon(call.votes)});
+                    marker=L.marker([call.lat, call.lng], {icon: decideIcon(call['votes'])});
                 }else{
                     // BUG? NO hay que decidir dependiendo de los votos independientemente de si es la seleccionada o no?
-                    marker=L.marker([call.lat, call.lng], {icon: defaultIcon});
+                    //marker=L.marker([call.lat, call.lng], {icon: defaultIcon});
+                    marker=L.marker([call.lat, call.lng], {icon: decideIcon(call['votes'])});
                 }
                 marker.__data__= call;
                 marker.bindPopup("Cargando");
@@ -349,6 +351,7 @@ $(document).ready(function(){
         console.log('At menuCall');
         var callSymbol = '%C2%A1';
         if(/Android/i.test(navigator.userAgent)){location = "twitter://post?message="+replyAccount+"%20"+callSymbol+"%20";}
+        //if(/Android/i.test(navigator.userAgent)){location = "https://twitter.com/intent/tweet?text="+replyAccount+"%20"+callSymbol+"%20";}
         else{
             if(/iPad/i.test(navigator.userAgent)){location = "twitter://post?message="+replyAccount+"%20"+callSymbol+"%20";}
             else{

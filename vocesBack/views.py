@@ -14,6 +14,9 @@ from django.http import HttpResponse
 from dataHelper import dataSearchGeo,dataSearchGeoHash,dataSearchPointDetail,dataInsertCheckIn,dataAlreadyChecked,\
                        dataGetCalls, dataGetCallCheckins, dataGetCallsInRadius
 
+from django.views.decorators.cache import cache_page
+
+
 # Create your views here.
 
 
@@ -42,6 +45,8 @@ def searchGeoHash(request,latMin,lngMin,latMax,lngMax,hashtag):
     return HttpResponse(json.dumps(tweets), content_type="application/json")
 
 
+
+@cache_page(60)
 def searchPointDetail(request,tweetId):
     tweetId = int(tweetId)
 
@@ -67,6 +72,8 @@ def home(request):
     return render_to_response("index.html", locals(),context_instance=RequestContext(request))
 
 #BEGIN Calls management.
+
+@cache_page(60 * 10)
 def getCalls(request):
     response = dataGetCalls()
     return HttpResponse(json.dumps(response), content_type='application/json')
@@ -79,6 +86,7 @@ def getCallsInRadius(request, lat, lng, radius):
     response = dataGetCallsInRadius(lat, lng, radius)
     return HttpResponse(json.dumps(response), content_type='application/json')
 
+@cache_page(60)
 def getCallCheckins(request, callId):
     callId = int(callId)
     response = dataGetCallCheckins(callId)

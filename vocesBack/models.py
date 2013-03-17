@@ -1,7 +1,7 @@
 # -*- coding: utf8 -*-
 
 from django.db.models import Model, CharField, BigIntegerField, IntegerField, DateTimeField, URLField, FloatField,\
-                             OneToOneField, ForeignKey
+                             OneToOneField, ForeignKey, OneToOneField
 from django.contrib.sites.models import Site
 
 class Config(Model):
@@ -15,12 +15,15 @@ class Config(Model):
     #BEGIN Call detection constants.
     calls_twitter_account = 'vote_outliers'
     call_symbol = '¡'
-    call_detection_regexp = "^@%s %s .*$" % (calls_twitter_account, call_symbol)
+    call_detection_regexp_str = "^@%s %s .*$" % (calls_twitter_account, call_symbol)
     #END Call detection constants.
     #BEGIN Checkin detection constants.
     checkin_symbol = '\*'
-    checkin_detection_regexp = "^@%s %s .*$" % (calls_twitter_account, checkin_symbol)
+    checkin_detection_regexp_str = "^@%s %s \[(\d+)\] .*$" % (calls_twitter_account, checkin_symbol)
     #END Checkin detection constants.
+    #BEGIN Maping detection constants.
+    mapping_detection_regexp_str = "^@%s \[(\d+)\] .*$" % (calls_twitter_account)
+    #END Maping detection constants.
     oauthToken = CharField('Robot OauthToken',max_length=100,unique=True)
     oauthSecret = CharField('Robot OauthSecret',max_length=100,unique=True)
     consumerKey = CharField('Consumer key',max_length=100,unique=True)
@@ -29,6 +32,9 @@ class Config(Model):
     maxPoints = IntegerField('Max number of points in a user geo Window')
     lastId = BigIntegerField('Last tweet Id for internal robot management (do not touch!)')
     lastBotTime = DateTimeField('Last robot wake up for internal robot management (do not touch!)')
+    call_detection_regexp = CharField(max_length=len(call_detection_regexp_str)+10,default=call_detection_regexp_str)
+    checkin_detection_regexp = CharField(max_length=len(checkin_detection_regexp_str)+10,default=checkin_detection_regexp_str)
+    mapping_detection_regexp = CharField(max_length=len(mapping_detection_regexp_str)+10,default=mapping_detection_regexp_str)
 
     class Meta:
         verbose_name_plural = 'Config'
@@ -52,6 +58,7 @@ class User(Model):
 
     def __unicode__(self):
         return self.screenName
+
 
 class Tweet(Model):
     """
@@ -92,4 +99,12 @@ class CheckIn(Model):
 
     def __unicode__(self):
         return str('%s-%s' % (self.userId, self.callId))
-                                          
+ 
+
+class Call(Model):
+    tweetId = OneToOneField(Tweet)
+
+    def __unicode__(self):
+        return str(self.tweetId)
+
+                                         
