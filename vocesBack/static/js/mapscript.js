@@ -276,7 +276,7 @@ $(document).ready(function(){
         console.log("¡¡¡¡¡¡¡¡TIRO EL MAPA!!!!!!!!!!!!!!");
         $("#map").remove();
         $("body").append('<div id="map"></div>');
-        map = L.map('map',{touchZoom:true}).locate({setView:false,enableHighAccuracy:true}).setView(myLatLng, myZoom);
+        map = L.map('map',{touchZoom:true}).locate({setView:false,enableHighAccuracy:true,maximumAge:60000}).setView(myLatLng, myZoom);
         map.on('locationfound', onLocationFound);
         map.on('locationerror', onLocationError);
         L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/'+mapStyle+'/256/{z}/{x}/{y}.png', {
@@ -437,7 +437,7 @@ $(document).ready(function(){
     };
     //First time run.
     var L_PREFER_CANVAS=true;
-    map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,enableHighAccuracy:true});
+    map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,enableHighAccuracy:true,maximumAge:60000});
     map.on('locationfound', onLocationFound);
     map.on('locationerror', onLocationError);
     L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/'+mapStyle+'/256/{z}/{x}/{y}.png', {
