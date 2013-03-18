@@ -203,7 +203,7 @@ $(document).ready(function(){
         console.log('At display');
         openInfobox(height+"px");
         html+='<br /><div class="close closeleft" href="#">Cerrar</div>';
-        $('#infoextra').html(html);
+        $('#infoextra').html("<br/>"+html);
         $('.close').on('click',function(){closeInfobox();});
     };
     var callInfo = function(){
@@ -280,7 +280,7 @@ $(document).ready(function(){
         map.on('locationerror', onLocationError);
         L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/'+mapStyle+'/256/{z}/{x}/{y}.png', {
             maxZoom: 18,
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
+            attribution: 'App by <a href="http://www.outliers.es">Outliers</a>, Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
         }).addTo(map);
     }
     var paintMap=function(){
@@ -407,7 +407,7 @@ $(document).ready(function(){
         console.log('At menu');
         var html="";
 //        html = '<a id="home" href="#"><img src="static/imgs/marker_white.png" width="20" height="30"></a><a id="tag" href="#">#TT</a><a id="call" href="#">¡C!</a>';
-        html = '<a id="home" class="infomenu" href="#">H</a><a id="tag" class="infomenu" href="#">#</a><a id="call" href="#" class="infomenu">!</a><a id="help" href="#" class="infomenu">?</a><span class="infomenu">LOGO</span>';
+        html = '<a id="home" class="infomenu" href="#"><img style="vertical-align:middle;" height="20" width="25" src="static/imgs/home-icon.png"></a><a id="tag" class="infomenu" href="#">#</a><a id="call" href="#" class="infomenu">C!</a><a id="help" href="#" class="infomenu">?</a>';
         $('#infomenu').html(html);
         $('#home').on("click",menuHome);
         $('#tag').on("click",menuHash);
@@ -430,7 +430,7 @@ $(document).ready(function(){
     map.on('locationerror', onLocationError);
     L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/'+mapStyle+'/256/{z}/{x}/{y}.png', {
         maxZoom: 18,
-        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
+        attribution: 'App by <a href="www.outliers.es">Outliers</a> Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
     }).addTo(map);
     menu();
     var refresher = setInterval(function(){updateData();},60000);
