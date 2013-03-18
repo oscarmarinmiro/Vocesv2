@@ -9,7 +9,7 @@ html, body, #mapPage, #map {
 
 #infobox
 {
-    width: 200px;
+    width: 210px;
     position:fixed;
     top: 12px;
     left:60px;

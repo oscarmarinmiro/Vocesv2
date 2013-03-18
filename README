@@ -28,6 +28,14 @@ http://wiki.akosma.com/IPhone_URL_Schemes#Twitter
 
 http://handleopenurl.com/scheme/twitter
 
+https://code.google.com/p/modwsgi/wiki/QuickInstallationGuide
+
+https://code.google.com/p/modwsgi/wiki/QuickInstallationGuide
+
+Añadir en el wsgi.py:
+
+sys.path.append('/home/desa/work/convoca/Vocesv2')
+
 
 
 
