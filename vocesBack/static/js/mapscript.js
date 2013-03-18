@@ -16,6 +16,7 @@ var locLatLng;
 var calls;
 var checkins;
 var callNode=null;
+var firstLocate = true;
 var callsLayerGroup;
 var checkinsLayerGroup;
 
@@ -275,7 +276,7 @@ $(document).ready(function(){
         console.log("¡¡¡¡¡¡¡¡TIRO EL MAPA!!!!!!!!!!!!!!");
         $("#map").remove();
         $("body").append('<div id="map"></div>');
-        map = L.map('map',{touchZoom:true}).setView(myLatLng, myZoom);
+        map = L.map('map',{touchZoom:true}).locate({maxZoom:18,enableHighAccuracy:true,watch:true}).setView(myLatLng, myZoom);
         map.on('locationfound', onLocationFound);
         map.on('locationerror', onLocationError);
         L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/'+mapStyle+'/256/{z}/{x}/{y}.png', {
@@ -415,17 +416,27 @@ $(document).ready(function(){
         $('#help').on("click", menuHelp);
     };
     //Map events handlers.
-    var onLocationError=function(e){console.log('At onLocationError');alert(e.message);};
+    var onLocationError=function(e){
+        if(!locLatLng)
+        {
+            console.log('At onLocationError');
+            alert(e.message);
+        }
+    };
     var onLocationFound=function(e){
         console.log('At onLocationFound');
         console.log("Location found...");
         locLatLng = e.latlng;
-        paintMapFirstTime();
-        updateData();
+        if(firstLocate)
+        {
+            paintMapFirstTime();
+            updateData();
+            firstLocate = false;
+        }
     };
     //First time run.
     var L_PREFER_CANVAS=true;
-    map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,enableHighAccuracy:true});
+    map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,enableHighAccuracy:true,watch:true});
     map.on('locationfound', onLocationFound);
     map.on('locationerror', onLocationError);
     L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/'+mapStyle+'/256/{z}/{x}/{y}.png', {
