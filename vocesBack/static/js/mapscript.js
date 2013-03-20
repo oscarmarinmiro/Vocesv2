@@ -204,7 +204,7 @@ $(document).ready(function(){
     var display = function(html,height){
         console.log('At display');
         openInfobox(height+"px");
-        html+='<br /><div class="close closeleft" href="#">Cerrar</div>';
+        html+='<div class="close closeleft" href="#">Cerrar</div>';
         $('#infoextra').html("<br/>"+html+"<div class='marginbot'></div>");
         $('.close').on('click',function(){closeInfobox();});
     };
@@ -217,10 +217,12 @@ $(document).ready(function(){
             data = datos;
         }).complete(function(){
                 var html = '<div class="tweet">';
+                html+='<div>';
                 html+='<div class="picture"><img class="picture" src="'+data.userImg+'"></div>';
                 html+='<div class="author">'+data.userName+"</div>";
                 html+='<div class="nick"><a href="https://www.twitter.com/'+data.userNick+'">@'+data.userNick+'</a></div>';
                 html+='<div class="birddate"><img src="static/imgs/bird_blue_16.png"><span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("DD.MM.YYYY HH:mm:ss")+"</span></div>";
+                html+='</div';
                 html+='<div class="botonera"><div class="checkin" id="checkin">Checkin</div><div class="mapping" id="mapea">Mapea</div><div class="close" href="#">Cerrar</div></div>';
                 html+='<div style="clear:both;" id="checkinsCount">Checkin count: '+data.votes+'</div>';
 
@@ -252,7 +254,7 @@ $(document).ready(function(){
                 html+='<div class="author">'+data.userName+"</div>";
                 html+='<div class="nick"><a href="https://www.twitter.com/'+data.userNick+'">@'+data.userNick+'</a></div>';
                 html+='<div class="birddate"><img src="static/imgs/bird_blue_16.png"><span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("DD.MM.YYYY HH:mm:ss")+"</span></div>";
-                html+='<div class="botonera"><div class="close closeleft" href="#">Cerrar</div></div>';
+                html+='<div class="botonera"><div class="closeup" href="#">Cerrar</div></div>';
 
                 //            html+='<span id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</span>';
                 html+='<div style="clear:both" class="tweetText">'+normalizeTweet(data.text)+"</div>";
