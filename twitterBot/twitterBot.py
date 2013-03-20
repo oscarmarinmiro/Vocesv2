@@ -12,6 +12,7 @@ import re
 import random
 import pprint
 from django.utils import timezone
+from math import sqrt, pow, pi, acos, sin, cos
 
 
 sys.path.append('../')
@@ -46,6 +47,10 @@ CALL_DETECTION_REGEXP = re.compile(ConfigObject.call_detection_regexp, re.IGNORE
 CHECKIN_DETECTION_REGEXP = re.compile(ConfigObject.checkin_detection_regexp, re.IGNORECASE)
 #END Call detection.
 MAPPING_DETECTION_REGEXP = re.compile(ConfigObject.mapping_detection_regexp, re.IGNORECASE)
+
+CHECKIN_DISTANCE_LIMIT = 1
+
+
 def getSinceFromConfig():
     try:
         return ConfigObject.lastId
@@ -61,6 +66,37 @@ def putSinceInConfig(since):
     ConfigObject.save()
 
     return
+
+def __pdistance(x1, y1, x2, y2):
+    EARTH_RADIUS = 6378.137
+    rad_x1 = x1 / 180 * pi
+    rad_y1 = y1 / 180 * pi
+    rad_x2 = x2 / 180 * pi
+    rad_y2 = y2 / 180 * pi
+    e = acos( sin(rad_x1) * sin(rad_x2) + cos(rad_x1)*cos(rad_x2)*cos(rad_y2-rad_y1))
+    return e * EARTH_RADIUS
+
+def is_close(lat,lng,call_id):
+
+    print "pido la condicion de cercania"
+    print "%s-%s y %s" % (lat,lng,call_id)
+
+    try:
+        reference_id = Call.objects.get(pk=call_id).tweetId
+        orig_tweet = Tweet.objects.get(pk=reference_id.tweetId)
+
+        dist = __pdistance(lat,lng,orig_tweet.lat,orig_tweet.lng)
+        print "y salen %s km" % dist
+        if dist < CHECKIN_DISTANCE_LIMIT:
+            print "asi que hago el checkin"
+            return True
+        else:
+            print "asi que NO hago el checkin"
+            return False
+
+    except:
+        return False
+    
 
 api = twitter.Api(consumer_key=CONSUMER_KEY,consumer_secret=CONSUMER_SECRET,
                   access_token_key=OAUTH_TOKEN, access_token_secret=OAUTH_SECRET)
@@ -154,7 +190,7 @@ while(True):
                 #BEGIN Checkin detection.
                 checkin_match = CHECKIN_DETECTION_REGEXP.search(tweet.text)
                 mapping_match = MAPPING_DETECTION_REGEXP.search(tweet.text)
-                if checkin_match:
+                if checkin_match and is_close(tweet.lat,tweet.lng,checkin_match.groups()[0]):
                     checkin = CheckIn()
                     reference_id = Call.objects.get(pk=checkin_match.groups()[0]).tweetId
                     print "ref_id %s" % reference_id
