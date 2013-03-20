@@ -1,7 +1,7 @@
 body {
     padding: 0;
     margin: 0;
-    font-family: "candara", "Helvetica Neue", sans-serif;
+    font-family: "Maven Pro", "Helvetica Neue", sans-serif;
 }
 html, body, #mapPage, #map {
     height: 100%;
@@ -9,7 +9,7 @@ html, body, #mapPage, #map {
 
 #infobox
 {
-    width: 210px;
+    width: 226px;
     position:fixed;
     top: 12px;
     left:60px;
@@ -17,135 +17,90 @@ html, body, #mapPage, #map {
     color: #FFF;
     z-index:1000;
     font-size:20px;
-    border-radius: 8px;
-    padding: 8px;
+    border-radius: 4px;
     height:auto;
-}
-#infomenu a
-{
-    text-decoration: none;
-    color:#fff;
-}
-
-#infomenu a
-{
-    text-decoration: none;
-    color:#fff;
-}
-
-#infobox a:hover
-{
-    text-decoration: underline;
 }
 
 
 #infoextra
 {
-    padding-top:2px;
-    padding-left:5px;
-    font-size:10px;
-}
-.tweet {
-    font-size: 14px;
-}
-.tweet a{
-    text-decoration: none;
-}
 
-.tweet .tweetText
-{
-    color:#ffe174;
-}
-
-.tweet .tweetText a
-{
-    text-decoration: none;
-    color:#ffe174;
-}
-.tweet .birddate
-{
-    padding-bottom: 3px;
-}
-
-.tweet .author
-{
-    font-size:14px;
-    font-weight: bold;
-    clear:both;
-}
-
-
-.tweet .botonera
-{
-    float:left;
-}
-
-.tweet .nick a
-{
-    color:#ffe174;
-}
-.tweet a
-{
-    color:#ffe174;
-}
-.button {
-    -moz-box-shadow: inset 0px 1px 0px 0px #fceaca;
-    -webkit-box-shadow: inset 0px 1px 0px 0px #fceaca;
-    box-shadow: inset 0px 1px 0px 0px #fceaca;
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffce79), color-stop(1, #ffe174));
-    background: -moz-linear-gradient(center top, #ffce79 5%, #ffe174 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffce79', endColorstr='#ffe174');
-    background-color: #ffce79;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    border-radius: 6px;
-    border: 1px solid #eeb44f;
-    display: inline-block;
-    color: #ffffff;
-    font-family: Verdana;
     font-size: 10px;
-    font-weight: bold;
-    padding: 6px 6px;
+    padding: 0px 8px 0px 12px;
+    width:206px;
+    background-color:#000;
+    border-radius:0px 0px 5px 5px;
+}
+
+#infomenu
+{
+    border-bottom: 1px solid #4D4D4D;
+}
+
+ul.button {
+    background-image: linear-gradient(bottom, rgb(34,34,34) 8%, rgb(54,54,54) 77%);
+    background-image: -o-linear-gradient(bottom, rgb(34,34,34) 8%, rgb(54,54,54) 77%);
+    background-image: -moz-linear-gradient(bottom, rgb(34,34,34) 8%, rgb(54,54,54) 77%);
+    background-image: -webkit-linear-gradient(bottom, rgb(34,34,34) 8%, rgb(54,54,54) 77%);
+    background-image: -ms-linear-gradient(bottom, rgb(34,34,34) 8%, rgb(54,54,54) 77%);
+    background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0.08, rgb(34,34,34)),color-stop(0.77, rgb(54,54,54)));
+    border: 1px solid #222222;
+    border-radius: 4px 4px 0px 0px;
+    box-shadow: 0 1px 0 0 #4D4D4D inset;
+    display: block;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+ul.button li {
+    float: left;
+    list-style: none outside none;
+}
+
+ul.button a {
+    border-left: 1px solid #4D4D4D;
+    border-right: 1px solid #111111;
+    color: #FFFFFF;
+    display: block;
+    font-family: 'Maven Pro', sans-serif;
+    font-size: 13px;
+    padding: 8px 16px;
     text-decoration: none;
-    text-shadow: 1px 1px 0px #ce8e28;
-    cursor: pointer;
+    text-shadow: 0 1px 0 #000000;
 }
-.button:hover {
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffe174), color-stop(1, #ffce79));
-    background: -moz-linear-gradient(center top, #ffe174 5%, #ffce79 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe174', endColorstr='#ffce79');
-    background-color: #ffe174;
+
+ul.button li a:hover {
+    background: none repeat scroll 0 0 rgba(255, 255, 255, 0.1);
 }
-.button:active {
-    position: relative;
-    top: 1px;
+
+.marginbot
+{
+    clear:both;
+    min-height: 5px;
 }
+
 .ht
 {
-    font-size: 20px;
+    font-size: 18px;
+    font-family:'Maven Pro', sans-serif;
+    margin-bottom:2px;
     cursor:pointer;
     color: #FFF;
 }
 
 .hton
 {
+    font-size: 18px;
     color:#ffe174;
 }
 
-#infomenu
+.htoninfo
 {
-
+    font-size: 15px;
+    color:#ffe174;
 }
-.infomenu
-{
-    font-size:22px;
-    margin-left:4px;
-    margin-right:4px;
-    padding-right:12px;
-    padding-left:12px;
-    border: 1px solid #773;
 
-}
+
 
 .extraHeader
 {
@@ -158,51 +113,125 @@ html, body, #mapPage, #map {
     font-size: 12px;
 }
 
-.close
-{
-    font-size: 12px;
-    width: 40px;
-    border: 1px solid white;
-    padding: 3px;
-    margin-top:3px;
-    margin-left:10px;
-    cursor:pointer;
-    background: #FFF;
-    color: #000;
+
+
+.picture{
+    margin-right:5px;
     float:left;
-    margin-bottom: 7px;
+
 }
 
-.closeleft
-{
-    margin-left:0px;
+.tweet .author {
+    font-size: 16px;
+    font-weight: bold;
+    font-family: 'Maven Pro', sans-serif;
+    color:#FFF;
+    clear:right;
+
 }
 
-.checkin
-{
-    margin-top:3px;
-    font-size: 12px;
-    width: 40px;
-    border: 1px solid white;
-    padding: 3px;
-    cursor:pointer;
-    background: #FFF;
-    color: #000;
-    float:left;
+.tweet .nick {
+    margin-bottom:3px;
 }
-.mapping
-{
-    margin-top:3px;
-    font-size: 12px;
-    width: 40px;
+.tweet .nick a {
+    color: #FFE174;
+    clear:both;
+    font-size: 13px;
+    font-family: 'Maven Pro', sans-serif;
+    text-decoration:none;
+
+}
+
+.date {
+    color:#888;
+    font-size: 11px;
+    font-family:Arial, Helvetica, sans-serif;
+    text-decoration:none;
+
+}
+.botonera{
+    margin-top:8px;
+    font-family: 'Maven Pro', sans-serif;
+    clear:both;
+    background: none repeat scroll 0 0 #FFFFFF;
+}
+
+.checkin {
+    background: none repeat scroll 0 0 #FFFFFF;
     border: 1px solid white;
+    color: #000000;
+    cursor: pointer;
+    float: left;
+    font-size: 11px;
+    margin-bottom: 8px;
+    margin-top: 11px;
     padding: 3px;
-    margin-left:10px;
-    cursor:pointer;
-    background: #FFF;
-    color: #000;
-    float:left;
-    margin-bottom: 7px;
+    width: 45px;
+    border-radius: 3px;
+    text-align: center;
+}
+
+.mapping {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid white;
+    color: #000000;
+    cursor: pointer;
+    float: left;
+    font-size: 11px;
+    margin-bottom: 8px;
+    margin-left: 10px;
+    margin-top: 3px;
+    padding: 3px;
+    width: 45px;
+    border-radius: 3px;
+    text-align: center;
+}
+
+.close {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid white;
+    color: #000000;
+    cursor: pointer;
+    float: left;
+    font-size: 11px;
+    margin-bottom: 8px;
+    margin-left: 10px;
+    margin-top: 3px;
+    padding: 3px;
+    width: 45px;
+    border-radius: 3px;
+    text-align: center;
+}
+
+#checkinsCount {
+    color:#FFF;
+    font-size: 13px;
+    font-family:'Maven Pro', sans-serif;
+    margin-bottom:2px;
+}
+
+.tweet .tweetText {
+    color: #FFE174;
+    font-size: 13px;
+    font-family:'Maven Pro', sans-serif;
+    margin-bottom:2px;
+}
+
+.closeleft{
+    font-size:11px;
+    font-family: 'Maven Pro', sans-serif;
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid white;
+    color: #000000;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-left: 0;
+    padding: 3px;
+    width: 45px;
+    border-radius: 3px;
+    text-align: center;
+
+
 
 }
 

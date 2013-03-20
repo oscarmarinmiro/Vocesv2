@@ -204,7 +204,7 @@ $(document).ready(function(){
         console.log('At display');
         openInfobox(height+"px");
         html+='<br /><div class="close closeleft" href="#">Cerrar</div>';
-        $('#infoextra').html("<br/>"+html+"<div class='marginbot'></div>");
+        $('#infoextra').html("<br/>"+html);
         $('.close').on('click',function(){closeInfobox();});
     };
     var callInfo = function(){
@@ -216,11 +216,14 @@ $(document).ready(function(){
             data = datos;
         }).complete(function(){
                 var html = '<div class="tweet">';
-                html+='<div class="picture"><img class="picture" src="'+data.userImg+'"></div>';
-                html+='<div class="author">'+data.userName+"</div>";
+                html+='<div class="birddate"><img src="static/imgs/bird_blue_16.png">';
+                html+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("DD.MM.YYYY HH:mm:ss")+"</span></div>";
+                html+='<div style="float:left;padding-right:3px;"><img class="picture" src="'+data.userImg+'"></div>';
+                html+='<div style="float:left;">';
+                html+='<div class="author" target="_blank">'+data.userName+"</div>";
                 html+='<div class="nick"><a href="https://www.twitter.com/'+data.userNick+'">@'+data.userNick+'</a></div>';
-                html+='<div class="birddate"><img src="static/imgs/bird_blue_16.png"><span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("DD.MM.YYYY HH:mm:ss")+"</span></div>";
-                html+='<div class="botonera"><div class="checkin" id="checkin">Checkin</div><div class="mapping" id="mapea">Mapea</div><div class="close" href="#">Cerrar</div></div>';
+                html+='</div>';
+                html+='<div class="botonera" style="clear:both;"><div class="checkin" id="checkin">Checkin</div><div class="mapping" id="mapea">Mapea</div><div class="close" href="#">Cerrar</div></div>';
                 html+='<div style="clear:both;" id="checkinsCount">Checkin count: '+data.votes+'</div>';
 
                 //            html+='<span id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</span>';
@@ -230,7 +233,7 @@ $(document).ready(function(){
                     html+='<a href="http://twitter.com/'+data.userNick+"/status/"+data.userId+"/photo/1"+' target="_blank">';
                     html+='<img src="'+data.media+'"></a>';
                 }
-                html+='<div class="htoninfo">Tag:'+data.hashTag+"</div>";
+                html+='<div class="hton">Tag:'+data.hashTag+"</div>";
                 html+='</div>';
                 display(html,430);
 
@@ -247,20 +250,21 @@ $(document).ready(function(){
             data = datos;
         }).complete(function(){
                 var html = '<div class="tweet">';
-                html+='<div class="picture"><img class="picture" src="'+data.userImg+'"></div>';
-                html+='<div class="author">'+data.userName+"</div>";
+                html+='<div class="birddate"><img src="static/imgs/bird_blue_16.png">';
+                html+='<span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("DD.MM.YYYY HH:mm:ss")+"</span></div>";
+                html+='<div style="float:left;padding-right:3px;"><img class="picture" src="'+data.userImg+'"></div>';
+                html+='<div style="float:left;">';
+                html+='<div class="author" target="_blank">'+data.userName+"</div>";
                 html+='<div class="nick"><a href="https://www.twitter.com/'+data.userNick+'">@'+data.userNick+'</a></div>';
-                html+='<div class="birddate"><img src="static/imgs/bird_blue_16.png"><span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("DD.MM.YYYY HH:mm:ss")+"</span></div>";
-                html+='<div class="botonera"><div class="close closeleft" href="#">Cerrar</div></div>';
-
-                //            html+='<span id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</span>';
-                html+='<div style="clear:both" class="tweetText">'+normalizeTweet(data.text)+"</div>";
+                html+='</div>';
+                html+='<div class="botonera" style="clear:both;"><div class="close closeleft" href="#">Cerrar</div></div>';
+                html+='<div class="tweetText" style="clear:both;">'+normalizeTweet(data.text)+"</div>";
                 if(data.media!=null)
                 {
                     html+='<a href="http://twitter.com/'+data.userNick+"/status/"+data.userId+"/photo/1"+' target="_blank">';
                     html+='<img src="'+data.media+'"></a>';
                 }
-                html+='<div class="htoninfo">Tag:'+data.hashTag+"</div>";
+                html+='<div class="hton">Tag:'+data.hashTag+"</div>";
                 html+='</div>';
                 display(html,430);
             });
@@ -404,13 +408,7 @@ $(document).ready(function(){
         console.log('At menu');
         var html="";
 //        html = '<a id="home" href="#"><img src="static/imgs/marker_white.png" width="20" height="30"></a><a id="tag" href="#">#TT</a><a id="call" href="#">¡C!</a>';
-        html+= '<ul class="button">';
-        html+='<li id="home"><a style="border-left:none;" href="#"><img src="static/imgs/home.png" width="22" height="20" /></a></li>';
-        html+='<li id="tag"><a href="#"><img src="static/imgs/tags.png" width="23" height="21" /></a></li>';
-        html+='<li id="call"><a href="#"><img src="static/imgs/C.png" width="26" height="22" /></a></li>';
-        html+='<li id="help"><a style="border-right:none;" href="#"><img src="static/imgs/info.png" width="16" height="22" /></a></li>';
-        html+='<div style="clear:both"></div>';
-        html+='</ul>';
+        html = '<a id="home" class="infomenu" href="#"><img style="vertical-align:middle;" height="20" width="25" src="static/imgs/home-icon.png"></a><a id="tag" class="infomenu" href="#">#</a><a id="call" href="#" class="infomenu">C!</a><a id="help" href="#" class="infomenu">?</a>';
         $('#infomenu').html(html);
         $('#home').on("click",menuHome);
         $('#tag').on("click",menuHash);
