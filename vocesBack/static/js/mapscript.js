@@ -207,6 +207,7 @@ $(document).ready(function(){
         html+='<div class="close closeleft" href="#">Cerrar</div>';
         $('#infoextra').html("<br/>"+html+"<div class='marginbot'></div>");
         $('.close').on('click',function(){closeInfobox();});
+        $('.closeup').on('click',function(){closeInfobox();});
     };
     var callInfo = function(){
         console.log('At callInfo');
