@@ -236,6 +236,12 @@ ul.button li a:hover {
     margin-bottom:2px;
 }
 
+.tweet .tweetText a{
+    color: #888;
+    font-size: 13px;
+    font-family:'Maven Pro', sans-serif;
+}
+
 .closeleft{
     font-size:11px;
     font-family: 'Maven Pro', sans-serif;
