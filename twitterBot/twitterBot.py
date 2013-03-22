@@ -3,6 +3,7 @@ __author__ = 'oscarmarinmiro'
 
 import os
 import sys
+import traceback
 import datetime
 import pprint
 import traceback
@@ -104,173 +105,180 @@ api = twitter.Api(consumer_key=CONSUMER_KEY,consumer_secret=CONSUMER_SECRET,
 
 while(True):
 
-    sinceId = getSinceFromConfig()
+    try:
+        sinceId = getSinceFromConfig()
 
-    print "Taking tweet from sinceId: %d" % (sinceId)
-
-    recentposts = api.GetReplies(since_id=sinceId)
+        print "Taking tweet from sinceId: %d" % (sinceId)
 
 
-    for status in recentposts:
-        print "New tweet, here's the dump:"
+        recentposts = api.GetReplies(since_id=sinceId)
 
-        pprint.pprint(status.data)
 
-        dStatus = status.AsDict()
+        for status in recentposts:
+            print "New tweet, here's the dump:"
 
-        pprint.pprint(dStatus)
+            pprint.pprint(status.data)
 
-        # Only take care of tweet if it has coordinates
+            dStatus = status.AsDict()
 
-        if status.coordinates is not None:
+            pprint.pprint(dStatus)
 
-            # Go w/ User
+            # Only take care of tweet if it has coordinates
 
-            if User.objects.filter(userId = dStatus['user']['id']).count() != 0 :
-                print "User %s already exists... updating" % dStatus['user']['screen_name']
-                user = User.objects.filter(userId = dStatus['user']['id'])[0]
-                # TBD how to update karma
-                user.name = dStatus['user']['name']
-                user.profileImgUrl = dStatus['user']['profile_image_url']
-            else:
-                user = User(userId = dStatus['user']['id'])
-                user.profileImgUrl = dStatus['user']['profile_image_url']
-                user.name = dStatus['user']['name']
-                user.karma = 0
-                user.screenName = dStatus['user']['screen_name']
+            if status.coordinates is not None:
 
-            user.save()
+                # Go w/ User
 
-            # Go w/ Tweet
-
-            if Tweet.objects.filter(tweetId=dStatus['id']).count() == 0:
-                tweet = Tweet(tweetId=dStatus['id'])
-                tweet.text = dStatus['text']
-                tweet.userId = user
-
-                if 'entities' in status.data and 'media' in status.data['entities'] and status.data['entities']['media'][0]['type']=='photo':
-                        tweet.mediaUrl = status.data['entities']['media'][0]['media_url']+":thumb"
+                if User.objects.filter(userId = dStatus['user']['id']).count() != 0 :
+                    print "User %s already exists... updating" % dStatus['user']['screen_name']
+                    user = User.objects.filter(userId = dStatus['user']['id'])[0]
+                    # TBD how to update karma
+                    user.name = dStatus['user']['name']
+                    user.profileImgUrl = dStatus['user']['profile_image_url']
                 else:
-                    tweet.mediaUrl = ""
+                    user = User(userId = dStatus['user']['id'])
+                    user.profileImgUrl = dStatus['user']['profile_image_url']
+                    user.name = dStatus['user']['name']
+                    user.karma = 0
+                    user.screenName = dStatus['user']['screen_name']
 
-                tweet.lat = dStatus['coordinates']['coordinates'][1]
-                tweet.lng = dStatus['coordinates']['coordinates'][0]
-                tweet.relevanceFirst = 0
-                tweet.relevanceSecond = 0
-                tweet.rt = 0
-                tweet.votes = 0
-                pprint.pprint(dStatus)
-                if 'hashtags' in dStatus:
-                    tweet.hashTag = dStatus['hashtags'][0].lower()
+                user.save()
+
+                # Go w/ Tweet
+
+                if Tweet.objects.filter(tweetId=dStatus['id']).count() == 0:
+                    tweet = Tweet(tweetId=dStatus['id'])
+                    tweet.text = dStatus['text']
+                    tweet.userId = user
+
+                    if 'entities' in status.data and 'media' in status.data['entities'] and status.data['entities']['media'][0]['type']=='photo':
+                            tweet.mediaUrl = status.data['entities']['media'][0]['media_url']+":thumb"
+                    else:
+                        tweet.mediaUrl = ""
+
+                    tweet.lat = dStatus['coordinates']['coordinates'][1]
+                    tweet.lng = dStatus['coordinates']['coordinates'][0]
+                    tweet.relevanceFirst = 0
+                    tweet.relevanceSecond = 0
+                    tweet.rt = 0
+                    tweet.votes = 0
+                    pprint.pprint(dStatus)
+                    if 'hashtags' in dStatus:
+                        tweet.hashTag = dStatus['hashtags'][0].lower()
+                    else:
+                        tweet.hashTag = ""
+                    tweet.stamp = time.strftime('%Y-%m-%d %H:%M:%S',time.strptime(dStatus['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))
+
+                    #BEGIN Call detection.
+                    if CALL_DETECTION_REGEXP.search(tweet.text):
+                        tweet.inReplyToId = -1
+                        tweet.save()
+                        #It's a call!
+                        #tweet.inReplyToId = -1
+                    #else:
+                    #    print "no esta la regez en el modelo"
+                    #    if 'in_reply_to_status_id' in dStatus:
+                    #        # We need to retrieve to which call it's replying to
+                    #        tweet.inReplyToId = dStatus['in_reply_to_status_id']
+                    #        calls = Tweet.objects.filter(tweetId=tweet.inReplyToId)
+                    #        calls.update(votes=F('votes') + 1)
+                    #        for call in calls:
+                    #            call.save()
+                    #    else:
+                    #        continue
+                    #END Call detection.
+
+                    print "antes de mapping/checkin"
+
+                    #BEGIN Checkin detection.
+                    checkin_match = CHECKIN_DETECTION_REGEXP.search(tweet.text)
+                    mapping_match = MAPPING_DETECTION_REGEXP.search(tweet.text)
+                    if checkin_match and is_close(tweet.lat,tweet.lng,checkin_match.groups()[0]):
+                        checkin = CheckIn()
+                        reference_id = Call.objects.get(pk=checkin_match.groups()[0]).tweetId
+                        print "ref_id %s" % reference_id
+                        checkin.callId = reference_id
+                        checkin.userId = User.objects.get(pk=dStatus['user']['id'])
+                        checkin.stamp = time.strftime('%Y-%m-%d %H:%M:%S',time.strptime(dStatus['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))
+                        #checkin.save()
+
+                        callUpdate = Call.objects.get(pk=checkin_match.groups()[0])
+                        print "callupd :-%s-" % callUpdate
+                        tweetUpdate = Tweet.objects.get(tweetId=callUpdate.tweetId.tweetId)
+                        print "tweetUpdate :-%s-" % tweetUpdate
+                        tweetUpdate.votes=F('votes') + 1
+                        tweetUpdate.save()
+
+                        #ESTO VA AQUI PARA EVITAR QUE SE BLOQUEE POR EL CHECKIN EN CASO DE FALLO EN EL UPDATE DE VOTOS. SINO NO SE ACTUALIZA EL LASTID PERO EL CHECKIN YA ESTA INSERTADO
+                        checkin.save()
+
+                    #END Checkin detection.
+                    elif mapping_match:
+                        #Mapeos & Calls
+                        # TBD
+
+                        tweet.inReplyToId = Call.objects.get(pk=mapping_match.groups()[0]).tweetId.tweetId
+                        print "REPLY %s" % tweet.inReplyToId
+
+                        #if 'entities' in status.data and 'media' in status.data['entities'] and status.data['entities']['media'][0]['type']=='photo':
+                        #    tweet.mediaUrl = status.data['entities']['media'][0]['media_url']+":thumb"
+                        #else:
+                        #    tweet.mediaUrl = ""
+
+                        #tweet.lat = dStatus['coordinates']['coordinates'][1]
+                        #tweet.lng = dStatus['coordinates']['coordinates'][0]
+                        #tweet.relevanceFirst = 0
+                        #tweet.relevanceSecond = 0
+                        #tweet.rt = 0
+                        #tweet.votes = 0
+                        #pprint.pprint(status.hashtags)
+                        #if dStatus['hashtags'] is not None:
+                        #    tweet.hashTag = dStatus['hashtags'][0].lower()
+                        #else:
+                        #    tweet.hashTag = ""
+                        #tweet.stamp = time.strftime('%Y-%m-%d %H:%M:%S',time.strptime(dStatus['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))
+
+                        tweet.save()
+
+                        callUpdate = Call.objects.get(pk=mapping_match.groups()[0])
+                        print callUpdate
+                        tweetUpdate = Tweet.objects.get(tweetId=callUpdate.tweetId.tweetId)
+                        print tweetUpdate
+                        tweetUpdate.votes=F('votes') + 1
+                        tweetUpdate.save()
+
+                    if CALL_DETECTION_REGEXP.search(tweet.text):
+                        #It's a call!
+                        print "call palla"
+                        callObject = Call(tweetId=tweet)
+                        callObject.save()
+                        print "call saved"
+
                 else:
-                    tweet.hashTag = ""
-                tweet.stamp = time.strftime('%Y-%m-%d %H:%M:%S',time.strptime(dStatus['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))
-
-                #BEGIN Call detection.
-                if CALL_DETECTION_REGEXP.search(tweet.text):
-                    tweet.inReplyToId = -1
-                    tweet.save()
-                    #It's a call!
-                    #tweet.inReplyToId = -1
-                #else:
-                #    print "no esta la regez en el modelo"
-                #    if 'in_reply_to_status_id' in dStatus:
-                #        # We need to retrieve to which call it's replying to
-                #        tweet.inReplyToId = dStatus['in_reply_to_status_id']
-                #        calls = Tweet.objects.filter(tweetId=tweet.inReplyToId)
-                #        calls.update(votes=F('votes') + 1)
-                #        for call in calls:
-                #            call.save()
-                #    else:
-                #        continue
-                #END Call detection.
-
-                print "antes de mapping/checkin"
-
-                #BEGIN Checkin detection.
-                checkin_match = CHECKIN_DETECTION_REGEXP.search(tweet.text)
-                mapping_match = MAPPING_DETECTION_REGEXP.search(tweet.text)
-                if checkin_match and is_close(tweet.lat,tweet.lng,checkin_match.groups()[0]):
-                    checkin = CheckIn()
-                    reference_id = Call.objects.get(pk=checkin_match.groups()[0]).tweetId
-                    print "ref_id %s" % reference_id
-                    checkin.callId = reference_id
-                    checkin.userId = User.objects.get(pk=dStatus['user']['id'])
-                    checkin.stamp = time.strftime('%Y-%m-%d %H:%M:%S',time.strptime(dStatus['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))
-                    #checkin.save()
-
-                    callUpdate = Call.objects.get(pk=checkin_match.groups()[0])
-                    print "callupd :-%s-" % callUpdate
-                    tweetUpdate = Tweet.objects.get(tweetId=callUpdate.tweetId.tweetId)
-                    print "tweetUpdate :-%s-" % tweetUpdate
-                    tweetUpdate.votes=F('votes') + 1
-                    tweetUpdate.save()
-
-                    #ESTO VA AQUI PARA EVITAR QUE SE BLOQUEE POR EL CHECKIN EN CASO DE FALLO EN EL UPDATE DE VOTOS. SINO NO SE ACTUALIZA EL LASTID PERO EL CHECKIN YA ESTA INSERTADO
-                    checkin.save()
-
-                #END Checkin detection.
-                elif mapping_match:
-                    #Mapeos & Calls
-                    # TBD
-
-                    tweet.inReplyToId = Call.objects.get(pk=mapping_match.groups()[0]).tweetId.tweetId
-                    print "REPLY %s" % tweet.inReplyToId
-
-                    #if 'entities' in status.data and 'media' in status.data['entities'] and status.data['entities']['media'][0]['type']=='photo':
-                    #    tweet.mediaUrl = status.data['entities']['media'][0]['media_url']+":thumb"
-                    #else:
-                    #    tweet.mediaUrl = ""
-
-                    #tweet.lat = dStatus['coordinates']['coordinates'][1]
-                    #tweet.lng = dStatus['coordinates']['coordinates'][0]
-                    #tweet.relevanceFirst = 0
-                    #tweet.relevanceSecond = 0
-                    #tweet.rt = 0
-                    #tweet.votes = 0
-                    #pprint.pprint(status.hashtags)
-                    #if dStatus['hashtags'] is not None:
-                    #    tweet.hashTag = dStatus['hashtags'][0].lower()
-                    #else:
-                    #    tweet.hashTag = ""
-                    #tweet.stamp = time.strftime('%Y-%m-%d %H:%M:%S',time.strptime(dStatus['created_at'],'%a %b %d %H:%M:%S +0000 %Y'))
-
-                    tweet.save()
-                    
-                    callUpdate = Call.objects.get(pk=mapping_match.groups()[0])
-                    print callUpdate
-                    tweetUpdate = Tweet.objects.get(tweetId=callUpdate.tweetId.tweetId)
-                    print tweetUpdate
-                    tweetUpdate.votes=F('votes') + 1
-                    tweetUpdate.save()
-
-                if CALL_DETECTION_REGEXP.search(tweet.text):
-                    #It's a call!
-                    print "call palla"
-                    callObject = Call(tweetId=tweet)
-                    callObject.save()
-                    print "call saved"
-                        
+                    print "Tweet %d already exists" % dStatus['id']
             else:
-                print "Tweet %d already exists" % dStatus['id']
-        else:
-            print "Tweet %d do not carry geo info" % status.id
+                print "Tweet %d do not carry geo info" % status.id
 
-        statusId = status.id
+            statusId = status.id
 
-        if statusId > sinceId:
-            sinceId= statusId
+            if statusId > sinceId:
+                sinceId= statusId
 
-    # Persisto el sinceid
 
-    putSinceInConfig(sinceId)
+        # Persisto el sinceid
 
-    # Me duermo un rato
+        putSinceInConfig(sinceId)
 
-    # Antes de dormir, pongo el datetime de ping del robot
+        # Me duermo un rato
 
-    ConfigObject.lastBotTime = timezone.now()
+        # Antes de dormir, pongo el datetime de ping del robot
 
-    ConfigObject.save()
+        ConfigObject.lastBotTime = timezone.now()
 
-    time.sleep(SLEEP_TIME)
+        ConfigObject.save()
+
+        time.sleep(SLEEP_TIME)
+
+    except:
+        print "Excepcion brutal"
+        traceback.print_exc()
