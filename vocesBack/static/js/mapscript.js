@@ -12,7 +12,7 @@ var mapStyle="22677";
 var htFilter = "__all__";
 
 var hashtagCount={};
-var CIRCLE_SIZE=30;
+var CIRCLE_SIZE=5;
 var locLatLng;
 var calls;
 var checkins;
