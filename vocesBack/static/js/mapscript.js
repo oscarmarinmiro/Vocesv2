@@ -375,8 +375,11 @@ $(document).ready(function(){
         html+='<p class="extraContent">';
         for (var i in hashtagCount)
         {
-            var finalName = hashtagCount[i].ht=='__all__' ? 'todos':'#'+hashtagCount[i].ht;
-            html+= hashtagCount[i].ht==htFilter ? '<span class="ht hton" htname='+hashtagCount[i].ht+'>'+finalName+'</span><br>':'<span class="ht" htname='+hashtagCount[i].ht+'>'+finalName+'</span><br>';
+            if(hashtagCount[i].ht!="")
+            {
+                var finalName = hashtagCount[i].ht=='__all__' ? 'todos':'#'+hashtagCount[i].ht;
+                html+= hashtagCount[i].ht==htFilter ? '<span class="ht hton" htname='+hashtagCount[i].ht+'>'+finalName+'</span><br>':'<span class="ht" htname='+hashtagCount[i].ht+'>'+finalName+'</span><br>';
+            }
         }
         html+='</p>';
         display(html,280);
