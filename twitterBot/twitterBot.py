@@ -244,7 +244,8 @@ while(True):
                         print callUpdate
                         tweetUpdate = Tweet.objects.get(tweetId=callUpdate.tweetId.tweetId)
                         print tweetUpdate
-                        tweetUpdate.votes=F('votes') + 1
+                        #tweetUpdate.votes=F('votes') + 1
+                        tweetUpdate.votes=F('relevanceFirst') + 1
                         tweetUpdate.save()
 
                     if CALL_DETECTION_REGEXP.search(tweet.text):

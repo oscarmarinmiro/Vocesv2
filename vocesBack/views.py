@@ -73,7 +73,7 @@ def home(request):
 
 #BEGIN Calls management.
 
-@cache_page(60 * 10)
+@cache_page(60)
 def getCalls(request):
     response = dataGetCalls()
     return HttpResponse(json.dumps(response), content_type='application/json')
