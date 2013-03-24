@@ -24,13 +24,12 @@ from vocesBack.models import Config, User, Tweet, CheckIn, Call
 from django.db.models import F
 
 # Estas son las credenciales de la app
-# La cuenta es vote_outliers en twitter, pass:vote2012pp
-# La cuenta gmail asociada es vote@outliers.es, pass:vote2012pp
+# La cuenta es convocacc en twitter, pass--> preguntar
 
-# OAUTH_TOKEN="616082494-ZpnieAKy8OxvVOcKxZrIAl90Kl7ha6pyC7mvpKYK"
-# OAUTH_SECRET="eFP9DashBJHIN8insuJ2prjmLwTnKhMwxDCOTGth1s"
-# CONSUMER_KEY="TT0jgqhKZm6JYqV80OMrw"
-# CONSUMER_SECRET="lqS1oyPFduvxIDVmmlccxPHF4AVIB3tXFbgIETQZE"
+# OAUTH_TOKEN="839606496-EgTk3MDabPMPpXSyzuXHFRLbG3e0Dh4NTVkxtahU"
+# OAUTH_SECRET="Q7ghGRr80HceaoRU1b2Wslj6LJxb4VrfjWppWZcd7s"
+# CONSUMER_KEY="5qeMfjwLoj6mto9Pm5P6g"
+# CONSUMER_SECRET="1M4UR1qjlfnBwjUSqeoFxtJOwa8MHUCaY6pz85tw5c"
 
 ConfigObject = Config.objects.all()[0]
 
@@ -283,8 +282,9 @@ while(True):
 
         ConfigObject.save()
 
-        time.sleep(SLEEP_TIME)
-
     except:
         print "Excepcion brutal"
         traceback.print_exc()
+
+
+    time.sleep(SLEEP_TIME)
