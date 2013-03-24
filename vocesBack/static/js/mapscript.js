@@ -4,7 +4,7 @@
 
 
 
-var replyAccount='@vote_outliers';
+var replyAccount='@convocacc';
 
 var mapStyle="22677";
 
@@ -225,7 +225,7 @@ $(document).ready(function(){
                 html+='<div class="birddate"><img src="static/imgs/bird_blue_16.png"><span class="date">'+moment(data.stamp,"YYYYMMDDHHmmss").format("DD.MM.YYYY HH:mm:ss")+"</span></div>";
                 html+='</div';
                 html+='<div class="botonera"><div class="checkin" id="checkin">Checkin</div><div class="mapping" id="mapea">Mapea</div><div class="close" href="#">Cerrar</div></div>';
-                html+='<div style="clear:both;" id="checkinsCount">Checkin count: '+data.votes+'</div>';
+                html+='<div style="clear:both;" id="checkinsCount">Checkins: '+data.votes+'</div>';
 
                 //            html+='<span id="checkinsCount">CheckIns count: '+data.relevanceFirst+'</span>';
                 html+='<div class="tweetText">'+normalizeTweet(data.text)+"</div>";
