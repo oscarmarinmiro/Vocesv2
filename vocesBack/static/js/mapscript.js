@@ -8,7 +8,7 @@ var mapStyle="22677";
 
 var HELP_COPY = '<p class="extraContent">(Para más información, visita <a href="http://blog.convoca.cc" target="_blank">blog.convoca.cc</a>)<br><br>"Convoca!" es una aplicación para mapear convocatorias, que aspira a hacer visible para todos lo que sucede en el espacio público.<br>Una convocatoria es un punto especial en el mapa cuyo color va cambiando en función del número de usuarios que hagan ‘checkin’ a través de la aplicación.<br>Las convocatorias con más afluencia aparecerán destacadas en el mapa.</p>';
 
-
+var CALL_COPY  = '<p class="extraContent"> Con este botón se te lanza el cliente Twitter con un texto asignado (¡no lo cambies!: Este texto se usa para reconocer los comandos). A partir de este texto puedes escribir lo que quieras y embeber fotos, vídeos, urls, etc.. a través del cliente de Twitter<br> <b> Es necesario activar la geolocalización en el cliente móvil de Twitter (en el mismo tweet) </b> <br> Al minuto aproximadamente, tu convocatoria aparecerá en el mapa<br>';
 
 var htFilter = "__all__";
 
@@ -19,6 +19,7 @@ var calls;
 var checkins;
 var callNode=null;
 var firstLocate = true;
+var posIcon = null;
 var callsLayerGroup;
 var checkinsLayerGroup;
 
@@ -157,7 +158,7 @@ $(document).ready(function(){
     // OJO (OSCAR): He mezclado aqui el retrieveCalls y retrieveCallCheckings desde el updateData porque las dos
     // son asincronas, para crear una sola rama de paintMap en cada caso
     var retrieveCalls=function(){
-        //console.log('At retrieveCalls');
+        console.log('At retrieveCalls');
         var url='getCalls/';
         //console.log('URL: '+url);
         $.getJSON(url,function(data){
@@ -277,9 +278,7 @@ $(document).ready(function(){
         //console.log("¡¡¡¡¡¡¡¡TIRO EL MAPA!!!!!!!!!!!!!!");
         $("#map").remove();
         $("body").append('<div id="map"></div>');
-        map = L.map('map',{touchZoom:true}).locate({setView:false,enableHighAccuracy:true,maximumAge:60000}).setView(myLatLng, myZoom);
-        map.on('locationfound', onLocationFound);
-        map.on('locationerror', onLocationError);
+        map = L.map('map',{touchZoom:true}).setView(myLatLng, myZoom);
         L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/'+mapStyle+'/256/{z}/{x}/{y}.png', {
             maxZoom: 18,
             attribution: 'App by <a href="http://www.outliers.es">Outliers</a>, Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
@@ -292,7 +291,7 @@ $(document).ready(function(){
     };
     var paintUserPosition=function(){
         //console.log('At paintUserPosition');
-        L.marker(locLatLng, {icon: markerIcon}).setZIndexOffset(-100).addTo(map);
+        posIcon = L.marker(locLatLng, {icon: markerIcon}).setZIndexOffset(-100).addTo(map);
         paintCalls();
     };
     var paintCalls=function(){
@@ -367,6 +366,9 @@ $(document).ready(function(){
     };
     //Menu functions.
     var menuHome=function(){
+        map.on('locationfound', onLocationFound);
+        map.on('locationerror', onLocationError);
+        map.locate({setView:true,maxZoom:18,maximumAge:60000});
         map.setView(locLatLng,18);
         closeInfobox();
     };
@@ -399,6 +401,12 @@ $(document).ready(function(){
     var menuCall=function(){
 //        console.log('At menuCall');
         var callSymbol = '%C2%A1';
+        html="";
+        html+='<span class="extraHeader">Mapea una convocatoria</span>';
+        html+=CALL_COPY;
+
+        display(html,200);
+
         if(/Android/i.test(navigator.userAgent)){location = "twitter://post?message="+replyAccount+"%20"+callSymbol+"%20";}
         //if(/Android/i.test(navigator.userAgent)){location = "https://twitter.com/intent/tweet?text="+replyAccount+"%20"+callSymbol+"%20";}
         else{
@@ -408,11 +416,13 @@ $(document).ready(function(){
                 else{location = "https://twitter.com/intent/tweet?text="+replyAccount+"%20"+callSymbol+"%20";}
             }
         }
+
+
+
     };
     var menu=function(){
 //        console.log('At menu');
         var html="";
-//        html = '<a id="home" href="#"><img src="static/imgs/marker_white.png" width="20" height="30"></a><a id="tag" href="#">#TT</a><a id="call" href="#">¡C!</a>';
         html+= '<ul class="button">';
         html+='<li id="home"><a style="border-left:none;" href="#"><img src="static/imgs/home.png" width="22" height="20" /></a></li>';
         html+='<li id="tag"><a href="#"><img src="static/imgs/tags.png" width="23" height="21" /></a></li>';
@@ -426,6 +436,7 @@ $(document).ready(function(){
         $('#call').on("click", menuCall);
         $('#help').on("click", menuHelp);
     };
+
     //Map events handlers.
     var onLocationError=function(e){
         if(!locLatLng)
@@ -434,6 +445,7 @@ $(document).ready(function(){
             alert(e.message);
         }
     };
+
     var onLocationFound=function(e){
 //        console.log('At onLocationFound');
 //        console.log("Location found...");
@@ -441,14 +453,30 @@ $(document).ready(function(){
 //        console.log("New location:"+locLatLng);
         if(firstLocate)
         {
+            console.log("Location found first time...");
+            console.log(locLatLng);
+
             paintMapFirstTime();
             updateData();
             firstLocate = false;
         }
+        else
+        {
+            console.log("Location found next times..");
+            console.log(locLatLng);
+
+            map.setView(locLatLng,18);
+
+            if(posIcon!=null)
+            {
+                posIcon.setLatLng(locLatLng);
+            }
+        }
     };
+
     //First time run.
     var L_PREFER_CANVAS=true;
-    map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,enableHighAccuracy:true,maximumAge:60000});
+    map = L.map('map',{touchZoom:true}).locate({setView:true,maxZoom:18,maximumAge:60000});
     map.on('locationfound', onLocationFound);
     map.on('locationerror', onLocationError);
     L.tileLayer('http://{s}.tile.cloudmade.com/4a708528dd0e441da7e211270da4dd33/'+mapStyle+'/256/{z}/{x}/{y}.png', {
