@@ -368,6 +368,7 @@ $(document).ready(function(){
     //Menu functions.
     var menuHome=function(){
         map.setView(locLatLng,18);
+        closeInfobox();
     };
     var menuHash=function(){
 //        console.log('At menuHash');
