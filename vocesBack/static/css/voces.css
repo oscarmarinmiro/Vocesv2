@@ -131,7 +131,9 @@ ul.button li a:hover {
     clear:right;
 
 }
-
+a{
+    color: #FFE174;
+}
 .tweet .nick {
     margin-bottom:3px;
 }

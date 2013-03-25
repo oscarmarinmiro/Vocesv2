@@ -1,12 +1,12 @@
-// TODO: Probar el metodo de hacer layers y anyadir ahi los circulos, con el volumen de circulos esperado
-// Para ver si ha desaparecido el bug del quitar una layer (lentisimo en android) y se puede quitar
-// lo de mapa de usar y tirar
 
-
+// (c) 2013 Outliers Collective (http://www.outliers.es) More information here: blog.convoca.cc
 
 var replyAccount='@convocacc';
 
 var mapStyle="22677";
+
+var HELP_COPY = '<p class="extraContent">(Para más información, visita <a href="http://blog.convoca.cc" target="_blank">blog.convoca.cc</a>)<br><br>"Convoca!" es una aplicación para mapear convocatorias, que aspira a hacer visible para todos lo que sucede en el espacio público.<br>Una convocatoria es un punto especial en el mapa cuyo color va cambiando en función del número de usuarios que hagan ‘checkin’ a través de la aplicación.<br>Las convocatorias con más afluencia aparecerán destacadas en el mapa.</p>';
+
 
 
 var htFilter = "__all__";
@@ -107,7 +107,7 @@ $(document).ready(function(){
     // Function that returns a Leaflet icon depending on a metric [0-100]
 
     var decideIconOff=function(level){
-        console.log('At decideIcon');
+        //console.log('At decideIcon');
         if(level>75){return offIcons[3];}
         else if(level<=75 && level>50){return offIcons[2];}
         else if(level<=50 && level>25){return offIcons[1];}
@@ -116,7 +116,7 @@ $(document).ready(function(){
 
 
     var decideIconOn=function(level){
-        console.log('At decideIcon');
+        //console.log('At decideIcon');
         if(level>75){return onIcons[0];}
         else if(level<=75 && level>50){return onIcons[0];}
         else if(level<=50 && level>25){return onIcons[0];}
@@ -125,7 +125,7 @@ $(document).ready(function(){
 
 
     var mapMe=function(){
-        console.log('At mapMe');
+        //console.log('At mapMe');
         if(/Android/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20['+callNode.callId+']%20';}
         //if(/Android/i.test(navigator.userAgent)){location = 'https://twitter.com/intent/tweet?text='+replyAccount+'%20['+callNode.callId+']%20';}
         else{
@@ -140,7 +140,7 @@ $(document).ready(function(){
     };
     var checkinMe=function(){
         var checkinSymbol='*';
-        console.log('At checkinMe');
+        //console.log('At checkinMe');
         if(/Android/i.test(navigator.userAgent)){location = 'twitter://post?in_reply_to_status_id='+callNode.id+'&message='+replyAccount+'%20'+checkinSymbol+'%20['+callNode.callId+']%20';}
         //if(/Android/i.test(navigator.userAgent)){location = 'https://twitter.com/intent/tweet?text='+replyAccount+'%20'+checkinSymbol+'%20['+callNode.callId+']%20';}
         else{
@@ -156,9 +156,9 @@ $(document).ready(function(){
     // OJO (OSCAR): He mezclado aqui el retrieveCalls y retrieveCallCheckings desde el updateData porque las dos
     // son asincronas, para crear una sola rama de paintMap en cada caso
     var retrieveCalls=function(){
-        console.log('At retrieveCalls');
+        //console.log('At retrieveCalls');
         var url='getCalls/';
-        console.log('URL: '+url);
+        //console.log('URL: '+url);
         $.getJSON(url,function(data){
             calls = data.calls;
             hashtagCount = data.hts;
@@ -167,42 +167,42 @@ $(document).ready(function(){
                     {
                         if(callNode!=null){
                                 var url='getCallCheckins/'+callNode.id+'/';
-                                console.log('URL: '+ url);
+                                //console.log('URL: '+ url);
                                 $.getJSON(url,function(data){
-                                    checkins=data;console.log(checkins);
-                                    }).complete(function(){console.log('Carga completada...');paintMap();});
+                                    checkins=data;
+                                    }).complete(function(){paintMap();});
                                 }
                         else
                         {
-                        console.log('Carga completada...' );
+                        //console.log('Carga completada...' );
                         paintMap();
                         }
                     });
         return true;
     };
     var updateData=function(){
-        console.log('At updateCalls');
+        //console.log('At updateCalls');
         calls=retrieveCalls();
 
     };
     var retrieveCallCheckins=function(id){
-        console.log('At retrieveCallCheckins');
+        //console.log('At retrieveCallCheckins');
         var url='getCallCheckins/'+id+'/';
-        console.log('URL: '+ url);
-        $.getJSON(url,function(data){checkins=data;console.log(checkins);}).complete(function(){console.log('Carga completada...');paintMap();});
+        //console.log('URL: '+ url);
+        $.getJSON(url,function(data){checkins=data;}).complete(function(){paintMap();});
     };
     //Display functions.
     function openInfobox(height){
-        console.log('At openInfobox');
+        //console.log('At openInfobox');
         //$('#infobox').css('height',height);
     };
     function closeInfobox(){
-        console.log('At closeInfobox');
+        //console.log('At closeInfobox');
         $('#infoextra').html("");
         //$('#infobox').css('height','50px');
     };
     var display = function(html,height){
-        console.log('At display');
+        //console.log('At display');
         openInfobox(height+"px");
         html+='<div class="close closeleft" href="#">Cerrar</div>';
         $('#infoextra').html("<br/>"+html+"<div class='marginbot'></div>");
@@ -210,7 +210,7 @@ $(document).ready(function(){
         $('.closeup').on('click',function(){closeInfobox();});
     };
     var callInfo = function(){
-        console.log('At callInfo');
+        //console.log('At callInfo');
         callId=callNode.id;
         var url="getPointDetail/"+callId+"/";
         var data = null;
@@ -244,7 +244,7 @@ $(document).ready(function(){
             });
     };
     var replyInfo = function(id){
-        console.log('At replyInfo');
+        //console.log('At replyInfo');
         var url="getPointDetail/"+id+"/";
         var data = null;
         $.getJSON(url, function(datos){
@@ -270,10 +270,10 @@ $(document).ready(function(){
             });
     };
     var paintMapFirstTime = function(){
-        console.log('At paintMapFirstTime');
+        //console.log('At paintMapFirstTime');
         var myLatLng = map.getCenter();
         var myZoom = map.getZoom();
-        console.log("¡¡¡¡¡¡¡¡TIRO EL MAPA!!!!!!!!!!!!!!");
+        //console.log("¡¡¡¡¡¡¡¡TIRO EL MAPA!!!!!!!!!!!!!!");
         $("#map").remove();
         $("body").append('<div id="map"></div>');
         map = L.map('map',{touchZoom:true}).locate({setView:false,enableHighAccuracy:true,maximumAge:60000}).setView(myLatLng, myZoom);
@@ -285,17 +285,17 @@ $(document).ready(function(){
         }).addTo(map);
     }
     var paintMap=function(){
-        console.log('At paintMap');
+        //console.log('At paintMap');
         paintMapFirstTime();
         paintUserPosition();
     };
     var paintUserPosition=function(){
-        console.log('At paintUserPosition');
+        //console.log('At paintUserPosition');
         L.marker(locLatLng, {icon: markerIcon}).setZIndexOffset(-100).addTo(map);
         paintCalls();
     };
     var paintCalls=function(){
-        console.log('At paintCalls');
+        //console.log('At paintCalls');
 
         for(var i=0;i<calls.length;i++){
             var call=calls[i];
@@ -303,8 +303,8 @@ $(document).ready(function(){
             {
                 var marker;
 
-                console.log(call);
-                console.log(callNode);
+//                console.log(call);
+//                console.log(callNode);
 
                 if((callNode) && (call.id==callNode.id)){
                     marker=L.marker([call.lat, call.lng], {icon: decideIconOn(call['votes'])});
@@ -322,8 +322,8 @@ $(document).ready(function(){
         if((callNode!=null) && ((htFilter=='__all__')||(callNode.hashTag == htFilter))){paintCallReplies();}
     };
     var paintCallReplies=function(){
-        console.log('At paintCallReplies');
-        console.log(checkins);
+//        console.log('At paintCallReplies');
+//        console.log(checkins);
         for(var i=0;i<checkins.tweets.length;i++){
             var tweet=checkins.tweets[i];
             var circle=L.circle([tweet.lat,tweet.lng],CIRCLE_SIZE,{
@@ -342,7 +342,7 @@ $(document).ready(function(){
     };
     //Item selected functions.
     var callSelected=function(e){
-        console.log('At callSelected');
+//        console.log('At callSelected');
         e.target.closePopup();
         if(callNode==null){
             callNode=e.target._popup._source.__data__;
@@ -360,7 +360,7 @@ $(document).ready(function(){
         }
     };
     var replySelected=function(e){
-        console.log('At replySelected');
+//        console.log('At replySelected');
         e.target.closePopup();
         replyInfo(e.target._popup._source.__data__);
     };
@@ -369,7 +369,7 @@ $(document).ready(function(){
         map.setView(locLatLng,18);
     };
     var menuHash=function(){
-        console.log('At menuHash');
+//        console.log('At menuHash');
         html="";
         html+='<span class="extraHeader">Trending ahora</span>';
         html+='<p class="extraContent">';
@@ -387,15 +387,15 @@ $(document).ready(function(){
     }
 
     var menuHelp=function(){
-        console.log('At menuhelp');
+//        console.log('At menuhelp');
         html="";
         html+='<span class="extraHeader">¿Qué es \'convoca!\'?</span>';
-        html+='<p class="extraContent">Convoca es una plataforma para convocar convocatorias convocantes de convocadores para convocados</p>';
+        html+=HELP_COPY;
         display(html,200);
     }
 
     var menuCall=function(){
-        console.log('At menuCall');
+//        console.log('At menuCall');
         var callSymbol = '%C2%A1';
         if(/Android/i.test(navigator.userAgent)){location = "twitter://post?message="+replyAccount+"%20"+callSymbol+"%20";}
         //if(/Android/i.test(navigator.userAgent)){location = "https://twitter.com/intent/tweet?text="+replyAccount+"%20"+callSymbol+"%20";}
@@ -408,7 +408,7 @@ $(document).ready(function(){
         }
     };
     var menu=function(){
-        console.log('At menu');
+//        console.log('At menu');
         var html="";
 //        html = '<a id="home" href="#"><img src="static/imgs/marker_white.png" width="20" height="30"></a><a id="tag" href="#">#TT</a><a id="call" href="#">¡C!</a>';
         html+= '<ul class="button">';
@@ -428,15 +428,15 @@ $(document).ready(function(){
     var onLocationError=function(e){
         if(!locLatLng)
         {
-            console.log('At onLocationError');
+//            console.log('At onLocationError');
             alert(e.message);
         }
     };
     var onLocationFound=function(e){
-        console.log('At onLocationFound');
-        console.log("Location found...");
+//        console.log('At onLocationFound');
+//        console.log("Location found...");
         locLatLng = e.latlng;
-        console.log("New location:"+locLatLng);
+//        console.log("New location:"+locLatLng);
         if(firstLocate)
         {
             paintMapFirstTime();
